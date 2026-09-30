@@ -141,7 +141,7 @@ class Runtime(QObject):
         self.marker=marker or ProgramUseMutex();self.integration=integration;self.demo=bundle.demo
         self.scheduler=None;self.active_claim=None;self.claim_dialog=None;self.claim_handled=False
         self.generation=0;self.claim_queue=None
-        self.poll_pending=False;self.renew_pending=False;self.tick_pending=False;self.quitting=False;self.closed=False
+        self.poll_pending=False;self.renew_pending=False;self.tick_pending=False;self._tick_token=None;self.quitting=False;self.closed=False;self._retiring_service=None
         self.window=MainWindow(self.service,self.store,demo_callback=self._demo_worker,
             integration_callback=integration.apply if integration and not self.demo else None,
             integration_status_callback=integration.status if integration and not self.demo else None)
@@ -195,7 +195,7 @@ class Runtime(QObject):
         self.pause_action.setText('继续整理' if config.paused else '暂停整理')
         self.tray.setToolTip(('FileHub · 演示 · ' if self.demo else 'FileHub · ')+('自动整理已暂停' if config.paused else '自动整理运行中'))
     def busy_changed(self,busy):
-        self.pause_action.setEnabled(not busy and not self.quitting)
+        self.pause_action.setEnabled(not busy and not self.quitting and self.window.capture_work_authority() is not None)
         self.window.demo_button.setEnabled(not busy and not self.active_claim and not self.quitting and self.window.automation.accepting)
         if self.quitting and not busy:self._finish_quit()
     def poll(self):
@@ -206,7 +206,7 @@ class Runtime(QObject):
     def _poll_done(self,value,queue,generation):
         self.poll_pending=False;show,batch=value
         if generation!=self.generation:
-            if batch:self.window.coordinator.submit(lambda:queue.release(batch.token),lambda _:None,self.window.show_error)
+            if batch:self.window.coordinator.submit(lambda:queue.release(batch.token),lambda _:None,self.window.show_error,lifecycle=True)
             return
         if show:self.show_window()
         if batch is None:return
@@ -236,19 +236,27 @@ class Runtime(QObject):
         def done(_):
             self.active_claim=None;self.claim_handled=False;self.claim_queue=None
             self.window.demo_button.setEnabled(not self.window.coordinator.pending and not self.quitting)
-        self.window.coordinator.submit(finish,done,lambda error:(done(None),self.window.show_error(error)))
+        self.window.coordinator.submit(finish,done,lambda error:(done(None),self.window.show_error(error)),lifecycle=True)
     def schedule_tick(self):
         if self.quitting or self.tick_pending or self.scheduler is None or self.window.coordinator.pending or not self.window.automation.accepting:return
-        self.tick_pending=True;scheduler=self.scheduler;now=datetime.now().astimezone();generation=self.generation
+        self.tick_pending=True;token=self._tick_token=object();scheduler=self.scheduler;now=datetime.now().astimezone();generation=self.generation
         completion=self.window.automation.completion_hook(self.service,self.window.automation.state_generation)
         effective_generation=self.window.automation.rule_generation
         def tick():
             scheduler.automatic_completion=completion
             return scheduler.tick(now),scheduler.last_errors
-        self.window.coordinator.submit(tick,lambda value:self._tick_done(value,generation,effective_generation),lambda message:self._tick_error(message) if generation==self.generation and effective_generation==self.window.automation.rule_generation else None)
-    def _tick_error(self,message):self.tick_pending=False;self.window.show_error(message);self.notify('FileHub · 后台整理未完成',message)
-    def _tick_done(self,value,generation=None,effective_generation=None):
-        self.tick_pending=False;results,errors=value
+        self.window.coordinator.submit(tick,lambda value:self._tick_done(value,generation,effective_generation,token),lambda message:self._tick_error(message,generation,effective_generation,token))
+    def _settle_tick(self,token):
+        if token is not None and token is not self._tick_token:return False
+        self._tick_token=None;self.tick_pending=False;return True
+    def _tick_error(self,message,generation=None,effective_generation=None,token=None):
+        if not self._settle_tick(token):return
+        if generation is not None and generation!=self.generation:return
+        if effective_generation is not None and effective_generation!=self.window.automation.rule_generation:return
+        self.window.show_error(message);self.notify('FileHub · 后台整理未完成',message)
+    def _tick_done(self,value,generation=None,effective_generation=None,token=None):
+        if not self._settle_tick(token):return
+        results,errors=value
         if generation is not None and generation!=self.generation:return
         if effective_generation is not None and effective_generation!=self.window.automation.rule_generation:
             self.window.refresh();return
@@ -270,11 +278,15 @@ class Runtime(QObject):
 
     def _service_rebound(self,service):
         self.service=service;self.generation+=1
+        if self.quitting:
+            self.scheduler=None;self._retire_for_quit();return
         generation=self.window.automation.state_generation
         self.scheduler=None
         self.window.coordinator.submit(lambda:Scheduler(service,automatic_completion=self.window.automation.completion_hook(service,generation)),self._scheduler_ready,self.window.show_error)
         self.config_changed(service.config)
     def _demo_ready(self):
+        if self.quitting:
+            self._retire_for_quit();return
         self.window.known_folder_proposals={role:self.service.config.watch_roots[0] for role in ('desktop','downloads')} if self.service.config.watch_roots else {}
         self.window.integration_callback=None;self.window.integration_status_callback=None
         self.window.autostart.setChecked(False);self.window.context_menu.setChecked(False)
@@ -283,19 +295,25 @@ class Runtime(QObject):
     def request_quit(self):
         if self.closed or self.quitting:return
         self.quitting=True;self.poll_timer.stop();self.tick_timer.stop()
+        self.window._quit_requested=True
         self.window.setEnabled(False);self.quit_action.setEnabled(False)
-        self.window.coordinator.begin_wait()
-        self.window.automation.retire(self.window.coordinator.end_wait)
+        self._retire_for_quit()
         if self.window.coordinator.pending:
             self.window.status.setText('正在完成当前操作，完成后安全退出。');return
         self._finish_quit()
+    def _retire_for_quit(self):
+        service=self.window.service
+        if self._retiring_service is service:return
+        self._retiring_service=service
+        self.window.coordinator.begin_wait()
+        self.window.automation.retire(self.window.coordinator.end_wait)
     def _finish_quit(self):
         if self.closed or self.window.coordinator.pending or not self.window.automation.settled:return
         if self.active_claim:
             batch=self.active_claim;queue=self.claim_queue
             self.active_claim=None
             # Quit is not a user cancellation of an unhandled selection.
-            self.window.coordinator.submit(lambda:queue.release(batch.token),lambda _:None,self.window.show_error)
+            self.window.coordinator.submit(lambda:queue.release(batch.token),lambda _:None,self.window.show_error,lifecycle=True)
             return
         self.closed=True;self.lease_timer.stop();self.window.coordinator.close()
         for dialog in tuple(self.window.dialogs):dialog.reject()
@@ -366,6 +384,8 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
         report['checks']['video_1920_undo']=inverse_ok and all(
             Path(item['source']).read_bytes()==content and not Path(item['target']).exists()
             for item,content in zip(report['videos'],originals))
+        from filehub.selftest020 import extend_report
+        extend_report(fixture,report)
         report['ok']=all(report['checks'].values())
     except Exception as exc:report['error']=str(exc)
     encoded=json.dumps(report,ensure_ascii=False,indent=2)

@@ -31,7 +31,7 @@ class AutomationController(QObject):
         self.window = window; self.executor = None; self.accepting = True; self.settled = False
         self.state_generation = 0; self.rule_generation = 0; self.image_generation = 0; self.template_generation = 0
         self.rules_revision = None; self.template_revision = None; self.rules_snapshot = None
-        self.jobs = {}; self._retire_callbacks = []
+        self.jobs = {}; self._retire_callbacks = []; self._retirement_started = False
         self.delivered.connect(self._finished); self.progressed.connect(self._progress)
         self.settlement.connect(self._settled)
         self.background.connect(self._background)
@@ -336,8 +336,8 @@ class AutomationController(QObject):
     def retire(self, callback):
         self._retire_callbacks.append(callback)
         if self.settled: self._settled(self.window.service); return
-        if not self.accepting: return
-        self.accepting = False
+        if self._retirement_started: return
+        self._retirement_started = True; self.accepting = False
         self.cancel('rules'); self.cancel('images')
         service = self.window.service
         service.close_conversions(lambda: self.settlement.emit(service))
@@ -350,5 +350,6 @@ class AutomationController(QObject):
 
     def rebind(self):
         self.state_generation += 1; self.rule_generation += 1; self.image_generation += 1
-        self.executor = None; self.accepting = True; self.settled = False; self.jobs.clear()
-        self.window.rules_page.invalidate_preview(); self.window.conversion_page.invalidate_preview(); self.load()
+        self.executor = None; self.accepting = not self.window._quit_requested; self.settled = False; self._retirement_started = False; self.jobs.clear()
+        self.window.rules_page.invalidate_preview(); self.window.conversion_page.invalidate_preview()
+        if self.accepting:self.load()

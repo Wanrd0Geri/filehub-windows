@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
         self.demo_callback=demo_callback;self.pause_callback=pause_callback;self.integration_callback=integration_callback;self.inbox_provider=inbox_provider
         self.integration_status_callback=integration_status_callback;self.integration_status_ready=integration_status_callback is None;self.runtime_close_callback=None;self.is_demo=False
         self.paths=();self.preview=None;self.preview_generation=0;self.batches=[];self.dialogs=[];self.generated_details={}
-        self.known_folder_proposals={};self._close_settled=False;self._close_requested=False;self.manual_check_callback=None;self.service_reopen_callback=None
+        self.known_folder_proposals={};self._close_settled=False;self._close_requested=False;self._quit_requested=False;self.manual_check_callback=None;self.service_reopen_callback=None
         self.coordinator=Coordinator(self);self.setWindowTitle('FileHub');self.resize(1000,700);self.setMinimumSize(800,620);self.setAcceptDrops(True)
         self.tag_history=HistoryController(self.coordinator,store.state_dir,self)
         shell=QWidget();self.setCentralWidget(shell);outer=QHBoxLayout(shell);outer.setContentsMargins(0,0,0,0);outer.setSpacing(0)
@@ -53,6 +53,21 @@ class MainWindow(QMainWindow):
 
     def system_theme_changed(self,scheme):
         if self.service.config.theme=='system':apply_theme(self,'system')
+
+    def capture_work_authority(self):
+        adapter=getattr(self,'automation',None)
+        if self._quit_requested or self._close_requested or (adapter is not None and not adapter.accepting):return None
+        return self.service,adapter.state_generation if adapter is not None else 0
+
+    def assert_work_authority(self,binding):
+        service,generation=binding;adapter=getattr(self,'automation',None)
+        current=adapter.state_generation if adapter is not None else 0
+        if service is not self.service or generation!=current or service._closing:
+            raise ValueError('操作所属状态已结束；未写入旧状态。')
+
+    def admit_work(self):
+        if self.capture_work_authority() is not None:return True
+        self.show_error('正在切换状态或退出；未接受新的操作。');return False
 
     @staticmethod
     def muted(text):
@@ -184,6 +199,7 @@ class MainWindow(QMainWindow):
         return '\n\n'.join(rows)
 
     def request_preview(self):
+        if not self.admit_work():return
         paths,tag,generation=self.paths,self.tag.text(),self.preview_generation
         service,history_token=self.service,self.tag_history.token
         def ready(preview):
@@ -197,6 +213,7 @@ class MainWindow(QMainWindow):
         self.preview=preview;self.preview_details.setPlainText(self.preview_text(preview));self.preview_details.setToolTip('\n'.join(str(i.source)+'\n'+'\n'.join(map(str,i.targets)) for i in preview.items));self.execute_button.setEnabled(any(not i.error for i in preview.items))
 
     def execute(self):
+        if not self.admit_work():return
         preview=self.preview
         if preview:
             service=self.service;generation=self.automation.state_generation;self.invalidate_preview()
@@ -214,7 +231,7 @@ class MainWindow(QMainWindow):
         generation=self.automation.state_generation if generation is None else generation
         ids={outcome.batch_id for outcome in outcomes if outcome.batch_id}
         def read():return tuple(batch for batch in service.history() if batch.batch_id in ids)
-        self.coordinator.submit(read,lambda batches:self.outcomes_ready.emit((service,generation,tuple(outcomes)),batches),self.show_error)
+        self.coordinator.submit(read,lambda batches:self.outcomes_ready.emit((service,generation,tuple(outcomes)),batches),self.show_error,lifecycle=True)
 
     def _show_outcome_batches(self,binding,batches):
         service,generation,outcomes=binding
@@ -225,7 +242,7 @@ class MainWindow(QMainWindow):
         elif not outcomes:self.status.setText('已取消，未开始剩余项目。')
 
     def manual_check(self):
-        if not self.automation.accepting:return
+        if not self.admit_work():return
         if self.manual_check_callback:self.manual_check_callback();return
         from ..scheduler import Scheduler
         service,generation=self.service,self.automation.state_generation
@@ -257,7 +274,9 @@ class MainWindow(QMainWindow):
     def busy_changed(self,busy):
         self.preview_button.setEnabled(not busy);self.save_button.setEnabled(not busy);self.undo_button.setEnabled(not busy)
         adapter=getattr(self,'automation',None)
-        self.demo_button.setEnabled(not busy and not self.dialogs and (adapter is None or adapter.accepting))
+        admitted=self.capture_work_authority() is not None
+        self.pause_button.setEnabled(not busy and admitted)
+        self.demo_button.setEnabled(not busy and not self.dialogs and admitted)
         self.execute_button.setEnabled(not busy and self.preview is not None and any(not i.error for i in self.preview.items))
 
     def refresh(self):
@@ -270,7 +289,7 @@ class MainWindow(QMainWindow):
         def ready(value):
             if service is not self.service or generation!=self.automation.state_generation:return
             batches,self.generated_details=value;self.show_history(batches)
-        self.coordinator.submit(read,ready,lambda message:self.show_error(message) if service is self.service and generation==self.automation.state_generation else None)
+        self.coordinator.submit(read,ready,lambda message:self.show_error(message) if service is self.service and generation==self.automation.state_generation else None,lifecycle=True)
 
     def show_history(self,batches):
         self.batches=batches;self.history_list.clear();self.recent_list.clear()
@@ -313,24 +332,27 @@ class MainWindow(QMainWindow):
         self.history_details.setPlainText('\n\n'.join(lines))
 
     def undo(self):
+        if not self.admit_work():return
         index=self.history_list.currentRow()
         if 0<=index<len(self.batches):
-            batch_id=self.batches[index].batch_id;self.coordinator.submit(lambda:self.service.undo(batch_id),self.show_result,self.show_error)
+            batch_id=self.batches[index].batch_id;service=self.service
+            self.coordinator.submit(lambda:service.undo(batch_id),self.show_result,self.show_error)
 
     def save_settings(self):
+        if not self.admit_work():return
         if self.integration_status_callback and not self.integration_status_ready:
             self.show_error('正在读取 Windows 集成设置，请稍候。');return
         self.invalidate_preview()
         for dialog in self.dialogs:dialog.invalidate()
         config=replace(self.service.config,sync_root=Path(self.sync_path.text()) if self.sync_path.text() else None,watch_roots=tuple(Path(self.watch_list.item(i).text()) for i in range(self.watch_list.count())),paused=self.paused.isChecked(),global_jobs=self.global_jobs.isChecked(),sweep_days=self.sweep_days.value(),inbox_days=self.inbox_days.value(),theme=['dark','light','system'][self.appearance.currentIndex()])
-        integration=(self.autostart.isChecked(),self.context_menu.isChecked())
+        integration=(self.autostart.isChecked(),self.context_menu.isChecked());integration_callback=self.integration_callback
         service,store,generation=self.service,self.store,self.automation.state_generation
         self.automation.config_requested(service.config,config)
         def save():
             with service.engine.locked():
                 store.save(config);service.config=config
-            if self.integration_callback:
-                try:self.integration_callback(*integration)
+            if integration_callback:
+                try:integration_callback(*integration)
                 except Exception as exc:raise RuntimeError('设置已保存，但 Windows 集成未完成：'+str(exc)) from exc
             return config
         self.coordinator.submit(save,lambda value:self.saved(value) if service is self.service and generation==self.automation.state_generation else None,
@@ -358,6 +380,7 @@ class MainWindow(QMainWindow):
         self.autostart.setChecked(status['autostart']);self.context_menu.setChecked(status['context_menu'])
 
     def toggle_pause(self):
+        if not self.admit_work():return
         config=replace(self.service.config,paused=not self.service.config.paused)
         service,store,generation=self.service,self.store,self.automation.state_generation
         self.automation.config_requested(service.config,config)
@@ -368,13 +391,16 @@ class MainWindow(QMainWindow):
         self.coordinator.submit(change,lambda value:self.saved(value) if service is self.service and generation==self.automation.state_generation else None,self.show_error)
 
     def start_demo(self):
+        if not self.admit_work():return
         if self.coordinator.pending or self.dialogs:
             self.show_error('请先完成当前操作或关闭归档窗口，再进入演示。');return
         if self.demo_callback:
             self.demo_button.setEnabled(False);self.status.setText('正在取消图片任务；安全完成当前替换后进入演示。')
             self.coordinator.begin_wait()
             def settled():
-                self.coordinator.submit(self.demo_callback,self.demo_ready,self.demo_failed);self.coordinator.end_wait()
+                if not self._quit_requested:
+                    self.coordinator.submit(self.demo_callback,self.demo_ready,self.demo_failed,lifecycle=True)
+                self.coordinator.end_wait()
             self.automation.retire(settled)
         else:self.status.setText('演示将在应用启动器接入后启用。')
 
@@ -402,7 +428,7 @@ class MainWindow(QMainWindow):
         def failed(error):
             self.demo_button.setEnabled(False)
             self.show_error('未进入演示；恢复原状态失败，请安全退出后重新打开。原任务已安全结束：'+message+'；'+error)
-        self.coordinator.submit(reopen,ready,failed)
+        self.coordinator.submit(reopen,ready,failed,lifecycle=True)
 
     def refresh_inbox(self):
         def scan():
@@ -436,6 +462,7 @@ class MainWindow(QMainWindow):
         if items:QDesktopServices.openUrl(QUrl.fromLocalFile(str(Path(items[0].data(Qt.UserRole)).parent)))
 
     def open_archive_dialog(self,paths):
+        if not self.admit_work():return None
         dialog=ArchiveDialog(self,paths);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog));dialog.show();dialog.raise_();dialog.activateWindow();return dialog
 
     def closeEvent(self,event):

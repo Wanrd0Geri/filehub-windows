@@ -425,3 +425,145 @@ def test_rule_save_busy_does_not_offer_job_cancel(ui,monkeypatch):
     w.rules_page.name_edit.setText('规则保存');w.rules_page.save_button.click();wait(app,entered.is_set)
     assert not w.rules_page.cancel_button.isEnabled()
     release.set();settle(app,w)
+
+
+@pytest.fixture
+def lifecycle_rt(tmp_path):
+    from filehub.ui.app import Runtime,bootstrap
+    app=QApplication.instance() or QApplication([]);sync=tmp_path/'同步'
+    (sync/'1_工作/项目/261001_XYZ_测试').mkdir(parents=True)
+    ConfigStore(tmp_path/'state').save(Config(sync_root=sync))
+    bundle=bootstrap(tmp_path/'state');notices=[];exits=[]
+    class Marker:
+        handle=True
+        def close(self):self.handle=None
+    rt=Runtime(bundle,auto_timers=False,notifier=lambda *a:notices.append(a),exit_callback=lambda:exits.append(True),marker=Marker())
+    rt._test_notices=notices;rt._test_exits=exits;settle(app,rt.window)
+    yield app,rt
+    if not rt.closed:
+        if not rt.quitting:rt.request_quit()
+        # Failed RED may strand a rebind. Cleanup after recording the assertion
+        # explicitly settles its owned service; this is not acceptance evidence.
+        rt.window.automation.retire(lambda:None)
+        settle(app,rt.window);wait(app,lambda:rt.window.automation.settled)
+        rt._finish_quit();wait(app,lambda:rt.closed)
+
+
+def test_transition_rejects_direct_home_tray_settings_and_archive_mutations(lifecycle_rt,tmp_path,monkeypatch):
+    import filehub.ui.app as module
+    app,rt=lifecycle_rt;w=rt.window;old=rt.service;oldstore=w.store;lease=rt.lease
+    source=tmp_path/'留在原位置.txt';source.write_text('old authority')
+    w.set_paths([source]);w.tag.setText('XYZ020822');w.request_preview();settle(app,w)
+    entered,release=Event(),Event();original=module.create_demo;writes=[];archives=[]
+    save=oldstore.save;execute=old.execute
+    def delayed(base):entered.set();assert release.wait(5);return original(base)
+    def recorded(config):writes.append((lease.file is None,rt.demo));return save(config)
+    def archive(preview):archives.append(True);return execute(preview)
+    monkeypatch.setattr(module,'create_demo',delayed);monkeypatch.setattr(oldstore,'save',recorded);monkeypatch.setattr(old,'execute',archive)
+    w.start_demo();wait(app,entered.is_set)
+    try:
+        w.toggle_pause();w.pause_button.click();rt.pause_action.trigger();w.save_settings();w.execute()
+        admitted=w.open_archive_dialog([source])
+        pause_enabled=w.pause_button.isEnabled()
+    finally:release.set()
+    settle(app,w)
+    assert writes==[] and archives==[] and source.exists() and old.config.paused
+    assert admitted is None and not pause_enabled and rt.demo
+
+
+@pytest.mark.parametrize('recovery',[False,True])
+def test_quit_during_demo_creation_or_recovery_retires_new_service_and_exits(lifecycle_rt,monkeypatch,recovery):
+    import filehub.ui.app as module
+    app,rt=lifecycle_rt;w=rt.window;entered,release=Event(),Event()
+    if recovery:
+        monkeypatch.setattr(module,'create_demo',lambda *a:(_ for _ in ()).throw(OSError('演示创建失败')))
+        original=w.service_reopen_callback
+        def delayed(old):entered.set();assert release.wait(5);return original(old)
+        w.service_reopen_callback=delayed
+    else:
+        original=module.create_demo
+        def delayed(base):entered.set();assert release.wait(5);return original(base)
+        monkeypatch.setattr(module,'create_demo',delayed)
+    w.start_demo();wait(app,entered.is_set)
+    try:
+        rt.quit_action.trigger();assert rt.quitting and not rt.closed and rt.lease.file is not None
+    finally:release.set()
+    settle(app,w)
+    assert rt.closed and not w.automation.accepting and w.automation.settled
+    assert rt.lease.file is None and rt.marker.handle is None and rt._test_exits==[True]
+
+
+def test_stale_tick_error_settles_own_token_and_next_check_runs(lifecycle_rt,monkeypatch):
+    app,rt=lifecycle_rt;w=rt.window;entered,release=Event(),Event();calls=[]
+    def tick(now):
+        calls.append(True)
+        if len(calls)==1:entered.set();assert release.wait(5);raise OSError('过期检查错误')
+        return []
+    monkeypatch.setattr(rt.scheduler,'tick',tick)
+    rt.schedule_tick();wait(app,entered.is_set)
+    try:w.rules_page.new_rule()
+    finally:release.set()
+    settle(app,w)
+    assert not rt.tick_pending and '过期检查错误' not in w.status.text()
+    assert not any('过期检查错误' in message for title,message in rt._test_notices)
+    rt.schedule_tick();settle(app,w);assert len(calls)==2 and not rt.tick_pending
+
+
+def test_admitted_config_write_finishes_before_demo_can_release_old_lease(lifecycle_rt,monkeypatch):
+    import filehub.ui.app as module
+    app,rt=lifecycle_rt;w=rt.window;old=rt.service;lease=rt.lease;entered,release=Event(),Event();writes=[]
+    original=w.store.save
+    def delayed(config):
+        entered.set();assert release.wait(5)
+        writes.append((lease.file is None,rt.demo));return original(config)
+    monkeypatch.setattr(w.store,'save',delayed)
+    w.toggle_pause();wait(app,entered.is_set)
+    try:
+        w.start_demo();assert not rt.demo and rt.service is old and not old._closing and lease.file is not None
+    finally:release.set()
+    settle(app,w);assert writes==[(False,False)] and not old.config.paused
+    w.start_demo();settle(app,w);assert rt.demo and lease.file is None
+
+
+def test_queued_worker_guard_rejects_retired_mutation_before_ownership_release(lifecycle_rt,monkeypatch):
+    app,rt=lifecycle_rt;w=rt.window;entered,release=Event(),Event();writes=[]
+    w.coordinator.submit(lambda:(entered.set(),release.wait(5)),lambda _:None)
+    wait(app,entered.is_set)
+    monkeypatch.setattr(w.store,'save',lambda config:writes.append(config))
+    w.toggle_pause()  # This request is admitted while the earlier ordinary job runs.
+    rt.request_quit();assert rt.lease.file is not None
+    release.set();settle(app,w)
+    assert writes==[] and rt.closed and rt.lease.file is None and rt._test_exits==[True]
+
+
+def test_tick_error_current_generation_notifies_and_old_token_cannot_clear_new_check(lifecycle_rt,monkeypatch):
+    app,rt=lifecycle_rt;w=rt.window;calls=[];entered,release=Event(),Event()
+    def tick(now):
+        calls.append(True)
+        if len(calls)==1:raise OSError('当前检查读取失败')
+        entered.set();assert release.wait(5);return []
+    monkeypatch.setattr(rt.scheduler,'tick',tick)
+    rt.schedule_tick();old=rt._tick_token;settle(app,w)
+    assert not rt.tick_pending and any('当前检查读取失败' in message for title,message in rt._test_notices)
+    rt.schedule_tick();wait(app,entered.is_set);new=rt._tick_token
+    try:
+        rt._tick_error('迟到旧错误',rt.generation,w.automation.rule_generation,old)
+        rt._tick_done(([],()),rt.generation,w.automation.rule_generation,old)
+        assert rt.tick_pending and rt._tick_token is new and '迟到旧错误' not in w.status.text()
+    finally:release.set()
+    settle(app,w);assert not rt.tick_pending and rt._tick_token is None
+
+
+def test_quit_before_demo_conversion_settlement_keeps_old_service_until_safe_commit(lifecycle_rt,tmp_path):
+    from filehub.platform.windows import WindowsPlatform
+    app,rt=lifecycle_rt;w=rt.window;old=rt.service;p=tmp_path/'关键切换.png';png(p);image_preview(app,w,p)
+    entered,release=Event(),Event()
+    class Block(WindowsPlatform):
+        def checkpoint(self,stage,item):
+            if stage=='before_generated_publish':entered.set();assert release.wait(5)
+    old.engine.platform=Block();w.conversion_page.execute_button.click();wait(app,entered.is_set)
+    w.start_demo();assert not w.automation.accepting and not w.automation.settled
+    rt.request_quit();assert rt.lease.file is not None and not rt.demo
+    release.set();settle(app,w)
+    assert rt.closed and rt.service is old and not rt.demo and rt.lease.file is None and rt.marker.handle is None
+    assert not p.exists() and p.with_suffix('.jpg').exists() and old.history()[0].ok

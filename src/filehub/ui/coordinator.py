@@ -12,10 +12,19 @@ class Coordinator(QObject):
         self.pending = 0
         self.delivered.connect(self._finish)
 
-    def submit(self, action, callback, error=None):
+    def submit(self, action, callback, error=None, *, lifecycle=False):
+        owner=self.parent()
+        binding=None
+        if not lifecycle and hasattr(owner,'capture_work_authority'):
+            binding=owner.capture_work_authority()
+            if binding is None:
+                if error:error('正在切换状态或退出；未接受新的操作。')
+                return
         self.pending += 1; self.busy.emit(True)
         def run():
-            try: result, failure = action(), None
+            try:
+                if binding is not None:owner.assert_work_authority(binding)
+                result, failure = action(), None
             except Exception as exc: result, failure = None, exc
             self.delivered.emit((callback, error), result, failure)
         self.executor.submit(run)
