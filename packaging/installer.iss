@@ -9,6 +9,10 @@
 AppId={{E5C1A2EB-0E1D-46D8-9D39-1056D8661DD5}
 AppName=FileHub
 AppVersion={#AppVersion}
+VersionInfoVersion={#AppVersion}
+VersionInfoTextVersion={#AppVersion}
+VersionInfoProductVersion={#AppVersion}
+VersionInfoProductTextVersion={#AppVersion}
 AppPublisher=FileHub
 DefaultDirName={localappdata}\Programs\FileHub
 DefaultGroupName=FileHub

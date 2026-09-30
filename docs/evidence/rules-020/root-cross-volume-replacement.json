@@ -1,0 +1,111 @@
+{
+  "checked_utc": "2026-10-01T12:50:16.796486+00:00",
+  "rows": [
+    {
+      "same_path": false,
+      "source": "F:\\FileHub-QA-8513df8b4dd8403db3e4ef8f02fab63f\\cross-extension\\sample.png",
+      "backup": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\root-cross-volume-8513df8b4dd8403db3e4ef8f02fab63f\\cross\\conversion-backups\\eb8255a6682d4fdebce93ea80190342d\\sample.png",
+      "before": {
+        "device": 11279401552646490738,
+        "file_id": 2814749767396127,
+        "size": 317,
+        "mtime_ns": 1790859016510875000,
+        "sha256": "89a87c7f2add85af72be064d26dcc6389eb4ad1601154a676c40a9185676f4d7",
+        "creation_ns": 1790859016501080500,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "backup_fingerprint": {
+        "device": 10293559555737634045,
+        "file_id": 4222124651670896,
+        "size": 317,
+        "mtime_ns": 1790859016510875000,
+        "sha256": "89a87c7f2add85af72be064d26dcc6389eb4ad1601154a676c40a9185676f4d7",
+        "creation_ns": 1790859016501080500,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "restored": {
+        "device": 11279401552646490738,
+        "file_id": 3096224744106783,
+        "size": 317,
+        "mtime_ns": 1790859016510875000,
+        "sha256": "89a87c7f2add85af72be064d26dcc6389eb4ad1601154a676c40a9185676f4d7",
+        "creation_ns": 1790859016501080500,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "batch_id": "02a1f3df9e764a6b97cceb07fd54b9df",
+      "passed": true
+    },
+    {
+      "same_path": true,
+      "source": "F:\\FileHub-QA-8513df8b4dd8403db3e4ef8f02fab63f\\same-path\\sample.jpg",
+      "backup": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\root-cross-volume-8513df8b4dd8403db3e4ef8f02fab63f\\same\\conversion-backups\\0f3e1fe326fb45119021a34246502dc8\\sample.jpg",
+      "before": {
+        "device": 11279401552646490738,
+        "file_id": 2814749767396129,
+        "size": 821,
+        "mtime_ns": 1790859016662543000,
+        "sha256": "4980c42ddf8d4fe500394923c15aac9af8263dc743a5d4ddeb7f8087c0377b03",
+        "creation_ns": 1790859016662039300,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "backup_fingerprint": {
+        "device": 10293559555737634045,
+        "file_id": 2814749768120084,
+        "size": 821,
+        "mtime_ns": 1790859016662543000,
+        "sha256": "4980c42ddf8d4fe500394923c15aac9af8263dc743a5d4ddeb7f8087c0377b03",
+        "creation_ns": 1790859016662039300,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "restored": {
+        "device": 11279401552646490738,
+        "file_id": 3096224744106785,
+        "size": 821,
+        "mtime_ns": 1790859016662543000,
+        "sha256": "4980c42ddf8d4fe500394923c15aac9af8263dc743a5d4ddeb7f8087c0377b03",
+        "creation_ns": 1790859016662039300,
+        "streams": [
+          {
+            "name": ":qa-metadata:$DATA",
+            "size": 47,
+            "sha256": "734488314855a40612546d9db14f7c9572c5fc1f049962d5a9ed443cee5755eb"
+          }
+        ]
+      },
+      "batch_id": "3b441945c520490faa01b87d999ba177",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "boundary": "Only new UUID fixtures were created; no real project, live state or original checkout changed. Fixtures retained."
+}
