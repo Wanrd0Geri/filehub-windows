@@ -17,15 +17,21 @@ datas += [(str(root / "sandbox/vendor-downloads" / name), "third_party/sources")
           for name in ("ffmpeg-source.zip", "qtbase-source.zip", "pyside-source.zip")]
 binaries = [(str(p), "resources/ffprobe") for p in sorted(probe.iterdir())
             if p.suffix.lower() in (".exe", ".dll")]
+webp = root / "third_party/conversion/bin/qwebp.dll"
+if not webp.is_file():
+    raise SystemExit("Missing reviewed Qt WebP plugin")
+binaries += [(str(webp), "PySide6/plugins/imageformats")]
 a = Analysis([str(root / "packaging" / "entrypoint.py")],
              pathex=[str(root / "src")], binaries=binaries, datas=datas,
              hiddenimports=["filehub.__main__"],
              excludes=["PySide6.QtQml", "PySide6.QtQuick", "PySide6.QtWebEngineCore",
                        "PySide6.QtWebEngineWidgets", "PySide6.QtPdf", "PySide6.QtSvg",
                        "PySide6.QtSvgWidgets", "PySide6.QtNetwork", "pytest"], noarchive=False)
-# Restrict Qt image plugins to QtBase; no PDF/SVG/TIFF/WebP addon modules.
-# The GUI draws its own vector icons and needs only basic raster formats.
-allowed_images = {"qgif.dll", "qico.dll", "qjpeg.dll", "qwbmp.dll"}
+# QtBase raster plugins plus the sole reviewed QtImageFormats WebP plugin.
+# Replace hook discovery with one exact pinned source; no other addon plugins.
+a.binaries = [item for item in a.binaries if Path(item[0]).name.lower() != "qwebp.dll"]
+a.binaries += [("PySide6/plugins/imageformats/qwebp.dll", str(webp), "BINARY")]
+allowed_images = {"qgif.dll", "qico.dll", "qjpeg.dll", "qwbmp.dll", "qwebp.dll"}
 a.binaries = [item for item in a.binaries
               if "imageformats" not in item[0].replace("\\", "/")
               or Path(item[0]).name.lower() in allowed_images]
@@ -48,5 +54,6 @@ a.binaries = [item for item in a.binaries
                    or item[0].replace("\\", "/").startswith("resources/ffprobe/"))]
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="FileHub",
-          console=False, icon=str(root / "resources" / "app.ico"))
+          console=False, icon=str(root / "resources" / "app.ico"),
+          version=str(root / "packaging/version-info.txt"))
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name="FileHub")

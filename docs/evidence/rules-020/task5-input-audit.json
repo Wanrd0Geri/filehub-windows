@@ -1,0 +1,66 @@
+{
+  "phase": "A inputs only; no build or executable functional acceptance",
+  "checked_utc": "2026-10-01T13:01:05.264081+00:00",
+  "passed": true,
+  "pinned_file_count": 228,
+  "source_archives": [
+    {
+      "file": "ffmpeg-source.zip",
+      "source_url": "https://codeload.github.com/FFmpeg/FFmpeg/zip/29e619e767cde9045a75c29bc9a8278ae7b3a98b",
+      "source_commit": "29e619e767cde9045a75c29bc9a8278ae7b3a98b",
+      "sha256": "69ea98adb1b80aabdbecefdb0b545ff19ebcd7c6fc0cea9dd550b02f5b642a21",
+      "bytes": 23134216
+    },
+    {
+      "file": "qtbase-source.zip",
+      "source_url": "https://codeload.github.com/qt/qtbase/zip/refs/tags/v6.11.2",
+      "source_commit": "ef55f427f2c8b410d34f8a7681020a3000cf6866",
+      "sha256": "02d5195d165949318340d27fee6c28d047f0d4682b40c8fa75509a785e686051",
+      "bytes": 78663969
+    },
+    {
+      "file": "pyside-source.zip",
+      "source_url": "https://codeload.github.com/pyside/pyside-setup/zip/refs/tags/v6.11.2",
+      "source_commit": "24627cd36e1593adf22eb1f2950e4248e7bcc1ec",
+      "sha256": "7c357b79dcc0e38da49bcd667dedf342ff7b2c557e2e858dea2a5690f80a37e7",
+      "bytes": 23050410
+    },
+    {
+      "file": "qtimageformats-6.11.2.zip",
+      "relative_path": "third_party/conversion/sources/qtimageformats-6.11.2.zip",
+      "source_url": "https://codeload.github.com/qt/qtimageformats/zip/refs/tags/v6.11.2",
+      "source_tag": "v6.11.2",
+      "sha256": "a0003652945eeafc8bc28cc639f5941350fe27e91236908306d4733b703a23b5",
+      "bytes": 3041992
+    }
+  ],
+  "input_verifier_exit": 0,
+  "input_verifier_output": "0.2.0 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified",
+  "spec_simulation": {
+    "qwebp_pinned_singleton": true,
+    "old_native_filters_preserved": true,
+    "source_material_collected": true,
+    "warm_yellow_icon": true
+  },
+  "version_resource_parser": "0.2.0.0 fixed / 0.2.0 string; packaging input only",
+  "qwebp_imports": [
+    "Qt6Gui.dll",
+    "Qt6Core.dll",
+    "VCRUNTIME140.dll",
+    "api-ms-win-crt-string-l1-1-0.dll",
+    "api-ms-win-crt-heap-l1-1-0.dll",
+    "api-ms-win-crt-math-l1-1-0.dll",
+    "api-ms-win-crt-utility-l1-1-0.dll",
+    "api-ms-win-crt-runtime-l1-1-0.dll",
+    "KERNEL32.dll"
+  ],
+  "changed_old_pinned_inputs": [
+    "docs/第三方许可.md"
+  ],
+  "original_011_installer": {
+    "path": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.1-windows-x64-setup.exe",
+    "sha256": "bacd74379bc38e02d924f381aad8980f07bd738e68800668cc4b699f68d37f1a",
+    "untouched": true
+  },
+  "boundary": "Read-only pinned runtime, no pip/install/update; UUID-owned audit output only. No live install/state/registry/app changes."
+}

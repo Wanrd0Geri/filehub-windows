@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "0.1.1",
+  "app_version": "0.2.0",
   "redistribution_status": "prepared",
   "python_version": "3.12.10",
   "ffprobe_version": "8.1.3-filehub1",
@@ -27,6 +27,14 @@
       "source_commit": "24627cd36e1593adf22eb1f2950e4248e7bcc1ec",
       "sha256": "7c357b79dcc0e38da49bcd667dedf342ff7b2c557e2e858dea2a5690f80a37e7",
       "bytes": 23050410
+    },
+    {
+      "file": "qtimageformats-6.11.2.zip",
+      "relative_path": "third_party/conversion/sources/qtimageformats-6.11.2.zip",
+      "source_url": "https://codeload.github.com/qt/qtimageformats/zip/refs/tags/v6.11.2",
+      "source_tag": "v6.11.2",
+      "sha256": "a0003652945eeafc8bc28cc639f5941350fe27e91236908306d4733b703a23b5",
+      "bytes": 3041992
     }
   ],
   "python_distributions": {
@@ -45,11 +53,27 @@
   "font_assets": [],
   "fonts": "Installed Inter/Noto Sans SC, then Windows system fallbacks",
   "file_hashes": {
-    "docs/第三方许可.md": "21322271d2e32036f4722ffaf4761c038d53f344c2c889d99432c2ae2cfc4b18",
+    "docs/第三方许可.md": "7acb2dcc3587020f1bb2586495693222cba3b9902be10a524c9f4131537ed1d1",
+    "packaging/version-info.txt": "a811a2e400c3f492a55f8656315659c7f03416c2292e42c8157eded735fcedb2",
     "resources/app.ico": "7720ff6a07ff5ce74188ba626d6bbfd80ed035c24d1303c4db1b23ea82313b3c",
     "resources/selftest/tiny-1920-blue.mp4": "a518c61250175b6f93f6d4fccf1c115152e2c40f0c1e9843b2e1b025fb758056",
     "resources/selftest/tiny-1920-yellow.mp4": "bf1452612e036b7df70ed25f775fa7fbbd8797a86b50df6cbb70d2203131dd08",
     "resources/selftest/tiny.mp4": "3d5addb83d23bc0d7de037e988509f6efd47286f3da9355a0670121a6eb1805b",
+    "third_party/conversion/bin/qwebp.dll": "6b2c53cc4423140c29a6a1eb6dd908016e09d794b5739a05a3a39c8c49a0df8a",
+    "third_party/conversion/provenance.json": "e5a091e32c9309b7c78be30a62031b0d698b846178f766f4182bec08f84c989e",
+    "third_party/conversion/qtimageformats/LICENSES/BSD-3-Clause.txt": "9f0490f18656c6f2435bd14f603ef0c96434d1825615363dce43abb42ed1dcce",
+    "third_party/conversion/qtimageformats/LICENSES/GFDL-1.3-no-invariants-only.txt": "110535522396708cea37c72a802c5e7e81391139f5f7985631c93ef242b206a4",
+    "third_party/conversion/qtimageformats/LICENSES/GPL-2.0-only.txt": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "third_party/conversion/qtimageformats/LICENSES/GPL-3.0-only.txt": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "third_party/conversion/qtimageformats/LICENSES/LGPL-3.0-only.txt": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
+    "third_party/conversion/qtimageformats/LICENSES/libtiff.txt": "fbd6fed7938541d2c809c0826225fc85e551fdbfa8732b10f0c87e0847acafd7",
+    "third_party/conversion/qtimageformats/LICENSES/LicenseRef-Qt-Commercial.txt": "9b1f50aae6267f9d5e0ceb6775ee86450262c25ec7c0573e151fe5d3f18a4700",
+    "third_party/conversion/qtimageformats/src/3rdparty/libwebp/AUTHORS": "f251be89fd442bd9d701360730aea163cc8e2076ff03528f59267dc2c4f8b60a",
+    "third_party/conversion/qtimageformats/src/3rdparty/libwebp/COPYING": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+    "third_party/conversion/qtimageformats/src/3rdparty/libwebp/PATENTS": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+    "third_party/conversion/qtimageformats/src/3rdparty/libwebp/qt_attribution.json": "0a9f45a5ea57dea6b6987ec2974c4a785cd0cb6850df96af49a544068577363b",
+    "third_party/conversion/README.md": "bf8bd1faba9584953c92c0c57cffc68aab3c60b5790d15e6f0f46372ce521ac1",
+    "third_party/conversion/sources/qtimageformats-6.11.2.zip": "a0003652945eeafc8bc28cc639f5941350fe27e91236908306d4733b703a23b5",
     "third_party/ffprobe/bin/avcodec-62.dll": "3265e25d662488e4fc17d0d995f7afe2a1b817fdc2638fdc6cdc520ac89d068b",
     "third_party/ffprobe/bin/avformat-62.dll": "864789474b157a19b92dbf98a4431106051b3e377528066d27e07b9773739c30",
     "third_party/ffprobe/bin/avutil-60.dll": "391f9c6fff14350cd8fd9f2965e3f9997e40577c12ccedc6523709a41e26dc95",
@@ -280,6 +304,35 @@
       "KERNEL32.dll"
     ]
   },
+  "image_conversion": {
+    "scope": "Image conversion only; no FFmpeg encoder or OpenH264 delivery.",
+    "qt_version": "6.11.2",
+    "plugin": {
+      "name": "qwebp.dll",
+      "size": 564536,
+      "sha256": "6b2c53cc4423140c29a6a1eb6dd908016e09d794b5739a05a3a39c8c49a0df8a",
+      "distribution": "PySide6_Essentials==6.11.2",
+      "wheel_record_sha256": "6b2c53cc4423140c29a6a1eb6dd908016e09d794b5739a05a3a39c8c49a0df8a",
+      "wheel_tag": "cp310-abi3-win_amd64",
+      "source_repository": "https://github.com/qt/qtimageformats",
+      "source_tag": "v6.11.2",
+      "license": "LGPL-3.0-only (selected upstream alternative)"
+    },
+    "source_archive": {
+      "name": "qtimageformats-6.11.2.zip",
+      "url": "https://codeload.github.com/qt/qtimageformats/zip/refs/tags/v6.11.2",
+      "sha256": "a0003652945eeafc8bc28cc639f5941350fe27e91236908306d4733b703a23b5"
+    },
+    "libwebp": {
+      "version": "1.6.0",
+      "license": "BSD-3-Clause",
+      "source": "Included verbatim in the corresponding QtImageFormats source archive",
+      "notice": "qtimageformats/src/3rdparty/libwebp/COPYING",
+      "patent_grant": "qtimageformats/src/3rdparty/libwebp/PATENTS"
+    },
+    "local_source_modifications": [],
+    "runtime_network_required": false
+  },
   "tools": {
     "inno": {
       "version": "6.7.3",
@@ -292,5 +345,5 @@
       "sha256": "af0bdba17f06fe037f0194069adaa31a8fe45f1a11381501896aea1fae37bd5d"
     }
   },
-  "evidence_scope": "Prepared inputs, native ffprobe probes and compiler syntax only; final GUI package/install acceptance pending"
+  "evidence_scope": "0.2.0 pinned inputs only; actual packaged acceptance pending. Historical 0.1 installation evidence is separate; no 0.2 live install/uninstall performed."
 }
