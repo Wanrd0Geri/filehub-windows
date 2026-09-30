@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "0.2.0",
+  "app_version": "0.2.1",
   "redistribution_status": "prepared",
   "python_version": "3.12.10",
   "ffprobe_version": "8.1.3-filehub1",
@@ -53,8 +53,8 @@
   "font_assets": [],
   "fonts": "Installed Inter/Noto Sans SC, then Windows system fallbacks",
   "file_hashes": {
-    "docs/第三方许可.md": "7acb2dcc3587020f1bb2586495693222cba3b9902be10a524c9f4131537ed1d1",
-    "packaging/version-info.txt": "a811a2e400c3f492a55f8656315659c7f03416c2292e42c8157eded735fcedb2",
+    "docs/第三方许可.md": "6729385a4c72f7363bb4af8bc18c98ae6d22dff0e1dc378de165bfb3d87abf5b",
+    "packaging/version-info.txt": "68ec1442c45bd7055c0c8717f8aa9122e4c265d9835cc355189377926d5b3818",
     "resources/app.ico": "7720ff6a07ff5ce74188ba626d6bbfd80ed035c24d1303c4db1b23ea82313b3c",
     "resources/selftest/tiny-1920-blue.mp4": "a518c61250175b6f93f6d4fccf1c115152e2c40f0c1e9843b2e1b025fb758056",
     "resources/selftest/tiny-1920-yellow.mp4": "bf1452612e036b7df70ed25f775fa7fbbd8797a86b50df6cbb70d2203131dd08",
@@ -345,5 +345,5 @@
       "sha256": "af0bdba17f06fe037f0194069adaa31a8fe45f1a11381501896aea1fae37bd5d"
     }
   },
-  "evidence_scope": "0.2.0 pinned inputs only; actual packaged acceptance pending. Historical 0.1 installation evidence is separate; no 0.2 live install/uninstall performed."
+  "evidence_scope": "0.2.1 pinned inputs only; actual packaged acceptance pending. Historical installation evidence is separate; no live install/uninstall performed for this release."
 }

@@ -1,0 +1,12 @@
+{
+  "phase": "0.2.1 metadata only; not executable acceptance",
+  "pinned_file_count": 228,
+  "source_archive_count": 4,
+  "changed_previously_pinned_inputs": [
+    "docs/第三方许可.md",
+    "packaging/version-info.txt"
+  ],
+  "old020_installer_sha256": "a36ac5a9f21e319d3a35c6aaf31a8a16dcad44254e997688a738659943053735",
+  "old020_installer_preserved": true,
+  "input_gate": "0.2.1 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified;exit0"
+}

@@ -55,7 +55,7 @@ manifest = {
                          "sha256": "9c73c3bae7ed48d44112a0f48e66742c00090bdb5bef71d9d3c056c66e97b732"},
               "make": {"version": "4.4.1-3", "source_url": "https://repo.msys2.org/msys/x86_64/make-4.4.1-3-x86_64.pkg.tar.zst",
                          "sha256": "af0bdba17f06fe037f0194069adaa31a8fe45f1a11381501896aea1fae37bd5d"}},
-    "evidence_scope": "0.2.0 pinned inputs only; actual packaged acceptance pending. Historical 0.1 installation evidence is separate; no 0.2 live install/uninstall performed.",
+    "evidence_scope": f"{app_version} pinned inputs only; actual packaged acceptance pending. Historical installation evidence is separate; no live install/uninstall performed for this release.",
 }
 (root / "third_party/components.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 print(f"Frozen {len(paths)} inputs and {len(archives)} source archives")
