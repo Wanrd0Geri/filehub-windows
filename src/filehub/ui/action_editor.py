@@ -1,5 +1,5 @@
 """Ordered action forms and shared image settings; no runtime/store access."""
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, QEvent
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QComboBox,
     QLineEdit, QSpinBox, QCheckBox, QLabel, QPushButton, QGroupBox, QFileDialog, QColorDialog)
 from PySide6.QtGui import QColor
@@ -48,6 +48,17 @@ class ConversionFields(QWidget):
                        self.lossless.toggled, self.background.textChanged, self.destination.textChanged): signal.connect(self.changed)
         self._refresh()
 
+    def _fit_form_height(self):
+        # Qt's wrapped QFormLayout height-for-width minimum can undercount
+        # styled field rows after visibility changes. Keep the preferred height
+        # as the floor while retaining the narrow width and parent scrolling.
+        self.setMinimumHeight(self.sizeHint().height())
+
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        if event.type() in (QEvent.StyleChange, QEvent.FontChange) and hasattr(self, '_form'):
+            self._fit_form_height()
+
     def _choose_folder(self):
         path = QFileDialog.getExistingDirectory(self, '选择输出文件夹')
         if path: self.destination.setText(path)
@@ -81,6 +92,7 @@ class ConversionFields(QWidget):
         self._form.setRowVisible(self.lossless, fmt == 'webp')
         self._form.setRowVisible(self.background_choice, fmt == 'jpeg')
         self._form.setRowVisible(self.background_box, fmt == 'jpeg' and self.background_choice.currentData() == 'custom')
+        self._fit_form_height()
 
     def set_value(self, spec, mode='keep', destination=None):
         if not isinstance(spec, ConversionSpec): raise ValueError('图片设置必须通过验证')
@@ -96,6 +108,7 @@ class ConversionFields(QWidget):
             lossless=self.lossless.isChecked(), background=self.background.text(),
             timeout_seconds=self._timeout, max_pixels=self._max_pixels)
         mode = self.mode.currentData()
+        if mode == 'keep' and not self.destination.text().strip(): raise ValueError('请选择输出文件夹')
         return spec, mode, absolute_folder(self.destination.text()) if mode == 'keep' else None
 
 

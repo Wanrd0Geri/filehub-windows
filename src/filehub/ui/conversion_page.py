@@ -1,7 +1,8 @@
 """Independent conversion intentions and progress display, with no image decode."""
 from collections.abc import Mapping
+import ntpath
 from pathlib import Path
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Signal, Qt, QEvent, QSize
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView, QFileDialog, QListWidget, QListWidgetItem)
 from .action_editor import ConversionFields
@@ -20,16 +21,17 @@ class ConversionPage(QWidget):
     cancelRequested = Signal()
     changed = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, *, can_accept_paths=None):
         super().__init__(parent); self._paths = (); self._generation = 0; self._busy = False
+        self._can_accept_paths = can_accept_paths or (lambda: True)
         self._cancel_pending = False; self._token = None; self._can_execute = False
         box = QVBoxLayout(self); box.setContentsMargins(12, 12, 12, 12)
         title = QLabel('图片转换'); title.setObjectName('heading'); box.addWidget(title)
         scroll = QScrollArea(); scroll.setWidgetResizable(True); box.addWidget(scroll, 1)
         self.editor = QWidget(); contents = QVBoxLayout(self.editor); scroll.setWidget(self.editor)
-        self.select_button = QPushButton('选择图片（可多选）'); contents.addWidget(self.select_button)
+        self.select_button = QPushButton('选择图片（可多选，也可拖入 JPEG / PNG / WebP）'); contents.addWidget(self.select_button)
         self.paths_label = QLabel('未选择图片'); self.paths_label.setWordWrap(True); contents.addWidget(self.paths_label)
-        self.sources = QListWidget(); self.sources.setFixedHeight(90); contents.addWidget(self.sources)
+        self.sources = QListWidget(); self.sources.setObjectName('conversionSources'); self.sources.setFixedHeight(90); contents.addWidget(self.sources)
         self.fields = ConversionFields(); contents.addWidget(self.fields)
         label = QLabel('先预览确切文件名和冲突，再明确开始。预览会读取图片，但不会转换或替换原图。')
         label.setWordWrap(True); label.setObjectName('muted'); contents.addWidget(label)
@@ -49,6 +51,55 @@ class ConversionPage(QWidget):
         self.select_button.clicked.connect(self._choose); self.fields.changed.connect(self.invalidate_preview)
         self.preview_button.clicked.connect(self._preview); self.execute_button.clicked.connect(self._execute)
         self.cancel_button.clicked.connect(self._cancel); self._buttons()
+        # Native item-view viewports and editable fields receive drops themselves.
+        # Intercept them before they can insert URLs or bubble to archive routing.
+        self.setAcceptDrops(True)
+        for widget in self.findChildren(QWidget):
+            widget.setAcceptDrops(True); widget.installEventFilter(self)
+
+    def _drop_paths(self, mime):
+        if self._busy: raise ValueError('正在处理图片，请结束后再添加图片。')
+        if not self._can_accept_paths(): raise ValueError('正在切换状态或退出，请稍后再添加图片。')
+        urls = mime.urls()
+        if not urls: raise ValueError('请拖入本地 JPEG、PNG 或 WebP 图片文件。')
+        paths = []
+        for url in urls:
+            path = url.toLocalFile()
+            if not url.isLocalFile() or url.host() not in ('', 'localhost') or path.startswith(('\\\\', '//')):
+                raise ValueError('只接受本地图片文件，不支持远程链接或网络路径。')
+            candidate = Path(path)
+            if candidate.is_dir(): raise ValueError('不支持拖入文件夹；请选择 JPEG、PNG 或 WebP 图片文件。')
+            if candidate.suffix.lower() not in ('.jpg', '.jpeg', '.png', '.webp'):
+                raise ValueError('只支持 JPEG、PNG 和 WebP 图片；本次拖入未添加任何文件。')
+            if not candidate.is_file(): raise ValueError('请选择存在的本地 JPEG、PNG 或 WebP 图片文件。')
+            paths.append(str(candidate))
+        return paths
+
+    def _drag_event(self, event):
+        if not event.possibleActions() & Qt.CopyAction:
+            self.show_error('请以复制方式拖入图片；拖放只添加选择，不移动文件。'); event.ignore(); return
+        try: paths = self._drop_paths(event.mimeData())
+        except (ValueError, OSError) as exc:
+            self.show_error(str(exc)); event.ignore(); return
+        if event.type() == QEvent.Drop:
+            combined = list(self._paths); known = {ntpath.normcase(ntpath.normpath(path)) for path in combined}
+            for path in paths:
+                key = ntpath.normcase(ntpath.normpath(path))
+                if key not in known: combined.append(path); known.add(key)
+            self.error_label.clear()
+            if tuple(combined) != self._paths: self.set_paths(combined)
+        event.setDropAction(Qt.CopyAction); event.accept()
+
+    def eventFilter(self, watched, event):
+        if event.type() in (QEvent.DragEnter, QEvent.DragMove, QEvent.Drop):
+            self._drag_event(event); return True
+        return super().eventFilter(watched, event)
+
+    def dragEnterEvent(self, event): self._drag_event(event)
+
+    def dragMoveEvent(self, event): self._drag_event(event)
+
+    def dropEvent(self, event): self._drag_event(event)
 
     @property
     def generation(self): return self._generation
@@ -64,7 +115,8 @@ class ConversionPage(QWidget):
         self.paths_label.setText('已选择 %d 张（完整路径见每项提示）：' % len(self._paths))
         self.sources.clear()
         for path in self._paths:
-            item = QListWidgetItem(Path(path).name); item.setToolTip(path); self.sources.addItem(item)
+            item = QListWidgetItem(Path(path).name); item.setToolTip(path)
+            item.setSizeHint(QSize(0, self.sources.fontMetrics().height() + 6)); self.sources.addItem(item)
         self.invalidate_preview()
 
     def _choose(self):

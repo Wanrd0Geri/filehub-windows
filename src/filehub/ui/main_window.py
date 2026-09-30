@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         self.build_home();self.build_inbox();self.build_history();self.build_settings()
         self.rules_tabs=QTabWidget();self.rules_page=RulesPage();self.templates_page=TemplatesPage()
         self.rules_tabs.addTab(self.rules_page,'自动规则');self.rules_tabs.addTab(self.templates_page,'项目模板')
-        self.pages.addWidget(self.rules_tabs);self.conversion_page=ConversionPage();self.pages.addWidget(self.conversion_page)
+        self.pages.addWidget(self.rules_tabs);self.conversion_page=ConversionPage(can_accept_paths=lambda:self.capture_work_authority() is not None);self.pages.addWidget(self.conversion_page)
         self.status_footer=StatusFooter(self);self.status=self.status_footer.label
         self.statusBar().setObjectName('appStatusBar');self.statusBar().setSizeGripEnabled(False);self.statusBar().addWidget(self.status_footer,1)
         self.coordinator.busy.connect(self.busy_changed)
@@ -176,10 +176,19 @@ class MainWindow(QMainWindow):
         self.editor.setVisible(bool(self.paths))
 
     def dragEnterEvent(self,event):
+        if self.pages.currentWidget() is self.conversion_page:
+            self.conversion_page.dragEnterEvent(event);return
         if event.mimeData().hasUrls() and all(u.isLocalFile() for u in event.mimeData().urls()):event.acceptProposedAction()
 
     def dropEvent(self,event):
+        if self.pages.currentWidget() is self.conversion_page:
+            self.conversion_page.dropEvent(event);return
         self.set_paths([u.toLocalFile() for u in event.mimeData().urls() if u.isLocalFile()]);self.navigate(0);event.acceptProposedAction()
+
+    def dragMoveEvent(self,event):
+        if self.pages.currentWidget() is self.conversion_page:
+            self.conversion_page.dragMoveEvent(event);return
+        super().dragMoveEvent(event)
 
     def invalidate_preview(self):
         self.preview_generation+=1;self.preview=None;self.execute_button.setEnabled(False)

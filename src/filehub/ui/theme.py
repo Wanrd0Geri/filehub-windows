@@ -44,12 +44,14 @@ def apply_theme(widget, appearance='dark'):
     QPushButton:focus,QLineEdit:focus,QComboBox:focus {{border:1px solid {gold};}}
     QPushButton:disabled {{color:{muted};}}
     QPushButton#primary {{background:{text};color:{bg};font-weight:500;}}
+    QPushButton#primary:disabled {{background:{surface};color:{muted};border-color:{line};}}
     QPushButton#nav {{background:transparent;border:1px solid transparent;text-align:left;padding:10px;}}
     QPushButton#nav:checked {{background:{top};border:1px solid {line};border-right:2px solid {gold};}}
     QLineEdit,QComboBox,QSpinBox {{background:{surface};border:1px solid {line};border-radius:7px;padding:8px;selection-background-color:{gold};}}
     QLineEdit#tag {{font-size:19px;}}
     QListWidget,QTextEdit {{background:{surface};border:1px solid {line};border-radius:9px;padding:4px;}}
     QListWidget::item {{padding:12px 9px;border-bottom:1px solid {line};}}
+    QListWidget#conversionSources::item {{padding:2px 8px;}}
     QListWidget::item:selected {{background:{top};color:{text};}}
     QCheckBox {{spacing:8px;}}
     QScrollArea {{border:0;}}
