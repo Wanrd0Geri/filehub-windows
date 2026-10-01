@@ -1,0 +1,330 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Noto+Sans+SC:wght@400;500;600&amp;display=swap">
+<style>
+#fh-design .fh-app{--fh-bg:light-dark(#fff,#202020);--fh-side:light-dark(#f7f7f5,#191919);--fh-soft:light-dark(#f6f6f4,#292929);--fh-text:light-dark(#242424,#eee);--fh-muted:light-dark(#73736e,#aaa9a4);--fh-line:light-dark(#e9e9e5,#393937);--fh-strong:light-dark(#262626,#eee);--fh-inverse:light-dark(#fff,#202020);--fh-green:light-dark(#368164,#8cba9c);--fh-error:light-dark(#a94339,#f1a197);--fh-shadow:light-dark(#0000000b,#00000035);--fh-overlay:light-dark(#e9e9e6d9,#101010d9);--fh-radius:16px;font-family:Inter,"Segoe UI","Microsoft YaHei UI",sans-serif;font-size:14px;line-height:1.5;color:var(--fh-text);background:var(--fh-bg);border:1px solid var(--fh-line);border-radius:var(--fh-radius);overflow:hidden;position:relative;min-width:0;isolation:isolate}
+#fh-design .fh-app *{box-sizing:border-box}#fh-design [hidden]{display:none!important}#fh-design button,#fh-design input,#fh-design select{font:inherit}#fh-design button{color:inherit}#fh-design button:disabled{opacity:.45;cursor:default}#fh-design button:not(:disabled):hover{filter:brightness(.96)}#fh-design .fh-app button:focus-visible,#fh-design .fh-app input:focus-visible,#fh-design .fh-app select:focus-visible{outline:2px solid var(--fh-green);outline-offset:3px}#fh-design h1,#fh-design h2,#fh-design h3,#fh-design p{margin:0}#fh-design .fh-app svg{flex-shrink:0}#fh-design .fh-windowbar{height:39px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:var(--fh-muted);font-size:11px;letter-spacing:.08em;border-bottom:1px solid var(--fh-line)}#fh-design .fh-windowtools{display:flex;gap:22px;align-items:center}#fh-design .fh-windowtools svg{width:11px;height:11px}#fh-design .fh-body{display:grid;grid-template-columns:184px minmax(0,1fr);min-height:620px}#fh-design .fh-sidebar{background:var(--fh-side);padding:26px 14px 19px;display:flex;flex-direction:column;border-right:1px solid var(--fh-line)}#fh-design .fh-brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:600;letter-spacing:-.65px}#fh-design .fh-brandmark{display:flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:9px;background:var(--fh-strong);color:var(--fh-inverse)}#fh-design .fh-sidebar .fh-brand{padding-left:9px;margin-bottom:33px}#fh-design .fh-nav{display:flex;flex-direction:column;gap:5px}#fh-design .fh-nav button{border:0;background:transparent;padding:11px 12px;display:flex;align-items:center;gap:11px;text-align:left;border-radius:9px;color:var(--fh-muted);font-size:13px}#fh-design .fh-nav button[aria-current="page"]{color:var(--fh-text);background:var(--fh-bg);box-shadow:0 1px 3px var(--fh-shadow)}#fh-design .fh-sidebottom{margin-top:auto;padding:32px 11px 0;color:var(--fh-muted);font-size:12px}#fh-design .fh-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--fh-green);margin-right:7px;vertical-align:2px}#fh-design .fh-dot.paused{background:var(--fh-muted)}#fh-design .fh-small{font-size:12px;color:var(--fh-muted)}#fh-design .fh-workspace{padding:33px 37px 23px;min-width:0}#fh-design .fh-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:31px}#fh-design .fh-heading h1{font-size:25px;letter-spacing:-.9px;font-weight:500;line-height:1.25}#fh-design .fh-heading p{margin-top:7px;font-size:12px;color:var(--fh-muted)}#fh-design .fh-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--fh-line);background:var(--fh-bg);padding:9px 13px;border-radius:9px;white-space:nowrap;font-size:12px;font-weight:500}#fh-design .fh-action.primary{background:var(--fh-strong);border-color:var(--fh-strong);color:var(--fh-inverse)}#fh-design .fh-action.quiet{background:transparent;border-color:transparent;padding:6px 8px;color:var(--fh-muted)}#fh-design .fh-sectiontitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:25px 0 12px}#fh-design .fh-sectiontitle h2{font-size:12px;font-weight:500;color:var(--fh-muted)}#fh-design .fh-sectiontitle button{font-size:11px}#fh-design .fh-sources{border:1px solid var(--fh-line);border-radius:12px;background:var(--fh-bg)}#fh-design .fh-source{display:flex;align-items:center;gap:13px;padding:18px}#fh-design .fh-source+.fh-source{border-top:1px solid var(--fh-line)}#fh-design .fh-sourceicon{width:35px;height:35px;border-radius:10px;background:var(--fh-soft);display:flex;align-items:center;justify-content:center;color:var(--fh-muted);flex-shrink:0}#fh-design .fh-source strong{font-size:13px;font-weight:500}#fh-design .fh-source .fh-small{font-size:11px;margin-top:3px}#fh-design .fh-source .fh-trail{margin-left:auto;color:var(--fh-muted);font-size:11px;white-space:nowrap}#fh-design .fh-record{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:11px;padding:16px 0;border-bottom:1px solid var(--fh-line)}#fh-design .fh-record:last-child{border-bottom:0}#fh-design .fh-record>svg{color:var(--fh-muted)}#fh-design .fh-recordname{font-size:12px;overflow-wrap:anywhere}#fh-design .fh-recordpath{font-size:11px;color:var(--fh-muted);margin-top:4px;overflow-wrap:anywhere}#fh-design .fh-recordtime{font-size:11px;color:var(--fh-muted);white-space:nowrap}#fh-design .fh-footer{margin-top:25px;padding-top:16px;border-top:1px solid var(--fh-line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--fh-muted)}#fh-design .fh-statusmessage:empty{display:none}#fh-design .fh-statusmessage{margin-top:14px;font-size:12px;color:var(--fh-green)}
+#fh-design .fh-command .fh-topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 30px}#fh-design .fh-command .fh-nav{flex-direction:row;flex-wrap:wrap;gap:3px}#fh-design .fh-command .fh-nav button{padding:7px 11px;font-size:12px}#fh-design .fh-command .fh-nav button[aria-current="page"]{background:var(--fh-soft);box-shadow:none}#fh-design .fh-commandmain{max-width:680px;min-height:531px;padding:22px 24px 24px;margin:0 auto}#fh-design .fh-hero{text-align:center;padding:25px 0 27px}#fh-design .fh-hero h1{font-size:29px;letter-spacing:-1.5px;font-weight:500;line-height:1.3}#fh-design .fh-hero p{font-size:12px;color:var(--fh-muted);margin-top:10px}#fh-design .fh-composer{border:1px solid var(--fh-line);border-radius:calc(var(--fh-radius) + 4px);padding:19px;background:var(--fh-bg);box-shadow:0 5px 24px var(--fh-shadow)}#fh-design .fh-filepill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:var(--fh-soft);font-size:12px;max-width:100%;overflow-wrap:anywhere}#fh-design .fh-composer label{display:block;font-size:11px;color:var(--fh-muted);margin:19px 0 5px}#fh-design .fh-codebar{display:flex;gap:12px;align-items:center}#fh-design .fh-codebar input{flex:1;min-width:0;border:0;background:transparent;color:var(--fh-text);font-size:20px;padding:5px 0;letter-spacing:.03em}#fh-design .fh-iconbutton{border:0;border-radius:50%;background:var(--fh-strong);color:var(--fh-inverse);display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0}#fh-design .fh-codehelp{font-size:11px;color:var(--fh-muted);margin-top:12px;overflow-wrap:anywhere}#fh-design .fh-examples{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}#fh-design .fh-example{border:1px solid var(--fh-line);background:var(--fh-bg);border-radius:20px;padding:6px 10px;font-size:11px;color:var(--fh-muted)}#fh-design .fh-commandbottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:27px 0 15px;font-size:11px;color:var(--fh-muted)}#fh-design .fh-command .fh-record{padding:13px 0}#fh-design .fh-command .fh-footer{margin-top:15px}#fh-design .fh-altpanel{min-height:490px}#fh-design .fh-altpanel h1{font-size:24px;letter-spacing:-.7px;font-weight:500}#fh-design .fh-altpanel>.fh-small{margin:8px 0 24px}#fh-design .fh-settingsrow{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;border-bottom:1px solid var(--fh-line)}#fh-design .fh-settingsrow strong{font-size:13px;font-weight:500}#fh-design .fh-settingsrow p{font-size:11px;color:var(--fh-muted);margin-top:5px}#fh-design .fh-app select{border:1px solid var(--fh-line);border-radius:8px;padding:7px 10px;background:var(--fh-bg);color:var(--fh-text);font-size:12px;max-width:100%}#fh-design .fh-app input[type="checkbox"]{accent-color:var(--fh-green);width:17px;height:17px}#fh-design .fh-inboxempty{display:flex;align-items:center;gap:13px;padding:22px 0;border-bottom:1px solid var(--fh-line)}#fh-design .fh-inboxempty>svg{color:var(--fh-muted)}#fh-design .fh-inboxempty strong{font-weight:500;font-size:13px}#fh-design .fh-inboxempty .fh-small{font-size:11px;margin-top:3px}#fh-design .fh-inboxempty span{margin-left:auto;font-size:12px;color:var(--fh-muted)}
+#fh-design .fh-overlay{position:absolute;inset:39px 0 0;z-index:5;background:var(--fh-overlay);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px}#fh-design .fh-dialog{background:var(--fh-bg);border:1px solid var(--fh-line);box-shadow:0 20px 70px var(--fh-shadow);border-radius:calc(var(--fh-radius) + 2px);padding:27px;width:440px;max-width:100%;min-width:0}#fh-design .fh-dialoghead{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:14px}#fh-design .fh-dialoghead h2{font-size:19px;letter-spacing:-.5px;font-weight:500}#fh-design .fh-dialoghead button{background:transparent;border:0;color:var(--fh-muted);display:flex;padding:5px}#fh-design .fh-dialog label{font-size:12px;display:block;margin:23px 0 8px}#fh-design .fh-dialog input{width:100%;border:1px solid var(--fh-line);border-radius:10px;color:var(--fh-text);background:var(--fh-bg);padding:12px;font-size:17px;letter-spacing:.03em}#fh-design .fh-routepreview{margin:19px 0 24px;padding:15px;background:var(--fh-soft);border-radius:10px;font-size:12px;overflow-wrap:anywhere}#fh-design .fh-routepreview .fh-small{font-size:11px;margin-bottom:6px}#fh-design .fh-dialogfooter{display:flex;justify-content:flex-end;gap:8px}#fh-design .fh-invalid{color:var(--fh-error)!important}#fh-design .fh-app[data-density="compact"] .fh-source{padding:12px 18px}#fh-design .fh-app[data-density="compact"] .fh-record{padding:11px 0}#fh-design .fh-app[data-density="compact"] .fh-settingsrow{padding:15px 0}
+#fh-design .fh-app{min-height:680px}#fh-design .fh-body{min-height:639px}
+@media(max-width:700px){#fh-design .fh-body{grid-template-columns:148px minmax(0,1fr)}#fh-design .fh-workspace{padding:27px 22px 22px}#fh-design .fh-heading{align-items:flex-start;flex-wrap:wrap;margin-bottom:22px}#fh-design .fh-heading h1{font-size:23px}#fh-design .fh-source .fh-trail{display:none}#fh-design .fh-command .fh-topbar{padding:20px;gap:12px;flex-wrap:wrap}#fh-design .fh-command .fh-nav button{padding:7px 9px}}
+@media(max-width:480px){#fh-design .fh-body{display:block;min-height:620px}#fh-design .fh-sidebar{border-right:0;border-bottom:1px solid var(--fh-line);padding:17px 14px 12px}#fh-design .fh-sidebar .fh-brand{margin-bottom:14px;padding-left:7px;font-size:18px}#fh-design .fh-sidebar .fh-nav{flex-direction:row;justify-content:space-between;gap:2px}#fh-design .fh-nav button{padding:8px;gap:6px;font-size:12px}#fh-design .fh-sidebottom{display:none}#fh-design .fh-workspace{padding:24px 19px}#fh-design .fh-heading{gap:17px}#fh-design .fh-record{grid-template-columns:23px minmax(0,1fr)}#fh-design .fh-recordtime{display:none}#fh-design .fh-source{padding:15px}#fh-design .fh-commandmain{padding:12px 19px 24px;min-height:620px}#fh-design .fh-command .fh-topbar{gap:16px;padding:19px}#fh-design .fh-command .fh-nav{width:100%;justify-content:space-between}#fh-design .fh-command .fh-nav button{padding:8px 10px}#fh-design .fh-hero{padding-top:16px}#fh-design .fh-hero h1{font-size:25px}#fh-design .fh-examples{gap:5px}#fh-design .fh-overlay{padding:13px;align-items:flex-start;padding-top:75px}#fh-design .fh-dialog{padding:21px}#fh-design .fh-settingsrow{gap:10px;flex-wrap:wrap}#fh-design .fh-commandbottom{flex-wrap:wrap}}
+@media(pointer:coarse){#fh-design .fh-app button{min-height:44px}#fh-design .fh-app input,#fh-design .fh-app select{font-size:16px}}
+@media(prefers-reduced-motion:no-preference){#fh-design .fh-app button{transition:background .15s,color .15s,filter .15s}}
+/* Refined typography: one scale, consistent baselines, readable metadata. */
+#fh-design .fh-workbench{
+  --fh-type:14px;
+  --fh-bg:light-dark(#fdfdfc,#202120);
+  --fh-side:light-dark(#f5f5f3,#1a1b1a);
+  --fh-soft:light-dark(#f2f3f0,#292b29);
+  --fh-text:light-dark(#252824,#e9ece7);
+  --fh-muted:light-dark(#757b72,#a1a79d);
+  --fh-line:light-dark(#e7e9e3,#353a34);
+  --fh-strong:light-dark(#282d27,#e9ece7);
+  font-family:"Inter","Noto Sans SC","PingFang SC","Microsoft YaHei UI",sans-serif;
+  font-size:var(--fh-type);line-height:1.6;font-weight:400;
+  font-optical-sizing:auto;font-synthesis:none;
+  -webkit-font-smoothing:antialiased;
+  min-height:728px;
+}
+#fh-design .fh-workbench .fh-windowbar{height:36px;letter-spacing:.075em;font-size:11px;padding-inline:21px;color:var(--fh-muted)}
+#fh-design .fh-workbench .fh-body{grid-template-columns:196px minmax(0,1fr);min-height:690px}
+#fh-design .fh-workbench .fh-sidebar{padding:32px 16px 24px}
+#fh-design .fh-workbench .fh-brand{font-size:22px;line-height:1.2;letter-spacing:-.8px;font-weight:600;gap:11px}
+#fh-design .fh-workbench .fh-brandmark{width:31px;height:31px;border-radius:10px}
+#fh-design .fh-workbench .fh-sidebar .fh-brand{padding-left:12px;margin-bottom:39px}
+#fh-design .fh-workbench .fh-nav{gap:8px}
+#fh-design .fh-workbench .fh-nav button{font-size:var(--fh-type);font-weight:400;line-height:1.5;letter-spacing:.025em;padding:12px 14px;gap:12px;border-radius:10px}
+#fh-design .fh-workbench .fh-nav button[aria-current="page"]{font-weight:500;background:var(--fh-bg);box-shadow:0 1px 5px var(--fh-shadow)}
+#fh-design .fh-workbench .fh-sidebottom{padding:32px 13px 0;font-size:12px;line-height:1.8}
+#fh-design .fh-workbench .fh-workspace{padding:42px 40px 25px}
+#fh-design .fh-workbench .fh-heading{align-items:center;gap:20px;margin-bottom:37px}
+#fh-design .fh-workbench .fh-heading h1{font-size:calc(var(--fh-type) * 2.2);font-weight:500;line-height:1.35;letter-spacing:-.025em;text-wrap:balance}
+#fh-design .fh-workbench .fh-heading p{font-size:calc(var(--fh-type) - 1px);line-height:1.7;letter-spacing:.025em;margin-top:12px}
+#fh-design .fh-workbench .fh-action{font-size:calc(var(--fh-type) - 1px);font-weight:500;line-height:1.5;letter-spacing:.01em;padding:11px 16px;border-radius:10px;gap:8px}
+#fh-design .fh-workbench .fh-action.quiet{font-size:calc(var(--fh-type) - 2px);font-weight:400;padding:6px 0;letter-spacing:0}
+#fh-design .fh-workbench .fh-sectiontitle{margin:31px 0 14px;min-height:29px}
+#fh-design .fh-workbench .fh-sectiontitle h2{font-size:var(--fh-type);font-weight:500;line-height:1.5;letter-spacing:.03em;color:var(--fh-text)}
+#fh-design .fh-workbench .fh-sources{border-radius:14px}
+#fh-design .fh-workbench .fh-source{padding:20px 22px;gap:16px}
+#fh-design .fh-workbench .fh-sourceicon{width:39px;height:39px;border-radius:11px;color:var(--fh-text)}
+#fh-design .fh-workbench .fh-source strong{font-size:calc(var(--fh-type) + 1px);font-weight:500;line-height:1.5;letter-spacing:.035em}
+#fh-design .fh-workbench .fh-source .fh-small{font-size:calc(var(--fh-type) - 2px);line-height:1.65;margin-top:5px;letter-spacing:.02em}
+#fh-design .fh-workbench .fh-source .fh-trail{font-size:calc(var(--fh-type) - 2px);letter-spacing:.02em}
+#fh-design .fh-workbench .fh-record{grid-template-columns:25px minmax(0,1fr) auto;gap:15px;padding:20px 0;align-items:start}
+#fh-design .fh-workbench .fh-record>svg{margin-top:4px}
+#fh-design .fh-workbench .fh-recordname{font-size:var(--fh-type);font-weight:400;line-height:1.55;letter-spacing:-.015em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#fh-design .fh-workbench .fh-recordpath{font-size:calc(var(--fh-type) - 2px);line-height:1.65;margin-top:7px;letter-spacing:.015em}
+#fh-design .fh-workbench .fh-recordtime{font-size:calc(var(--fh-type) - 2px);font-variant-numeric:tabular-nums;line-height:1.8;padding-top:1px}
+#fh-design .fh-workbench .fh-footer{font-size:calc(var(--fh-type) - 2px);line-height:1.7;margin-top:24px;padding-top:19px;border-top:0;gap:10px}
+#fh-design .fh-workbench .fh-statusmessage{font-size:13px;line-height:1.65}
+#fh-design .fh-workbench .fh-altpanel h1{font-size:calc(var(--fh-type) * 2.05);line-height:1.35;letter-spacing:-.025em}
+#fh-design .fh-workbench .fh-altpanel>.fh-small{font-size:13px;line-height:1.75;margin:12px 0 30px}
+#fh-design .fh-workbench .fh-settingsrow{padding:23px 0}
+#fh-design .fh-workbench .fh-settingsrow strong,#fh-design .fh-workbench .fh-inboxempty strong{font-size:var(--fh-type);letter-spacing:.02em;font-weight:500}
+#fh-design .fh-workbench .fh-settingsrow p,#fh-design .fh-workbench .fh-inboxempty .fh-small{font-size:12px;line-height:1.75;margin-top:6px}
+#fh-design .fh-workbench select{font-size:13px;padding:9px 12px;line-height:1.5}
+#fh-design .fh-workbench .fh-overlay{inset:36px 0 0}
+#fh-design .fh-workbench .fh-dialog{width:480px;padding:32px}
+#fh-design .fh-workbench .fh-dialoghead{margin-bottom:27px}
+#fh-design .fh-workbench .fh-dialoghead h2{font-size:24px;line-height:1.4;letter-spacing:-.02em;font-weight:500}
+#fh-design .fh-workbench .fh-filepill{font-size:13px;padding:9px 12px;gap:9px}
+#fh-design .fh-workbench .fh-dialog label{font-size:13px;font-weight:500;letter-spacing:.02em;margin:27px 0 10px}
+#fh-design .fh-workbench .fh-dialog input{font-family:inherit;font-size:21px;line-height:1.5;letter-spacing:.025em;padding:13px 15px}
+#fh-design .fh-workbench .fh-routepreview{font-size:13px;line-height:1.7;padding:18px;margin:20px 0 26px}
+#fh-design .fh-workbench .fh-routepreview .fh-small{font-size:12px;line-height:1.7;margin-bottom:9px}
+@media(max-width:850px){
+  #fh-design .fh-workbench .fh-body{grid-template-columns:166px minmax(0,1fr)}
+  #fh-design .fh-workbench .fh-sidebar{padding-inline:12px}
+  #fh-design .fh-workbench .fh-workspace{padding:34px 28px 24px}
+  #fh-design .fh-workbench .fh-heading{align-items:flex-start;flex-wrap:wrap;gap:20px}
+  #fh-design .fh-workbench .fh-heading h1{font-size:28px}
+  #fh-design .fh-workbench .fh-heading p{font-size:13px}
+  #fh-design .fh-workbench .fh-record{grid-template-columns:23px minmax(0,1fr);gap:12px}
+  #fh-design .fh-workbench .fh-recordtime{grid-column:2;font-size:11px;margin-top:-9px}
+}
+@media(max-width:480px){
+  #fh-design .fh-workbench .fh-body{display:block;min-height:0}
+  #fh-design .fh-workbench .fh-sidebar{padding:22px 16px 15px}
+  #fh-design .fh-workbench .fh-sidebar .fh-brand{padding-left:8px;margin-bottom:22px}
+  #fh-design .fh-workbench .fh-nav{gap:3px}
+  #fh-design .fh-workbench .fh-nav button{flex:1;justify-content:center;padding:10px 4px;gap:4px;font-size:13px;letter-spacing:0;white-space:nowrap}
+  #fh-design .fh-workbench .fh-workspace{padding:29px 21px 24px}
+  #fh-design .fh-workbench .fh-heading{margin-bottom:26px}
+  #fh-design .fh-workbench .fh-heading h1{font-size:27px;letter-spacing:-.035em}
+  #fh-design .fh-workbench .fh-source{padding:19px 16px;gap:12px}
+  #fh-design .fh-workbench .fh-sourceicon{width:32px;height:36px;background:transparent}
+  #fh-design .fh-workbench .fh-source .fh-small{font-size:12px}
+  #fh-design .fh-workbench .fh-recordname{font-size:13px}
+  #fh-design .fh-workbench .fh-recordtime{display:none}
+  #fh-design .fh-workbench .fh-overlay{padding:14px;padding-top:65px}
+  #fh-design .fh-workbench .fh-dialog{padding:23px}
+  #fh-design .fh-workbench .fh-dialog input{font-size:19px}
+}
+@media(max-width:380px){#fh-design .fh-workbench .fh-nav button svg{display:none}}
+/* Compact graphite surfaces with warm yellow icon accents. */
+#fh-design .fh-workbench{
+  --fh-bg:light-dark(#f7f7f5,#19191b);
+  --fh-side:light-dark(#eeeeeb,#111113);
+  --fh-soft:light-dark(#eaeae5,#252527);
+  --fh-text:light-dark(#242422,#ececea);
+  --fh-muted:light-dark(#73736b,#969693);
+  --fh-line:light-dark(#deded7,#303032);
+  --fh-strong:light-dark(#282827,#ececea);
+  --fh-inverse:light-dark(#fff,#1a1a1b);
+  --fh-gold:light-dark(#927216,#d8bd65);
+  --fh-gold-soft:light-dark(#b99d3620,#d8bd6512);
+  --fh-gold-line:light-dark(#b99d3640,#d8bd6533);
+  --fh-surface:light-dark(#fff,#202022);
+  --fh-surface-top:light-dark(#fff,#252527);
+  --fh-bevel:light-dark(#ffffffaa,#ffffff07);
+  --fh-overlay:light-dark(#dfdfd8de,#0e0e10d9);
+  min-height:552px;
+  border-color:var(--fh-line);
+  box-shadow:inset 0 1px 0 var(--fh-bevel);
+}
+#fh-design .fh-workbench .fh-windowbar{height:32px;background:var(--fh-side);padding-inline:16px;font-size:10px;letter-spacing:.065em;border-color:var(--fh-line)}
+#fh-design .fh-workbench .fh-body{grid-template-columns:180px minmax(0,1fr);min-height:518px}
+#fh-design .fh-workbench .fh-sidebar{padding:22px 12px 17px}
+#fh-design .fh-workbench .fh-sidebar .fh-brand{padding:0 8px 21px;margin:0 0 18px;border-bottom:1px solid var(--fh-line);font-size:20px;letter-spacing:-.6px;gap:10px}
+#fh-design .fh-workbench .fh-brandmark{width:30px;height:30px;border:1px solid var(--fh-gold-line);border-radius:8px;background:linear-gradient(145deg,var(--fh-surface-top),var(--fh-side));color:var(--fh-gold);box-shadow:inset 0 1px 0 var(--fh-bevel)}
+#fh-design .fh-workbench .fh-nav{gap:5px}
+#fh-design .fh-workbench .fh-nav button{position:relative;isolation:isolate;border:1px solid transparent;border-radius:7px;font-size:13px;line-height:1.45;letter-spacing:0;padding:9px 10px;gap:10px}
+#fh-design .fh-workbench .fh-nav button svg{color:var(--fh-gold);opacity:.78}
+#fh-design .fh-workbench .fh-nav button[aria-current="page"]{background:linear-gradient(100deg,var(--fh-surface-top) 60%,var(--fh-gold-soft));border-color:var(--fh-line);color:var(--fh-text);font-weight:500;box-shadow:inset 0 1px 0 var(--fh-bevel),0 2px 3px var(--fh-shadow)}
+#fh-design .fh-workbench .fh-nav button[aria-current="page"]::after{content:"";position:absolute;right:-1px;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--fh-gold);opacity:.65}
+#fh-design .fh-workbench .fh-nav button[aria-current="page"] svg{opacity:1}
+#fh-design .fh-workbench .fh-sidebottom{font-size:11px;padding:17px 9px 0;line-height:1.7;border-top:1px solid var(--fh-line);margin-top:auto}
+#fh-design .fh-workbench .fh-workspace{padding:25px 26px 17px}
+#fh-design .fh-workbench .fh-heading{gap:16px;margin:0 0 22px;align-items:center}
+#fh-design .fh-workbench .fh-heading h1{font-size:calc(var(--fh-type) * 1.75);font-weight:500;line-height:1.4;letter-spacing:-.03em}
+#fh-design .fh-workbench .fh-heading p{font-size:12px;line-height:1.6;margin-top:6px;letter-spacing:.01em}
+#fh-design .fh-workbench .fh-action{padding:8px 12px;font-size:12px;line-height:1.5;gap:7px;border-radius:7px;background:var(--fh-surface);box-shadow:inset 0 1px 0 var(--fh-bevel)}
+#fh-design .fh-workbench .fh-action.primary{background:linear-gradient(var(--fh-surface-top),var(--fh-surface));border-color:var(--fh-line);color:var(--fh-text);box-shadow:inset 0 1px 0 var(--fh-bevel),0 2px 5px var(--fh-shadow)}
+#fh-design .fh-workbench .fh-action svg{color:var(--fh-gold)}
+#fh-design .fh-workbench .fh-action.quiet{background:transparent;border-color:transparent;box-shadow:none;font-size:11px;padding:3px 0}
+#fh-design .fh-workbench .fh-sectiontitle{margin:18px 0 10px;min-height:23px}
+#fh-design .fh-workbench .fh-sectiontitle h2{font-size:12px;line-height:1.5;font-weight:500;color:var(--fh-muted);letter-spacing:.015em}
+#fh-design .fh-workbench .fh-sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;border:0;border-radius:0;background:transparent}
+#fh-design .fh-workbench .fh-source{min-width:0;position:relative;gap:11px;padding:15px;border:1px solid var(--fh-line);border-radius:10px;background:linear-gradient(140deg,var(--fh-surface-top),var(--fh-surface) 72%);box-shadow:inset 0 1px 0 var(--fh-bevel)}
+#fh-design .fh-workbench .fh-source+.fh-source{border-top:1px solid var(--fh-line)}
+#fh-design .fh-workbench .fh-sourceicon{width:30px;height:34px;flex-shrink:0;background:transparent;border-radius:7px;color:var(--fh-gold)}
+#fh-design .fh-workbench .fh-source strong{font-size:13px;font-weight:500;line-height:1.5;letter-spacing:.01em}
+#fh-design .fh-workbench .fh-source .fh-small{font-size:11px;line-height:1.6;margin-top:3px;letter-spacing:0}
+#fh-design .fh-workbench .fh-source .fh-trail{display:none}
+#fh-design .fh-workbench [data-records]{border:1px solid var(--fh-line);border-radius:10px;background:var(--fh-surface);box-shadow:inset 0 1px 0 var(--fh-bevel);overflow:hidden}
+#fh-design .fh-workbench .fh-record{grid-template-columns:21px minmax(0,1fr) auto;gap:12px;padding:13px 15px;align-items:center;border-color:var(--fh-line)}
+#fh-design .fh-workbench .fh-record>svg{margin-top:0;color:var(--fh-gold);opacity:.92}
+#fh-design .fh-workbench .fh-recordname{font-size:calc(var(--fh-type) - 1px);line-height:1.5;letter-spacing:-.01em;font-weight:400}
+#fh-design .fh-workbench .fh-recordpath{font-size:11px;line-height:1.55;margin-top:4px;letter-spacing:.005em}
+#fh-design .fh-workbench .fh-recordtime{font-size:11px;line-height:1.6;grid-column:auto;margin-top:0;padding:0}
+#fh-design .fh-workbench .fh-footer{margin-top:17px;padding-top:13px;border-top:1px solid var(--fh-line);font-size:11px;line-height:1.5}
+#fh-design .fh-workbench .fh-statusmessage{font-size:12px;margin-top:12px}
+#fh-design .fh-workbench .fh-altpanel{min-height:400px}
+#fh-design .fh-workbench .fh-altpanel h1{font-size:24px;line-height:1.4}
+#fh-design .fh-workbench .fh-altpanel>.fh-small{font-size:12px;line-height:1.6;margin:8px 0 22px}
+#fh-design .fh-workbench .fh-settingsrow{padding:16px 0}
+#fh-design .fh-workbench .fh-settingsrow strong,#fh-design .fh-workbench .fh-inboxempty strong{font-size:13px}
+#fh-design .fh-workbench .fh-settingsrow p,#fh-design .fh-workbench .fh-inboxempty .fh-small{font-size:11px;line-height:1.6;margin-top:4px}
+#fh-design .fh-workbench select{background:var(--fh-surface);border-radius:7px;font-size:12px;padding:7px 9px}
+#fh-design .fh-workbench .fh-inboxempty{padding:17px 0}
+#fh-design .fh-workbench .fh-inboxempty>svg{color:var(--fh-gold)}
+#fh-design .fh-workbench .fh-overlay{inset:32px 0 0}
+#fh-design .fh-workbench .fh-dialog{background:var(--fh-bg);border-color:var(--fh-line);border-radius:12px;padding:26px;width:438px;box-shadow:inset 0 1px 0 var(--fh-bevel),0 20px 70px #00000038}
+#fh-design .fh-workbench .fh-dialoghead{margin-bottom:21px}
+#fh-design .fh-workbench .fh-dialoghead h2{font-size:22px;line-height:1.4}
+#fh-design .fh-workbench .fh-filepill{font-size:12px;line-height:1.5;padding:8px 10px;background:var(--fh-surface);border:1px solid var(--fh-line);border-radius:7px;gap:8px}
+#fh-design .fh-workbench .fh-filepill>svg{color:var(--fh-gold)}
+#fh-design .fh-workbench .fh-dialog label{font-size:12px;margin:21px 0 8px}
+#fh-design .fh-workbench .fh-dialog input{font-size:19px;padding:10px 13px;background:var(--fh-side);border-radius:8px}
+#fh-design .fh-workbench .fh-dialog input:focus-visible{outline-color:var(--fh-gold)}
+#fh-design .fh-workbench .fh-routepreview{font-size:12px;padding:14px;background:var(--fh-surface);border:1px solid var(--fh-line);border-radius:8px;margin:16px 0 21px}
+#fh-design .fh-workbench .fh-routepreview .fh-small{font-size:11px;margin-bottom:6px}
+#fh-design .fh-workbench[data-density="compact"] .fh-source{padding:14px 12px}
+#fh-design .fh-workbench[data-density="compact"] .fh-record{padding:12px 15px}
+#fh-design .fh-workbench[data-density="compact"] .fh-settingsrow{padding:15px 0}
+#fh-design .fh-workbench[data-density="relaxed"] .fh-source{padding:18px 15px}
+#fh-design .fh-workbench[data-density="relaxed"] .fh-record{padding:17px 15px}
+#fh-design .fh-workbench .fh-windowtools svg{color:var(--fh-muted)}
+@media(max-width:800px){
+  #fh-design .fh-workbench .fh-body{grid-template-columns:156px minmax(0,1fr)}
+  #fh-design .fh-workbench .fh-workspace{padding:22px 20px 16px}
+  #fh-design .fh-workbench .fh-heading{align-items:flex-start;flex-wrap:wrap;gap:14px}
+  #fh-design .fh-workbench .fh-heading h1{font-size:23px}
+  #fh-design .fh-workbench .fh-sources{grid-template-columns:1fr}
+  #fh-design .fh-workbench .fh-record{grid-template-columns:19px minmax(0,1fr);gap:10px}
+  #fh-design .fh-workbench .fh-recordtime{display:none}
+}
+@media(max-width:480px){
+  #fh-design .fh-workbench .fh-body{display:block;min-height:0}
+  #fh-design .fh-workbench .fh-sidebar{padding:17px 13px 11px}
+  #fh-design .fh-workbench .fh-sidebar .fh-brand{margin-bottom:12px;padding:0 7px 15px;font-size:20px}
+  #fh-design .fh-workbench .fh-nav{gap:3px}
+  #fh-design .fh-workbench .fh-nav button{flex:1;justify-content:center;white-space:nowrap;gap:5px;padding:8px 4px;font-size:12px}
+  #fh-design .fh-workbench .fh-nav button[aria-current="page"]::after{display:none}
+  #fh-design .fh-workbench .fh-nav button svg{display:block;width:14px;height:14px}
+  #fh-design .fh-workbench .fh-workspace{padding:22px 17px 16px}
+  #fh-design .fh-workbench .fh-heading{margin-bottom:17px;gap:14px}
+  #fh-design .fh-workbench .fh-heading h1{font-size:24px;letter-spacing:-.04em}
+  #fh-design .fh-workbench .fh-heading p{font-size:12px;line-height:1.6}
+  #fh-design .fh-workbench .fh-source .fh-small{font-size:11px}
+  #fh-design .fh-workbench .fh-sourceicon{width:27px}
+  #fh-design .fh-workbench .fh-recordname{font-size:12px}
+  #fh-design .fh-workbench .fh-dialog{padding:21px}
+  #fh-design .fh-workbench .fh-dialog input{font-size:18px}
+}
+</style>
+<div id="fh-design">
+<div class="fh-preview" aria-label="FileHub 界面方向" data-previous-label="上一个方案" data-next-label="下一个方案">
+<section data-variant="留白工作台" aria-label="留白工作台">
+<div class="fh-app fh-workbench" data-app="workbench" aria-label="FileHub 留白工作台">
+  <div class="fh-windowbar"><span>FILEHUB · 界面预览</span><span class="fh-windowtools" aria-hidden="true"><i data-lucide="minus"></i><i data-lucide="square"></i><i data-lucide="x"></i></span></div>
+  <div class="fh-body">
+    <aside class="fh-sidebar">
+      <div class="fh-brand"><span class="fh-brandmark"><i data-lucide="folder-closed" aria-hidden="true"></i></span>FileHub</div>
+      <nav class="fh-nav" aria-label="工作台导航">
+        <button type="button" class="cursor-interaction" data-view="home" aria-current="page"><i data-lucide="layout-grid" aria-hidden="true"></i>整理</button>
+        <button type="button" class="cursor-interaction" data-view="inbox"><i data-lucide="inbox" aria-hidden="true"></i>收件箱</button>
+        <button type="button" class="cursor-interaction" data-view="history"><i data-lucide="history" aria-hidden="true"></i>记录</button>
+        <button type="button" class="cursor-interaction" data-view="settings"><i data-lucide="settings-2" aria-hidden="true"></i>设置</button>
+      </nav>
+      <div class="fh-sidebottom"><div><span class="fh-dot"></span><span data-running>后台运行中</span></div><p style="margin-top:7px">本机 · Windows</p></div>
+    </aside>
+    <main class="fh-workspace">
+      <div data-home>
+        <div class="fh-heading"><div><h1>文件，各归其位。</h1><p>留下需要的，其余交给 FileHub。</p></div><button type="button" class="fh-action primary cursor-interaction" data-open-route><i data-lucide="arrow-up-right" aria-hidden="true"></i>送进项目</button></div>
+        <div class="fh-sectiontitle"><h2>自动整理</h2><button type="button" class="fh-action quiet cursor-interaction" data-pause>暂停整理</button></div>
+        <div class="fh-sources">
+          <div class="fh-source"><span class="fh-sourceicon"><i data-lucide="monitor" aria-hidden="true"></i></span><div><strong>桌面</strong><div class="fh-small">闲置 3 天后，送入收件箱</div></div><span class="fh-trail" data-source-status>已开启</span></div>
+          <div class="fh-source"><span class="fh-sourceicon"><i data-lucide="download" aria-hidden="true"></i></span><div><strong>下载</strong><div class="fh-small">闲置 3 天后，送入收件箱</div></div><span class="fh-trail" data-source-status>已开启</span></div>
+        </div>
+        <div class="fh-sectiontitle"><h2>最近整理</h2><button type="button" class="fh-action quiet cursor-interaction" data-goto="history">全部记录<i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+        <div data-records>
+          <div class="fh-record"><i data-lucide="film" aria-hidden="true"></i><div><div class="fh-recordname">02_08_22_01_20260930PM_1080p.mp4</div><div class="fh-recordpath">临渊行 / 制作 / E02 / S08</div></div><span class="fh-recordtime">刚刚</span></div>
+          <div class="fh-record"><i data-lucide="image" aria-hidden="true"></i><div><div class="fh-recordname">苏云_法相_260930-1.png</div><div class="fh-recordpath">临渊行 / 设定 / 角色 / 苏云</div></div><span class="fh-recordtime">8 分钟前</span></div>
+          <div class="fh-record"><i data-lucide="folder" aria-hidden="true"></i><div><div class="fh-recordname">灵感参考</div><div class="fh-recordpath">收件箱 / 其他 / 260930</div></div><span class="fh-recordtime">20 分钟前</span></div>
+        </div>
+        <div class="fh-footer"><span><span class="fh-dot"></span><span data-running>自动整理已开启</span></span><span>也可以在文件上右键 → 送进项目</span></div>
+      </div>
+      <div class="fh-altpanel" data-alt hidden></div>
+      <div class="fh-statusmessage" data-message role="status" aria-live="polite"></div>
+    </main>
+  </div>
+</div>
+</section>
+</div>
+</div>
+<script>
+(() => {
+  const root = document.getElementById('fh-design');
+  const icons = () => { if (globalThis.lucide) lucide.createIcons({attrs:{width:16,height:16}}); };
+  const escapeText = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sampleRoutes = {
+    'LYX020822': {path:'临渊行 / 制作 / E02 / S08', detail:'临渊行 / 第 02 集 / 第 08 场 / 镜头 22', name:'02_08_22_02_20260930PM_1080p.mp4'},
+    'LYX苏云法相': {path:'临渊行 / 设定 / 角色 / 苏云', detail:'临渊行 / 角色「苏云」/ 备注「法相」', name:'苏云_法相_260930-2_1080p.mp4'},
+    'LYXPV决战': {path:'临渊行 / 制作 / PV', detail:'临渊行 / PV / 备注「决战」', name:'PV_决战_260930-1_1080p.mp4'}
+  };
+  const findRoute = value => sampleRoutes[value.trim()] || null;
+  root.querySelectorAll('[data-app]').forEach(app => {
+    const home = app.querySelector('[data-home]'), alt = app.querySelector('[data-alt]'), message = app.querySelector('[data-message]');
+    const theme = {appearance:'dark', radius:10, compact:true, typeSize:14};
+    let paused = false, lastRoute = null, currentView = 'home', priorFocus = null;
+    const say = text => { message.textContent = text; };
+    function applyDesign() { app.style.colorScheme = theme.appearance === 'system' ? '' : theme.appearance; app.style.setProperty('--fh-radius', theme.radius+'px'); app.style.setProperty('--fh-type', theme.typeSize+'px'); app.dataset.density = theme.compact ? 'compact' : 'relaxed'; }
+    function pause() {
+      paused = !paused;
+      app.querySelectorAll('[data-running]').forEach(el => el.textContent = paused ? '自动整理已暂停' : '自动整理运行中');
+      app.querySelectorAll('.fh-dot').forEach(el => el.classList.toggle('paused',paused));
+      app.querySelectorAll('[data-pause]').forEach(el => el.textContent = paused ? '继续整理' : '暂停整理');
+      app.querySelectorAll('[data-source-status]').forEach(el => el.textContent = paused ? '已暂停' : '已开启');
+      say(paused ? '已暂停自动整理，仍可手动送进项目。' : '已恢复自动整理。');
+    }
+    function renderHistory() {
+      alt.innerHTML = '<h1>整理记录</h1><p class="fh-small">每次归档都有迹可循。</p>' + (lastRoute ? '<div class="fh-record"><i data-lucide="film" aria-hidden="true"></i><div><div class="fh-recordname">'+escapeText(lastRoute.name)+'</div><div class="fh-recordpath">'+escapeText(lastRoute.path)+'</div></div><button type="button" class="fh-action cursor-interaction" data-undo>撤销</button></div>' : '') + '<div class="fh-sectiontitle"><h2>今天 · 示例记录</h2></div><div class="fh-record"><i data-lucide="image" aria-hidden="true"></i><div><div class="fh-recordname">苏云_法相_260930-1.png</div><div class="fh-recordpath">桌面 → 临渊行 / 设定 / 角色 / 苏云</div></div><span class="fh-recordtime">14:32</span></div><div class="fh-record"><i data-lucide="folder" aria-hidden="true"></i><div><div class="fh-recordname">灵感参考</div><div class="fh-recordpath">桌面 → 收件箱 / 其他 / 260930</div></div><span class="fh-recordtime">14:20</span></div>';
+      const undo = alt.querySelector('[data-undo]');
+      if (undo) undo.addEventListener('click', () => { lastRoute=null; app.querySelectorAll('[data-demo-record]').forEach(el=>el.remove()); renderHistory(); say('预览：已撤销归档，文件回到原位置。'); icons(); });
+    }
+    function navigate(view) {
+      currentView=view; say(''); home.hidden=view!=='home'; alt.hidden=view==='home';
+      app.querySelectorAll('[data-view]').forEach(el => { if(el.dataset.view===view) el.setAttribute('aria-current','page'); else el.removeAttribute('aria-current'); });
+      if(view==='history') renderHistory();
+      if(view==='inbox') alt.innerHTML='<h1>收件箱</h1><p class="fh-small">暂时没有归属的文件，在这里留一会儿。</p><div class="fh-inboxempty"><i data-lucide="image" aria-hidden="true"></i><div><strong>图片</strong><p class="fh-small">等待整理</p></div><span>0 项</span></div><div class="fh-inboxempty"><i data-lucide="film" aria-hidden="true"></i><div><strong>视频</strong><p class="fh-small">等待整理</p></div><span>0 项</span></div><div class="fh-inboxempty"><i data-lucide="folder" aria-hidden="true"></i><div><strong>其他</strong><p class="fh-small">灵感参考 · 示例文件夹</p></div><span>1 项</span></div><div class="fh-footer"><span>到期清理由 Mac 负责</span><span>Windows 端已关闭</span></div>';
+      if(view==='settings') {
+        alt.innerHTML='<h1>设置</h1><p class="fh-small">按你的习惯，安静地运行。</p><div class="fh-settingsrow"><div><strong>同步空间</strong><p>首次使用时选择百度网盘同步目录</p></div><span class="fh-small">示例同步空间</span></div><div class="fh-settingsrow"><div><strong>自动收纳</strong><p>桌面与下载中的闲置文件</p></div><select aria-label="自动收纳时间"><option>3 天后</option>5 天后</option><option>7 天后</option></select></div><div class="fh-settingsrow"><div><strong>登录后自动运行</strong><p>在后台继续整理</p></div><input type="checkbox" checked aria-label="登录后自动运行"></div><div class="fh-settingsrow"><div><strong>外观</strong><p>浅色、深色，或跟随系统</p></div><select data-appearance aria-label="外观"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></div><div class="fh-settingsrow"><div><strong>共享收件箱清理</strong><p>由 Mac 统一处理，避免两边重复清理</p></div><span class="fh-small">已关闭</span></div>';
+        const appearance=alt.querySelector('[data-appearance]'); appearance.value=theme.appearance;
+        appearance.addEventListener('change',()=>{theme.appearance=appearance.value; applyDesign();});
+      }
+      icons();
+    }
+    function complete(route) {
+      lastRoute=route;
+      app.querySelectorAll('[data-demo-record]').forEach(el=>el.remove());
+      const record=document.createElement('div'); record.className='fh-record'; record.dataset.demoRecord='true';
+      record.innerHTML='<i data-lucide="film" aria-hidden="true"></i><div><div class="fh-recordname">'+escapeText(route.name)+'</div><div class="fh-recordpath">'+escapeText(route.path)+'</div></div><span class="fh-recordtime">预览 · 刚刚</span>';
+      app.querySelector('[data-records]').prepend(record); say('预览：已送进项目。可在「记录」中撤销。'); icons();
+    }
+    function closeDialog(){const overlay=app.querySelector('.fh-overlay'); if(overlay) overlay.remove(); if(priorFocus?.isConnected) priorFocus.focus();}
+    function openDialog() {
+      priorFocus=document.activeElement;
+      const overlay=document.createElement('div'); overlay.className='fh-overlay';
+      overlay.innerHTML='<section class="fh-dialog" role="dialog" aria-modal="true" aria-label="送进项目预览"><form><div class="fh-dialoghead"><h2>送进项目</h2><button type="button" class="cursor-interaction" data-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button></div><div class="fh-filepill"><i data-lucide="film" aria-hidden="true"></i>镜头素材.mp4<span class="fh-small">· 示例文件</span></div><label for="fh-dialog-code">项目代码与目的地</label><input id="fh-dialog-code" value="LYX020822" spellcheck="false" autocomplete="off" aria-describedby="fh-dialog-result"><div class="fh-routepreview" id="fh-dialog-result" aria-live="polite"></div><div class="fh-dialogfooter"><button type="button" class="fh-action cursor-interaction" data-close>取消</button><button type="submit" class="fh-action primary cursor-interaction" data-submit>送进项目<i data-lucide="arrow-up-right" aria-hidden="true"></i></button></div></form></section>';
+      app.append(overlay); const input=overlay.querySelector('input'), result=overlay.querySelector('.fh-routepreview'), submit=overlay.querySelector('[data-submit]');
+      function update(){const route=findRoute(input.value); submit.disabled=!route; result.classList.toggle('fh-invalid',!route); result.innerHTML=route ? '<div class="fh-small">'+escapeText(route.path)+'</div>'+escapeText(route.name) : '此预览支持 LYX020822、LYX苏云法相、LYXPV决战。';}
+      input.addEventListener('input',update); overlay.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',closeDialog));
+      submit.type='button';
+      const routeNow=()=>{const route=findRoute(input.value);if(route){closeDialog();complete(route);}};
+      submit.addEventListener('click',routeNow);
+      input.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();routeNow();}});
+      overlay.querySelector('form').addEventListener('submit',event=>event.preventDefault());
+      overlay.addEventListener('keydown',event=>{if(event.key==='Escape'){closeDialog();return;}if(event.key==='Tab'){const items=[...overlay.querySelectorAll('button:not(:disabled),input')];const first=items[0],last=items[items.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}});
+      icons();update();input.focus();input.select();
+    }
+    app.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.view)));
+    app.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.goto)));
+    app.querySelectorAll('[data-pause]').forEach(el=>el.addEventListener('click',pause));
+    app.querySelectorAll('[data-open-route]').forEach(el=>el.addEventListener('click',openDialog));
+    const form=app.querySelector('[data-commandform]');
+    if(form){const input=form.querySelector('input'),hint=form.querySelector('[data-codehint]');function update(){const route=findRoute(input.value);hint.textContent=route?route.detail:'此预览支持下方三个示例代码。';hint.classList.toggle('fh-invalid',!route);form.querySelector('button').disabled=!route;}input.addEventListener('input',update);app.querySelectorAll('[data-example]').forEach(el=>el.addEventListener('click',()=>{input.value=el.dataset.example;update();input.focus();}));const routeNow=()=>{const route=findRoute(input.value);if(route)complete(route);};form.querySelector('button').addEventListener('click',routeNow);input.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();routeNow();}});form.addEventListener('submit',event=>event.preventDefault());}
+    applyDesign();
+    if(globalThis.Tweak){const tweak=new Tweak({container:app,onChange:applyDesign});tweak.addSelect(theme,'appearance',{label:'外观',options:[{label:'跟随系统',value:'system'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});tweak.addSlider(theme,'typeSize',{label:'正文字号',min:14,max:16,step:1,unit:'px'});tweak.addSlider(theme,'radius',{label:'圆角',min:10,max:24,step:2,unit:'px'});tweak.addToggle(theme,'compact',{label:'紧凑间距'});}
+  });
+})();
+</script>

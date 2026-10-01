@@ -27,3 +27,4 @@
 ## Progress
 - Source recovered at original path after user restored it; copied/extracted safely under reference. Original scripts not executed.
 - Plan self-review complete; ready for Task 1.
+- Task 1: dispatched GPT-6.1 Sol `/root/astra_director/sol_safety`, brief `docs/briefs/task-1.md`, base bc06c01; initial baseline has no product/tests.
