@@ -234,9 +234,11 @@ def undo_tree(engine,item):
         for name,current in restored_fp.entries:
             if inverse.get(str(item.source/name))!=current:raise ValueError('恢复后条目被外部替换，停止指纹关联')
         engine.journal.transition(item.operation_id,'undo_copied','恢复树已捕获；准备记录逆向身份关联',undo_fp=restored_fp)
+        with engine.journal.connection() as db:
+            ordinals={r['id']:r['ordinal'] for r in db.execute('SELECT id,ordinal FROM operations WHERE batch_id=?',(item.batch_id,))}
         for batch in engine.journal.history():
-            if batch.batch_id==item.batch_id:continue
             for prior in batch.items:
+                if batch.batch_id==item.batch_id and ordinals[prior.operation_id]>=ordinals[item.operation_id]:continue
                 if prior.state!='committed' or not prior.target or not prior.target.is_relative_to(item.source):continue
                 expected=prior.target_fingerprint
                 if expected is None:continue

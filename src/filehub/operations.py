@@ -241,31 +241,47 @@ class OperationEngine:
     def undo(self, batch_id: str):
         with self.locked(),ExitStack() as pinned:
             blocked=set()
-            for root in self.journal.items(batch_id):
+            items=self.journal.items(batch_id)
+            roots={i.operation_id:i for i in items if isinstance(i.expected_source,TreeFingerprint)}
+            checked_roots=set();group_pins={}
+
+            def prepare_group(root_id):
+                # Explicit ownership, not ordinal adjacency: execute() allocates
+                # unrelated parents before appending any of their file children.
+                if root_id in checked_roots:return
+                checked_roots.add(root_id)
+                root=next(i for i in self.journal.items(batch_id) if i.operation_id==root_id)
                 with self.journal.connection() as db:
                     already_blocked=db.execute('SELECT 1 FROM tree_undo_blocks WHERE operation=?',(root.operation_id,)).fetchone()
                     owned_inverse=db.execute('SELECT 1 FROM tree_inverse_roots WHERE operation=?',(root.operation_id,)).fetchone()
                 if already_blocked:
-                    blocked.add(root.operation_id);blocked.update(c.operation_id for c in self.tree_child_items(root));continue
+                    blocked.add(root.operation_id);blocked.update(c.operation_id for c in self.tree_child_items(root));return
                 if isinstance(root.expected_source,TreeFingerprint) and root.kind=='recycle' and root.state in {'recycled','manual_restore','recycle_unknown'}:
                     blocked.update(c.operation_id for c in self.tree_child_items(root))
-                    continue
+                    return
                 if isinstance(root.expected_source,TreeFingerprint) and (root.state=='committed' or owned_inverse and root.state=='conflict' or any(c.state=='committed' for c in self.tree_child_items(root))):
+                    group_pins[root_id]=pinned.enter_context(ExitStack())
                     try:
                         if root.state!='committed' and not (owned_inverse and root.kind=='move' and root.state=='conflict'):
                             raise ValueError('目录操作未完整完成，原目录逆向归属无法确认')
-                        if root.kind=='move':prepare_move_inverse(self,root,pinned)
+                        if root.kind=='move':prepare_move_inverse(self,root,group_pins[root_id])
                         elif root.kind=='copy':
                             if not self._matches(root.source,root.expected_source):raise ValueError('原目录树已变化；无法确认保留副本边界')
                             if not self._matches(root.target,root.target_fingerprint):raise ValueError('目标目录树已变化')
                         else:raise ValueError('目录回收仅支持人工恢复')
                     except (OSError,ValueError) as exc:
+                        group_pins[root_id].close()
                         blocked.add(root.operation_id)
                         blocked.update(c.operation_id for c in self.tree_child_items(root))
                         with self.journal.connection() as db:db.execute('INSERT OR REPLACE INTO tree_undo_blocks VALUES(?,?)',(root.operation_id,str(exc)))
                         location=root.staging or root.target
                         self.journal.transition(root.operation_id,'conflict',f'{exc}；拒绝全部子项撤销；保留位置：{location or root.source}，请人工核对恢复')
-            for item in reversed(self.journal.items(batch_id)):
+            for item in reversed(items):
+                root_id=item.parent_operation_id or item.operation_id
+                if root_id in roots:
+                    # Later inverse actions must restore this group's subject
+                    # before its whole-tree check, but no child may mutate first.
+                    prepare_group(root_id)
                 # A later inverse may durably rebind this earlier target to its
                 # restored Windows identity. Read that verified lineage now.
                 item = next(i for i in self.journal.items(batch_id) if i.operation_id == item.operation_id)
@@ -348,6 +364,11 @@ class OperationEngine:
                             self.journal.transition(item.operation_id, 'conflict', f'撤销停止：{exc}；恢复停止：{settle_exc}；保留备份和交换文件')
                     else:
                         self.journal.transition(item.operation_id, "conflict", f"撤销停止：{exc}；文件保持现状，请人工核对")
+                finally:
+                    if item.operation_id in group_pins:
+                        # The next earlier group may need to prune this restored
+                        # subject; retain its pins only through its own parent.
+                        group_pins[item.operation_id].close()
             return self.journal.batch(batch_id)
 
     def _matches(self, path, expected):

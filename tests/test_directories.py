@@ -282,3 +282,97 @@ def test_conflicted_tree_undo_blocks_children_when_original_root_reoccupied(tmp_
     assert str(destination) in after.items[0].message
     again=engine.undo(result.batch_id)
     assert all(c.state=='committed' for c in again.items if c.parent_operation_id)
+
+
+@pytest.mark.parametrize('kind',['move','copy'])
+@pytest.mark.parametrize('failed_tail',[False,True])
+@pytest.mark.parametrize('empty_tree',[False,True])
+def test_same_batch_directory_chain_restores_prior_subject_before_undo(tmp_path,kind,failed_tail,empty_tree):
+    s=tmp_path/'源 目录'
+    if empty_tree:(s/'空').mkdir(parents=True)
+    else:s=tree(tmp_path)
+    t=tmp_path/'intermediate';renamed=tmp_path/'renamed'
+    engine=OperationEngine(tmp_path/'state')
+    first=engine.execute([Operation(kind,s,t,Fingerprint.capture(s))],'chain');assert first.ok
+    second=engine.execute([Operation('move',t,renamed,Fingerprint.capture(t))],'chain',batch_id=first.batch_id)
+    assert second.ok and not t.exists()
+    if failed_tail:
+        occupied=tmp_path/'occupied';occupied.mkdir();(occupied/'external').write_bytes(b'keep')
+        failed=engine.execute([Operation('move',renamed,occupied,Fingerprint.capture(renamed))],'chain',batch_id=first.batch_id)
+        assert not failed.ok and failed.items[-1].state=='failed'
+    result=OperationEngine(tmp_path/'state').undo(first.batch_id)
+    committed=[i for i in result.items if i.state!='failed']
+    assert committed and all(i.state=='undone' for i in committed)
+    assert (s/'空').is_dir()
+    if not empty_tree:assert (s/'nested'/'文件.txt').read_bytes()==b'original'
+    assert not t.exists() and not renamed.exists()
+    if failed_tail:assert (occupied/'external').read_bytes()==b'keep'
+    else:assert result.ok
+
+
+@pytest.mark.parametrize('change',['added','changed','identical_replacement'])
+def test_directory_chain_external_change_blocks_whole_later_group(tmp_path,change):
+    s=tree(tmp_path);(s/'second.txt').write_bytes(b'second')
+    t=tmp_path/'intermediate';renamed=tmp_path/'renamed'
+    engine=OperationEngine(tmp_path/'state')
+    first=engine.execute([Operation('move',s,t,Fingerprint.capture(s))],'chain');assert first.ok
+    second=engine.execute([Operation('move',t,renamed,Fingerprint.capture(t))],'chain',batch_id=first.batch_id)
+    assert second.ok
+    child=renamed/'nested'/'文件.txt'
+    if change=='added':(renamed/'external.txt').write_bytes(b'external')
+    elif change=='changed':child.write_bytes(b'changed')
+    else:
+        from filehub.platform.metadata import set_times, winpath
+        from filehub.platform.windows import kernel
+        old=Fingerprint.capture(child);held=child.with_name('held-original');child.rename(held)
+        child.write_bytes(b'original')
+        handle=kernel.CreateFileW(winpath(child),0x100,3,None,3,0x80,None)
+        try:set_times(handle,old.creation_ns,old.mtime_ns)
+        finally:kernel.CloseHandle(handle)
+        held.unlink()
+        assert Fingerprint.capture(child).file_id!=old.file_id
+    before=Fingerprint.capture(renamed)
+    after=engine.undo(first.batch_id)
+    assert not after.ok and not s.exists() and not t.exists()
+    assert Fingerprint.capture(renamed)==before
+    assert all(i.state=='committed' for i in after.items if i.parent_operation_id)
+    again=engine.undo(first.batch_id)
+    assert not again.ok and Fingerprint.capture(renamed)==before
+
+
+def test_directory_batch_with_noncontiguous_parent_children_undo(tmp_path):
+    s=tree(tmp_path/'one');other=tree(tmp_path/'two')
+    t=tmp_path/'first-target';u=tmp_path/'second-target'
+    engine=OperationEngine(tmp_path/'state')
+    result=engine.execute([Operation('move',s,t,Fingerprint.capture(s)),
+                           Operation('move',other,u,Fingerprint.capture(other))],'two roots')
+    assert result.ok
+    assert all(i.parent_operation_id is None for i in result.items[:2])
+    assert all(i.parent_operation_id is not None for i in result.items[2:])
+    after=OperationEngine(tmp_path/'state').undo(result.batch_id)
+    assert after.ok and not t.exists() and not u.exists()
+    assert (s/'nested'/'文件.txt').read_bytes()==b'original'
+    assert (other/'nested'/'文件.txt').read_bytes()==b'original'
+
+
+def test_same_batch_directory_inverse_cannot_rebind_external_predecessor(tmp_path):
+    from filehub.platform.metadata import set_times, winpath
+    from filehub.platform.windows import kernel
+    s=tree(tmp_path);t=tmp_path/'intermediate';renamed=tmp_path/'renamed'
+    engine=OperationEngine(tmp_path/'state')
+    first=engine.execute([Operation('move',s,t,Fingerprint.capture(s))],'chain');assert first.ok
+    p=t/'nested'/'文件.txt';old=Fingerprint.capture(p);held=tmp_path/'held-original'
+    p.rename(held);p.write_bytes(b'original')
+    handle=kernel.CreateFileW(winpath(p),0x100,3,None,3,0x80,None)
+    try:set_times(handle,old.creation_ns,old.mtime_ns)
+    finally:kernel.CloseHandle(handle)
+    held.unlink()
+    assert Fingerprint.capture(p).file_id!=old.file_id
+    second=engine.execute([Operation('move',t,renamed,Fingerprint.capture(t))],'chain',batch_id=first.batch_id)
+    assert second.ok
+    after=engine.undo(first.batch_id)
+    assert not after.ok and after.items[0].state=='conflict' and not s.exists()
+    assert p.read_bytes()==b'original' and not renamed.exists()
+    assert all(c.state=='committed' for c in after.items if c.parent_operation_id==first.items[0].operation_id)
+    with engine.journal.connection() as db:
+        assert db.execute('SELECT 1 FROM tree_lineage WHERE previous_operation=?',(first.items[0].operation_id,)).fetchone() is None
