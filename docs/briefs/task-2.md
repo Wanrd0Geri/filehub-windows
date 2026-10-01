@@ -11,7 +11,7 @@ Requirements beyond examples:
 - Only ep+scene videos use team naming; PV video may have no shot. Two-shot video produces 2 targets, >=3 one target + warning; non-video multi-shot source behavior remains first only. Use width thresholds exactly.
 - Files with `keep` retain original name except safe_name sanitation and collision suffix, dated uses **source date** (sweep later uses arrival/current date). Directories route unchanged base name, and source dirs bypass dated child just like Mac; describe explicitly.
 - Sanitation maps ASCII illegal chars to fullwidth, normalizes only math alphanumeric block, removes original source excluded Unicode classes and supplementary symbols. No arbitrary total 150 char cut. Windows trailing dot/space and device names are explicit validation errors rather than silent changes. Ensure traversal/tag separators never create escapes; sanitized asset component remains within intended project.
-- Video probe absent/error: caller signals error, never omit required resolution silently. build_targets may receive `video_width=None` for nonvideos only.
+- Video probe absent/error: caller signals error for generated-name video routes, never omit required resolution silently. `keep`/`dated`/folder routes preserve names without probing, matching the Mac branch; those routes may receive `video_width=None`, as may nonvideos.
 - Source file suffix lowercased except `keep`; existing-name note matching must not accidentally duplicate C shot.
 - Main output should describe actual public API signatures, warnings and error types for service phase.
 
