@@ -16,3 +16,5 @@ Concrete semantics supplement:
 
 Workdir new filehub-rules worktree; shared runtime read-only. No stage/commit/spawn/pip/live operations. Focused tests only, no full suite. Report APIs and exact tests/outputs to docs/reports/rules-020/task2-sol.md, then freeze for Astra review.
 
+
+Replacement action supplement: image_convert includes mode=keep|replace (keep default). Replace target is original current subject parent/name with requested extension, no destination-folder field needed. Same-extension target may equal THIS bound source only; do not relax arbitrary collisions or other selected-source overlap. Plans explicitly identify generated content replacing original, require trusted internal recoverable backup at execution, and show resulting path. Do not accept backup path from imported action. Actual publication remains Task3 responsibility. Keep-mode target must differ from source; normal no-overwrite rules apply.
