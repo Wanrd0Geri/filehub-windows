@@ -1,0 +1,26 @@
+{
+  "source_commit": "681bc6965617f7791bf22635b7045f36c15689c5",
+  "artifacts": [
+    {
+      "file": "dist/FileHub/FileHub.exe",
+      "bytes": 2566737,
+      "sha256": "1bd22a1ee6574dbd5ed63c7c243c378dd66414c6e9c1ef4ce3bbd98203a272af"
+    },
+    {
+      "file": "dist/installer/FileHub-0.2.0-windows-x64-setup.exe",
+      "bytes": 143135555,
+      "sha256": "a36ac5a9f21e319d3a35c6aaf31a8a16dcad44254e997688a738659943053735"
+    },
+    {
+      "file": "dist/installer/FileHub-0.2.1-windows-x64-setup.exe",
+      "bytes": 143130835,
+      "sha256": "9268a5c324d311476bca00538321166d42b18f45bfb167442c45e70b7b544f07"
+    },
+    {
+      "file": "dist/installer/FileHub-0.2.2-windows-x64-setup.exe",
+      "bytes": 143140953,
+      "sha256": "705bf74f3567c73fe152e907d0726a438a1784b0f1ffac58c83886c74b7fc33f"
+    }
+  ],
+  "historical_installers_preserved": true
+}

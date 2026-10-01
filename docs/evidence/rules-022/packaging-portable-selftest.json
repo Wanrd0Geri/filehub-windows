@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "ok": true,
+  "checks": {
+    "default_unconfigured_paused": true,
+    "valid_png": true,
+    "png_archive": true,
+    "png_undo": true,
+    "bundled_probe_width_64": true,
+    "paused_no_source_mutation": true,
+    "video_1920_distinct_content": true,
+    "video_1920_archive_naming": true,
+    "video_1920_distinct_sequence": true,
+    "video_1920_undo": true,
+    "image_jpeg_png_webp_roundtrip": true,
+    "image_keep_original_and_undo": true,
+    "image_tiny42_webp_native_decode": true,
+    "image_transparency_png_webp": true,
+    "image_jpeg_backgrounds": true,
+    "image_cross_extension_replace_backup_undo": true,
+    "image_same_path_replace_backup_undo": true,
+    "image_collision_max_number_replace_backup_undo": true,
+    "image_collision_preview_late_occupancy_rejected": true,
+    "generic_rule_no_sync_before_legacy_gate": true,
+    "ordered_copy_convert_move_history_undo": true,
+    "imported_rule_disabled_persisted": true,
+    "template_route_persisted_undo": true
+  },
+  "fixture_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944",
+  "state_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\demo\\60159633fdf94b4ebf0fd3f259a16012\\state",
+  "probe": {
+    "path": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\ffprobe\\ffprobe.exe",
+    "fixture": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\selftest\\tiny.mp4",
+    "width": 64
+  },
+  "error": "",
+  "videos": [
+    {
+      "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\demo\\60159633fdf94b4ebf0fd3f259a16012\\示例下载\\真实1920-yellow.mp4",
+      "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\demo\\60159633fdf94b4ebf0fd3f259a16012\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_01_20261001AM_1080p.mp4",
+      "target_name": "02_08_22_01_20261001AM_1080p.mp4",
+      "expected_name": "02_08_22_01_20261001AM_1080p.mp4",
+      "sequence": "01",
+      "width": 1920,
+      "batch_id": "758191cf33a147598fe80e1a56d985bb"
+    },
+    {
+      "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\demo\\60159633fdf94b4ebf0fd3f259a16012\\示例下载\\真实1920-blue.mp4",
+      "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\demo\\60159633fdf94b4ebf0fd3f259a16012\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_02_20261001AM_1080p.mp4",
+      "target_name": "02_08_22_02_20261001AM_1080p.mp4",
+      "expected_name": "02_08_22_02_20261001AM_1080p.mp4",
+      "sequence": "02",
+      "width": 1920,
+      "batch_id": "d5df014307124278938b8e29f1ca7ae2"
+    }
+  ],
+  "release020": {
+    "runtime_frozen": true,
+    "images": [
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-0\\roundtrip.jpg",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 12,
+        "height": 8,
+        "bytes": 674,
+        "sha256": "8d746aa2b5d2f83132abf7b38bcb2c190ef3ffaa368375027483a360cd06e0a4",
+        "batch_id": "b0816704618149e792ae6f8f3ec41be4"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-0\\roundtrip.jpg",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-1\\roundtrip.png",
+        "mode": "keep",
+        "input_format": "jpeg",
+        "output_format": "png",
+        "width": 12,
+        "height": 8,
+        "bytes": 247,
+        "sha256": "3f948bc486700d2287db1557cbf326fc88db306e403ef1a73414621d16f107d8",
+        "batch_id": "4968eddff46e43d7b3cc8b0dc80a2f64"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-1\\roundtrip.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-2\\roundtrip.webp",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "webp",
+        "width": 12,
+        "height": 8,
+        "bytes": 202,
+        "sha256": "c1ad479c187214fe7138574d3b58b7e2498894588dbac32289e3d45234df2808",
+        "batch_id": "71df4efc25084bafa0217759b248dee7"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-2\\roundtrip.webp",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\roundtrip-3\\roundtrip.jpg",
+        "mode": "keep",
+        "input_format": "webp",
+        "output_format": "jpeg",
+        "width": 12,
+        "height": 8,
+        "bytes": 670,
+        "sha256": "1af3a0c6e3e0cc37a372f315cba4d2a3e982e1683a3cb41f1ca0baca2923f912",
+        "batch_id": "1f37c4baa5294396a2d9420f56be515d"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha-png\\alpha.png",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "png",
+        "width": 1,
+        "height": 1,
+        "bytes": 89,
+        "sha256": "def7eb6639479c49bc6cff39f130cc8344e8c661f8362340a65fdf119b79ade9",
+        "batch_id": "cbc7d19b682643ef89e74b4730e1eae2"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha-webp\\alpha.webp",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "webp",
+        "width": 1,
+        "height": 1,
+        "bytes": 42,
+        "sha256": "4fddc7a2763d4231d53f0572cdf978df66a0b4ea420aec4ebad0cddd633fe513",
+        "batch_id": "d2dd9cd5a96a4b49878ce79babcd56d1"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\background-FFFFFF\\alpha.jpg",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 1,
+        "height": 1,
+        "bytes": 629,
+        "sha256": "fa2061a2f38bd0ab9efa1c5a982f798aba75ddf3578578e4cda76d7a74a4d15d",
+        "batch_id": "48847e516b884017a871f388428d56b2"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\background-000000\\alpha.jpg",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 1,
+        "height": 1,
+        "bytes": 630,
+        "sha256": "57234c12c8e630b3e13569e64a7102a8db6b817fd682be7f13eacd6512b4d814",
+        "batch_id": "c6576535170a4becb00aeb21b9ea516c"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\background-2468AC\\alpha.jpg",
+        "mode": "keep",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 1,
+        "height": 1,
+        "bytes": 634,
+        "sha256": "e8ecae802eee7084c08863e34171c46d9d72549c4088dfd3706508da29315051",
+        "batch_id": "8e91f2a2bc334c85b2da28b47d56be11"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\cross-extension.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\cross-extension.jpg",
+        "mode": "replace",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 12,
+        "height": 8,
+        "bytes": 642,
+        "sha256": "5efdd1a14ef3d21561044e37ceb69c6e901e5dd760edf1a61522476b0c5ca88c",
+        "batch_id": "0ca414d3e4034f2ebbbbd33cd1518450"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\same-path.jpg",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\same-path.jpg",
+        "mode": "replace",
+        "input_format": "jpeg",
+        "output_format": "jpeg",
+        "width": 12,
+        "height": 8,
+        "bytes": 642,
+        "sha256": "5efdd1a14ef3d21561044e37ceb69c6e901e5dd760edf1a61522476b0c5ca88c",
+        "batch_id": "e19b7b79346847a4aee6363bd7368575"
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\numbered-006.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\numbered-020.jpg",
+        "mode": "replace",
+        "input_format": "png",
+        "output_format": "jpeg",
+        "width": 12,
+        "height": 8,
+        "bytes": 642,
+        "sha256": "5efdd1a14ef3d21561044e37ceb69c6e901e5dd760edf1a61522476b0c5ca88c",
+        "batch_id": "5320e7611c6241e498543844a1e6749c"
+      }
+    ],
+    "replacements": [
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\cross-extension.png",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\cross-extension.jpg",
+        "same_path": false,
+        "backup": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\state\\conversion-backups\\a9cbef797a444c21b25e7d38eb943e2f\\cross-extension.png",
+        "batch_id": "0ca414d3e4034f2ebbbbd33cd1518450",
+        "restored_bytes_ads_times": true
+      },
+      {
+        "source": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\same-path.jpg",
+        "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\same-path.jpg",
+        "same_path": true,
+        "backup": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\state\\conversion-backups\\bbb2a15cd04749f996c72e131ef5a1e3\\same-path.jpg",
+        "batch_id": "e19b7b79346847a4aee6363bd7368575",
+        "restored_bytes_ads_times": true
+      }
+    ],
+    "work_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020",
+    "qt_version": "6.11.2",
+    "capabilities": {
+      "inputs": [
+        "jpeg",
+        "png",
+        "webp"
+      ],
+      "outputs": [
+        "jpeg",
+        "png",
+        "webp"
+      ],
+      "digest": "063ddb445e35f05a4a0f6d8261d95691e42b447ddbceaf233c313ec84714318c"
+    },
+    "tiny_webp": {
+      "path": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\alpha-webp\\alpha.webp",
+      "bytes": 42,
+      "native_alpha": 0,
+      "native_reader": "QImageReader(path)"
+    },
+    "jpeg_backgrounds": [
+      {
+        "requested": "#FFFFFF",
+        "decoded_rgb": [
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "requested": "#000000",
+        "decoded_rgb": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "requested": "#2468AC",
+        "decoded_rgb": [
+          35,
+          104,
+          171
+        ]
+      }
+    ],
+    "collision_numbering": {
+      "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\images\\numbered-020.jpg",
+      "occupied_preserved": true,
+      "backup_verified": true,
+      "undone": true,
+      "late_occupancy_rejected": true
+    },
+    "generic_rule": {
+      "sync_root": null,
+      "legacy_sweep_days": 3,
+      "first_tick_succeeded": true,
+      "restart_suppressed": true,
+      "batch_id": "83ce39c937954900a5d9da5b777e0e14"
+    },
+    "rule_chain": {
+      "batch_id": "dd22c1884999461ea634f83d7a6b4f7d",
+      "journal_kinds": [
+        "copy",
+        "convert",
+        "move"
+      ],
+      "restored_original": true
+    },
+    "imported_rule": {
+      "original_id": "ed0f4da95f6d45a588535153e6285f30",
+      "imported_id": "8e83fb9778964fc0b0a9aab92e3fd3b0",
+      "persisted_enabled": false,
+      "source_unchanged": true
+    },
+    "template": {
+      "target": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state\\self-test-68d55d65f4aa4eacba4372928ed3b944\\release020\\template\\sync\\1_工作\\项目\\261001_TST_模板验收\\验收\\参考\\source.png",
+      "persisted": true,
+      "undone": true,
+      "revision": "b7db4a65db06866aaee6267e7b92d6cca7c91c06b11d0225fb97458a108c0ba7",
+      "batch_id": "9394691474204a2ba0aa84ca570f52c3"
+    }
+  },
+  "execution_kind": "Actual packaged FileHub.exe; source Python launches process only",
+  "acceptance_command": [
+    "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+    "--self-test",
+    "--state-dir",
+    "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1\\portable-state"
+  ],
+  "process_exit": 0,
+  "elapsed_seconds": 2.032,
+  "checked_utc": "2026-10-01T09:59:19.264759+00:00",
+  "environment": {
+    "PATH": "C:\\WINDOWS\\System32;C:\\WINDOWS",
+    "developer_python_qt_overrides_cleared": true,
+    "bounded_timeout_seconds": 120,
+    "owned_uuid_sandbox": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\packaging022-1bac6b2c-dbb2-4037-87b7-d522e611ccf1"
+  },
+  "stderr": ""
+}

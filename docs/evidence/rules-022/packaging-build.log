@@ -1,0 +1,541 @@
+0.2.2 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified
+171 INFO: PyInstaller: 6.19.0, contrib hooks: 2026.8
+171 INFO: Python: 3.12.10
+213 INFO: Platform: Windows-11-10.0.26200-SP0
+213 INFO: Python environment: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\.venv
+215 INFO: Removing temporary files and cleaning cache in C:\Users\Gerry-UltraPC\AppData\Local\pyinstaller
+255 INFO: Module search paths (PYTHONPATH):
+['C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\python312.zip',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\Lib',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312',
+ 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel '
+ 'Windows\\.venv',
+ 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel '
+ 'Windows\\.venv\\Lib\\site-packages',
+ 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel '
+ 'Windows\\packaging',
+ 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel '
+ 'Windows\\src']
+582 INFO: Appending 'binaries' from .spec
+582 INFO: Appending 'datas' from .spec
+589 INFO: checking Analysis
+589 INFO: Building Analysis because Analysis-00.toc is non existent
+589 INFO: Looking for Python shared library...
+589 INFO: Using Python shared library: C:\Users\Gerry-UltraPC\AppData\Local\Programs\Python\Python312\python312.dll
+589 INFO: Running Analysis Analysis-00.toc
+589 INFO: Target bytecode optimization level: 0
+589 INFO: Initializing module dependency graph...
+591 INFO: Initializing module graph hook caches...
+619 INFO: Analyzing modules for base_library.zip ...
+1843 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3270 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+4461 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5473 INFO: Caching module dependency graph...
+5500 INFO: Analyzing C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\entrypoint.py
+5550 INFO: Analyzing hidden import 'filehub.__main__'
+5609 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5705 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5881 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6121 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6203 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6537 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6695 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+7080 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8855 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+15123 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+16656 INFO: Processing module hooks (post-graph stage)...
+16950 INFO: Performing binary vs. data reclassification (346 entries)
+17443 INFO: Looking for ctypes DLLs
+17463 INFO: Analyzing run-time hooks ...
+17465 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+17471 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+17477 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+17483 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+17494 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+17500 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+17513 INFO: Creating base_library.zip...
+17526 INFO: Looking for dynamic libraries
+17841 INFO: Extra DLL search directories (AddDllDirectory): ['F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6']
+17841 INFO: Extra DLL search directories (PATH): ['F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6']
+18976 INFO: Warnings written to C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\build\pyinstaller\filehub\warn-filehub.txt
+18992 INFO: Graph cross-reference written to C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\build\pyinstaller\filehub\xref-filehub.html
+19037 INFO: checking PYZ
+19037 INFO: Building PYZ because PYZ-00.toc is non existent
+19037 INFO: Building PYZ (ZlibArchive) C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\build\pyinstaller\filehub\PYZ-00.pyz
+19204 INFO: Building PYZ (ZlibArchive) C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\build\pyinstaller\filehub\PYZ-00.pyz completed successfully.
+19210 INFO: checking PKG
+19210 INFO: Building PKG because PKG-00.toc is non existent
+19210 INFO: Building PKG (CArchive) FileHub.pkg
+19234 INFO: Building PKG (CArchive) FileHub.pkg completed successfully.
+19235 INFO: Bootloader C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\.venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+19235 INFO: checking EXE
+19235 INFO: Building EXE because EXE-00.toc is non existent
+19235 INFO: Building EXE from EXE-00.toc
+19236 INFO: Copying bootloader EXE to C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\build\pyinstaller\filehub\FileHub.exe
+19294 INFO: Copying icon to EXE
+19325 INFO: Copying version information to EXE
+19361 INFO: Copying 0 resources to EXE
+19361 INFO: Embedding manifest in EXE
+19394 INFO: Appending PKG archive to EXE
+19431 INFO: Fixing EXE headers
+19646 INFO: Building EXE from EXE-00.toc completed successfully.
+19650 INFO: checking COLLECT
+19650 INFO: Building COLLECT because COLLECT-00.toc is non existent
+19650 INFO: Removing dir C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\dist\FileHub
+19759 INFO: Building COLLECT COLLECT-00.toc
+20218 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+20225 INFO: Build complete! The results are available in: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\dist
+Inno Setup 6 Command-Line Compiler
+Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+https://www.innosetup.com
+
+Compiler engine version: Inno Setup 6.7.3
+Non-commercial use only
+
+Preprocessing
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\ISPPBuiltins.iss
+Parsing [Setup] section, line 9
+Parsing [Setup] section, line 10
+Parsing [Setup] section, line 11
+Parsing [Setup] section, line 12
+Parsing [Setup] section, line 13
+Parsing [Setup] section, line 14
+Parsing [Setup] section, line 15
+Parsing [Setup] section, line 16
+Parsing [Setup] section, line 17
+Parsing [Setup] section, line 18
+Parsing [Setup] section, line 19
+Parsing [Setup] section, line 20
+Parsing [Setup] section, line 21
+Parsing [Setup] section, line 22
+Parsing [Setup] section, line 23
+Parsing [Setup] section, line 24
+Parsing [Setup] section, line 25
+Parsing [Setup] section, line 26
+Parsing [Setup] section, line 27
+Parsing [Setup] section, line 28
+Parsing [Setup] section, line 29
+Parsing [Setup] section, line 30
+Parsing [Setup] section, line 31
+Parsing [Setup] section, line 32
+Parsing [Setup] section, line 33
+Parsing [Setup] section, line 34
+Parsing [Setup] section, line 35
+Parsing [Setup] section, line 36
+Reading file (WizardImageFile)
+Reading file (WizardSmallImageFile)
+Preparing Setup program executable
+   Verification successful
+   Updating icons (Setup.e32)
+   Updating version info (Setup.e32)
+Determining language code pages
+Parsing [Languages] section, line 39
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\Languages\ChineseSimplified.isl
+   Messages in script file
+Reading default messages from Default.isl
+Parsing [Languages] section, line 39
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\Languages\ChineseSimplified.isl
+Parsing [LangOptions], [Messages], and [CustomMessages] sections
+   Messages in script file
+Reading [Code] section
+Parsing [Tasks] section, line 46
+Parsing [Tasks] section, line 47
+Parsing [Tasks] section, line 48
+Parsing [Icons] section, line 54
+Parsing [Icons] section, line 55
+Parsing [Icons] section, line 56
+Parsing [Files] section, line 51
+Compiling [Code] section
+Creating setup files
+   Verification successful
+   Updating icons (Setup.exe)
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\FileHub.exe
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\base_library.zip
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\libcrypto-3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\libffi-8.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\libssl-3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\pyexpat.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\python3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\python312.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\select.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\sqlite3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\ucrtbase.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\unicodedata.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\VCRUNTIME140.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\VCRUNTIME140_1.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_bz2.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_ctypes.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_decimal.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_hashlib.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_lzma.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_multiprocessing.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_queue.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_socket.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_sqlite3.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_ssl.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_uuid.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\_wmi.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140_1.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140_2.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\pyside6.abi3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Core.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Gui.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Widgets.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtCore.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtGui.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtWidgets.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\VCRUNTIME140.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\VCRUNTIME140_1.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qgif.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qico.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qjpeg.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qwbmp.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qwebp.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qdirect2d.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qminimal.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qoffscreen.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qwindows.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\styles\qmodernwindowsstyle.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ar.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_bg.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ca.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_cs.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_da.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_de.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_en.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_es.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fa.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fi.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_gd.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_he.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_hr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_hu.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_it.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ja.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ka.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ko.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_lg.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_lv.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_nl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_nn.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_pl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_pt_BR.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ru.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_sk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_sv.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_tr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_uk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_zh_CN.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_zh_TW.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ar.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_bg.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ca.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_cs.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_da.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_de.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_en.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_es.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fa.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fi.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_gd.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_gl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_he.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ar.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_bg.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ca.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_cs.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_da.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_de.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_en.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_es.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_fr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_gl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_hr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_hu.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_it.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ja.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ka.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ko.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_nl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_nn.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_pl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_pt_BR.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ru.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sv.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_tr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_uk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_zh_CN.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_zh_TW.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_hr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_hu.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_it.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ja.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ka.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ko.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lg.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lt.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lv.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_nl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_nn.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pt_BR.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pt_PT.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ru.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sl.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sv.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_tr.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_uk.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_zh_CN.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_zh_TW.qm
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\app.ico
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avcodec-62.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avformat-62.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avutil-60.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\ffprobe.exe
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny-1920-blue.mp4
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny-1920-yellow.mp4
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny.mp4
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\MSVCP140.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\Shiboken.pyd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\shiboken6.abi3.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\VCRUNTIME140.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\VCRUNTIME140_1.dll
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\components.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\第三方许可.md
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\provenance.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\README.md
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\BSD-3-Clause.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\GFDL-1.3-no-invariants-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\GPL-2.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\GPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\LGPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\libtiff.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\LICENSES\LicenseRef-Qt-Commercial.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\src\3rdparty\libwebp\AUTHORS
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\src\3rdparty\libwebp\COPYING
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\src\3rdparty\libwebp\PATENTS
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\qtimageformats\src\3rdparty\libwebp\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\conversion\sources\qtimageformats-6.11.2.zip
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\filehub.patch
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-GPL-3.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-LGPL-2.1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-LGPL-3.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\UPSTREAM-LICENSE.md
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\ffprobe-build-local.cmd
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\ffprobe-configure.sh
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\patch-ffmpeg.py
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\prepare-ffprobe.ps1
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\inno\ChineseSimplified.isl
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\inno\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\microsoft\Visual-Studio-2022-Community-license.html
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\microsoft\Visual-Studio-2022-redistribution.html
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\pyinstaller\COPYING.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\libmpdec-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-expat-2.7.1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-libffi-3.4.4.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-OpenSSL-3.0.16.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-SQLite-3.49.1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-zlib-1.3.1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\attributions.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\demos\colorpaletteclient\icons\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\MARKDOWN-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\MARKED-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\simplebrowser\data\3rdparty\COPYING
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\simplebrowser\data\3rdparty\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\Apache-2.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\BSD-3-Clause.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GFDL-1.3-no-invariants-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GPL-2.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\LGPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\LicenseRef-Qt-Commercial.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\Qt-GPL-exception-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\libshiboken\bufferprocs_py37.h
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\libshiboken\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\shibokenmodule\files.dir\shibokensupport\signature\PSF-3.7.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\shibokenmodule\files.dir\shibokensupport\signature\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\attributions.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\extra-cmake-modules\COPYING-CMAKE-SCRIPTS
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\extra-cmake-modules\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\kwin\COPYING-CMAKE-SCRIPTS
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\kwin\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\AFL-2.1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Apache-2.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Bitstream-Vera.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\blessing.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-2-Clause.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-3-Clause.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-4-Clause.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSL-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\CC0-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\FTL.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GFDL-1.3-no-invariants-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-2.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-2.0-or-later.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\HPND.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\IJG.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Imlib2.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\IPL-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LGPL-2.1-or-later.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LGPL-3.0-only.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\libpng-2.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Libpng.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-ICC-License.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-Lcs-Telegraphics.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-Qt-Commercial.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-SHA1-Public-Domain.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Linux-syscall-note.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT-Khronos-old.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT-open-group.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MPL-2.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Qt-GPL-exception-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\SPL-1.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Unicode-3.0.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\X11.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Xerox.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Zlib.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\android\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\android\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\blake2\COPYING
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\blake2\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\D3D12MemoryAllocator\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\D3D12MemoryAllocator\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\double-conversion\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\double-conversion\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\easing\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\easing\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\emoji-segmenter\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\forkfd\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\forkfd\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\BDF-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\PCF-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\ZLIB-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\gradle\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\gradle\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\harfbuzz-ng\COPYING
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\harfbuzz-ng\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\icc\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\icc\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libjpeg\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpng\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpng\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\PSL-LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\src\LICENSE.chromium
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4c\LICENSE.md
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4c\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md5\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\LICENCE.md
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\LICENSE-SLJIT
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pixman\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pixman\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\rfc6234\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\rfc6234\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha1\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\BRG_ENDIAN_LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\CC0_LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\siphash\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sqlite\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\tinycbor\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\tinycbor\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\VulkanMemoryAllocator\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\VulkanMemoryAllocator\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wasm\DEJAVU-LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wasm\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\MIT_LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\appmenu\LGPL-2.1-or-later.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\appmenu\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\color-management\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\fractional-scale\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\fullscreen-shell\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\linux-dmabuf\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\pointer-gestures\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\pointer-warp\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\presentation-time\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\scaler\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\session-management\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\tablet\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v1\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v2\HPND_LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v2\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v3\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\viewporter\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wayland\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wl-eglstream\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wlr-data-control\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wp-primary-selection\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-activation\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-decoration\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-dialog\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-foreign\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-output\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-shell\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-system-bell\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-toplevel-icon\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wintab\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\xcb\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\xcb\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\zlib\LICENSE
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\zlib\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\global\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\kernel\LICENSE.QEVENTDISPATCHER_CF.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\kernel\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\mimetypes\3rdparty\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\text\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\dbus\LICENSE.LIBDBUS-1.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\dbus\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\opengl\LICENSE.KHRONOS.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\opengl\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\LICENSE.QIMAGETRANSFORM.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\LICENSE.XCONSORTIUM.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\rhi\LICENSE.MiniEngine.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\rhi\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\text\LICENSE.AGLFN.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\text\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\vulkan\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\vulkan\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\plugins\platforms\cocoa\LICENSE.COCOA.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\plugins\platforms\cocoa\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testinternal\3rdparty\cmake\Copyright.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testinternal\3rdparty\cmake\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\catch2\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\catch2\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\cycle\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\cycle\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\linux\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\linux\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\valgrind\LICENSE.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\valgrind\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\util\gradientgen\LICENSE.WEBGRADIENTS.txt
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\util\gradientgen\qt_attribution.json
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\ffmpeg-source.zip
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\pyside-source.zip
+   Compressing: C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\qtbase-source.zip
+   Compressing Setup program executable
+   Updating version info (Setup.exe)
+   Updating manifest (Setup.exe)
+
+
+Successful compile (21.469 sec). Resulting Setup program filename is:
+C:\Users\Gerry-UltraPC\.codex\worktrees\filehub-rules\Hazel Windows\dist\installer\FileHub-0.2.2-windows-x64-setup.exe
