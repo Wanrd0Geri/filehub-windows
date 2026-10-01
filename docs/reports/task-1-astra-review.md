@@ -27,3 +27,15 @@ Test requirements: real Windows NTFS main+Zone.Identifier+custom-stream copy/mov
 - Actual second-volume transfer, abrupt process termination/power loss and folder operations remain later acceptance work; current fault tests inject interruption on F:.
 - Recycle restore is manual; GUI must expose source path, exact recycled staging name and no false success.
 - Public history should expose persisted batch timestamp in Task3 for UI records.
+
+## Fix round 1 scoped review — dff5649
+
+**Spec and quality approved for Task 1's declared ordinary-file scope.** Metadata finding ADDRESSED; no new Critical/Important issue found in this fix. Read new `platform/metadata.py`, changed fingerprint/journal/guard/transfer code, 25 additional metadata cases and appended Sol report. No duplicate suite run.
+
+- `SetFileTime` preserves creation/last-write and checks exact retained values before source deletion. Real Windows copy/move/undo assertions cover both values.
+- Named stream inventory, size/hash and creation time are in durable fingerprints; stream serialization roundtrip and ADS-only edit/add/remove cases pass. Business `same_primary_content` remains distinct from all-stream `same_content` used for safe survivor deletion.
+- All original ADS are copied and verified; streams that cannot be enumerated/copied/time-preserved cause source-preserving failure. Tests use actual Zone.Identifier and a Chinese custom stream; unsupported-filesystem and EFS attributes are simulated explicitly.
+- Windows sharing limitations are handled by a fully reverified non-DELETE survivor after atomic publication; its stream guards prevent writes/unlink through source deletion. Delete-capable source guards protect stream writes and detect delete-pending streams. `Guard.close()` releases all source handles while survivor remains protected. Real race and takeover-gap tests substantiate this.
+- Full suite evidence: `.venv\Scripts\python.exe -X utf8 -m pytest -q` — **84 passed in 5.26s**, no warnings. Code diff check reported clean.
+
+Native recycle is still manual-restore, folders remain for Task4, actual second-volume/power-loss testing remains later, and ACLs inherit target permissions. These are explicit scope/acceptance boundaries, not missing fixes to this phase.
