@@ -16,3 +16,5 @@ Read `reference/filehub-ui-graphite.html` including final overrides beginning `C
 - Root delivery refinement: expose --demo via a clear 演示 button/shortcut requiring no typed command or config. One-click creates only self-owned fake sync/watch/sample files and isolated state; novice user can try archive/undo before selecting real directories. Ordinary launch remains unconfigured/paused.
 
 - Advanced global_jobs switch must state both effects beside it: 共享收件箱到期清理 + 同步空间不合规文件名修正（包括已有项目），仅一台电脑开启；默认由 Mac 管理/关闭。Normal names and project routing remain unchanged. No silent ownership takeover.
+
+- IPC claim remains leased/renewed while archive dialog awaits user; acknowledge only explicit cancellation or persisted execution result, never merely on show. Restart after crash during input re-delivers expired claim; cancel does not re-open. One active claimed dialog at a time.
