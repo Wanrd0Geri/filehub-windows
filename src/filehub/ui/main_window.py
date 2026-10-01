@@ -3,37 +3,51 @@ from pathlib import Path
 from datetime import datetime
 from PySide6.QtCore import Qt, QUrl, Signal
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QStackedWidget,QListWidget,QListWidgetItem,QLineEdit,QTextEdit,QFileDialog,QFrame,QComboBox,QSpinBox,QCheckBox,QScrollArea,QLayout)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QStackedWidget,QListWidget,QListWidgetItem,QLineEdit,QTextEdit,QFileDialog,QFrame,QComboBox,QSpinBox,QCheckBox,QScrollArea,QLayout,QTabWidget)
 from .coordinator import Coordinator
 from .theme import apply_theme, icon
 from .archive_dialog import ArchiveDialog
 from .tag_history import HistoryController, HistoryChips
 from .status_footer import StatusFooter
+from .rules_page import RulesPage
+from .templates_page import TemplatesPage
+from .conversion_page import ConversionPage
+from .automation_controller import AutomationController
 
 class MainWindow(QMainWindow):
     configuration_changed = Signal(object)
     demo_activated = Signal()
     result_ready = Signal(object)
+    outcomes_ready = Signal(object, object)
+    check_requested = Signal()
+    automation_error = Signal(str)
+    service_rebound = Signal(object)
     def __init__(self,service,store,*,demo_callback=None,pause_callback=None,integration_callback=None,integration_status_callback=None,inbox_provider=None):
         super().__init__();self.service=service;self.store=store
         self.demo_callback=demo_callback;self.pause_callback=pause_callback;self.integration_callback=integration_callback;self.inbox_provider=inbox_provider
         self.integration_status_callback=integration_status_callback;self.integration_status_ready=integration_status_callback is None;self.runtime_close_callback=None;self.is_demo=False
-        self.paths=();self.preview=None;self.preview_generation=0;self.batches=[];self.dialogs=[]
-        self.known_folder_proposals={}
+        self.paths=();self.preview=None;self.preview_generation=0;self.batches=[];self.dialogs=[];self.generated_details={}
+        self.known_folder_proposals={};self._close_settled=False;self._close_requested=False;self.manual_check_callback=None;self.service_reopen_callback=None
         self.coordinator=Coordinator(self);self.setWindowTitle('FileHub');self.resize(1000,700);self.setMinimumSize(800,620);self.setAcceptDrops(True)
         self.tag_history=HistoryController(self.coordinator,store.state_dir,self)
         shell=QWidget();self.setCentralWidget(shell);outer=QHBoxLayout(shell);outer.setContentsMargins(0,0,0,0);outer.setSpacing(0)
         sidebar=QWidget();sidebar.setObjectName('sidebar');sidebar.setFixedWidth(180);nav=QVBoxLayout(sidebar);nav.setContentsMargins(12,22,12,17);nav.setSpacing(5)
         brand_row=QHBoxLayout();brand_row.setSpacing(10);brand_icon=QLabel();brand_icon.setFixedWidth(30);brand_icon.setPixmap(icon('FileHub').pixmap(30,30));brand_row.addWidget(brand_icon);brand=QLabel('FileHub');brand.setObjectName('brand');brand_row.addWidget(brand);nav.addLayout(brand_row);nav.addSpacing(18)
         self.pages=QStackedWidget();self.nav_buttons=[]
-        for n,name in enumerate(('整理','收件箱','记录','设置')):
+        for n,name in enumerate(('整理','收件箱','记录','设置','自动规则','图片转换')):
             button=QPushButton(icon(name),name);button.setObjectName('nav');button.setCheckable(True);button.clicked.connect(lambda checked=False,i=n:self.navigate(i));nav.addWidget(button);self.nav_buttons.append(button)
         nav.addStretch();self.running=QLabel();self.running.setObjectName('muted');nav.addWidget(self.running);nav.addWidget(self.muted('本机 · Windows'))
         outer.addWidget(sidebar);outer.addWidget(self.pages,1)
         self.build_home();self.build_inbox();self.build_history();self.build_settings()
+        self.rules_tabs=QTabWidget();self.rules_page=RulesPage();self.templates_page=TemplatesPage()
+        self.rules_tabs.addTab(self.rules_page,'自动规则');self.rules_tabs.addTab(self.templates_page,'项目模板')
+        self.pages.addWidget(self.rules_tabs);self.conversion_page=ConversionPage();self.pages.addWidget(self.conversion_page)
         self.status_footer=StatusFooter(self);self.status=self.status_footer.label
         self.statusBar().setObjectName('appStatusBar');self.statusBar().setSizeGripEnabled(False);self.statusBar().addWidget(self.status_footer,1)
         self.coordinator.busy.connect(self.busy_changed)
+        self.outcomes_ready.connect(self._show_outcome_batches)
+        self.rules_page.checkRequested.connect(self.manual_check)
+        self.automation=AutomationController(self)
         self.load_config_controls();self.navigate(0);apply_theme(self,service.config.theme);self.refresh();self.tag_history.refresh()
         QApplication.styleHints().colorSchemeChanged.connect(self.system_theme_changed)
 
@@ -59,7 +73,7 @@ class MainWindow(QMainWindow):
 
     def build_home(self):
         layout=self.page('文件，各归其位。','留下需要的，其余交给 FileHub。')
-        self.first_run=QLabel('欢迎使用 FileHub\n先选择同步空间，再选择要自动整理的目录。\n新发现的文件会完整等待 3 天；首次启动保持暂停。');self.first_run.setObjectName('firstRun');self.first_run.setWordWrap(True);layout.addWidget(self.first_run)
+        self.first_run=QLabel('欢迎使用 FileHub\n自动规则：先在设置中选择观察文件夹，保存并启用规则，再继续自动整理。\n自动检查约每 10 分钟；首次启动保持暂停。送进项目另外需要同步空间。\n未匹配规则的旧收件箱整理才等待设定天数（默认 3 天）。');self.first_run.setObjectName('firstRun');self.first_run.setWordWrap(True);layout.addWidget(self.first_run)
         self.demo_notice=self.muted('演示 · 当前文件和同步空间均为独立示例。普通启动会返回原设置。');self.demo_notice.hide();layout.addWidget(self.demo_notice)
         row=QHBoxLayout();row.addWidget(self.button('选择文件',self.choose_files));row.addWidget(self.button('选择文件夹',self.choose_source_folder));self.first_sync_button=self.button('选择同步空间',self.first_choose_sync);row.addWidget(self.first_sync_button);row.addStretch();self.demo_button=self.button('演示',self.start_demo);row.addWidget(self.demo_button);layout.addLayout(row)
         self.selection=QLabel('将文件拖到这里，或选择多个文件。');self.selection.setWordWrap(True);layout.addWidget(self.selection)
@@ -94,7 +108,8 @@ class MainWindow(QMainWindow):
         self.sync_path=QLineEdit();self.sync_path.setReadOnly(True);row=QHBoxLayout();row.addWidget(self.sync_path,1);row.addWidget(self.button('选择同步空间',self.choose_sync));layout.addWidget(QLabel('同步空间'));layout.addLayout(row)
         layout.addWidget(QLabel('自动整理目录 · 明确选择后才生效'));self.watch_list=QListWidget();self.watch_list.setMinimumHeight(92);self.watch_list.setMaximumHeight(130);layout.addWidget(self.watch_list)
         row=QHBoxLayout();row.addWidget(self.button('添加目录',lambda:self.choose_watch()));row.addWidget(self.button('桌面…',lambda:self.choose_watch('desktop')));row.addWidget(self.button('下载…',lambda:self.choose_watch('downloads')));row.addWidget(self.button('移除所选',lambda:self.watch_list.takeItem(self.watch_list.currentRow())));layout.addLayout(row)
-        row=QHBoxLayout();row.addWidget(QLabel('首次发现后等待'));self.sweep_days=QSpinBox();self.sweep_days.setRange(1,365);self.sweep_days.setSuffix(' 天');row.addWidget(self.sweep_days);row.addStretch();row.addWidget(QLabel('外观'));self.appearance=QComboBox();self.appearance.addItems(['深色','浅色','跟随系统']);row.addWidget(self.appearance);layout.addLayout(row)
+        row=QHBoxLayout();row.addWidget(QLabel('未匹配规则的收件箱等待'));self.sweep_days=QSpinBox();self.sweep_days.setRange(1,365);self.sweep_days.setSuffix(' 天');row.addWidget(self.sweep_days);row.addStretch();row.addWidget(QLabel('外观'));self.appearance=QComboBox();self.appearance.addItems(['深色','浅色','跟随系统']);row.addWidget(self.appearance);layout.addLayout(row)
+        layout.addWidget(self.muted('自动检查约每 10 分钟；立即检查会执行启用的规则。普通规则使用各自条件，无需同步空间。'))
         self.paused=QCheckBox('暂停自动整理（仍可手动归档）');layout.addWidget(self.paused)
         self.global_jobs=QCheckBox('由这台电脑管理共享任务（高级）');layout.addWidget(self.global_jobs)
         layout.addWidget(self.muted('共享收件箱到期清理 + 同步空间不合规文件名修正（包括已有项目）。\n仅一台电脑开启；默认由 Mac 管理 / 关闭。普通文件名和项目路由不变。'))
@@ -112,7 +127,7 @@ class MainWindow(QMainWindow):
 
     def load_config_controls(self):
         c=self.service.config;self.sync_path.setText(str(c.sync_root or ''));self.watch_list.clear();self.watch_list.addItems([str(p) for p in c.watch_roots]);self.sweep_days.setValue(c.sweep_days);self.inbox_days.setValue(c.inbox_days);self.appearance.setCurrentIndex(['dark','light','system'].index(c.theme));self.paused.setChecked(c.paused);self.global_jobs.setChecked(c.global_jobs)
-        self.first_run.setVisible(c.sync_root is None);self.running.setText('自动整理已暂停' if c.paused else '自动整理运行中');self.pause_button.setText('继续整理' if c.paused else '暂停整理')
+        self.first_run.setVisible(not c.watch_roots or c.sync_root is None);self.running.setText('自动整理已暂停' if c.paused else '自动整理运行中');self.pause_button.setText('继续整理' if c.paused else '暂停整理')
         self.first_sync_button.setVisible(c.sync_root is None)
         self.setWindowTitle('FileHub · 演示' if self.is_demo else 'FileHub')
         self.demo_notice.setVisible(self.is_demo)
@@ -120,7 +135,7 @@ class MainWindow(QMainWindow):
         for n,label in enumerate(self.source_cards):
             text=str(c.watch_roots[n]) if n<len(c.watch_roots) else '未选择目录'
             self.source_titles[n].setText(c.watch_roots[n].name if n<len(c.watch_roots) else ('桌面','下载')[n])
-            label.setText(('已选择目录' if n<len(c.watch_roots) else text)+' · '+('已暂停' if c.paused else f'首次发现 {c.sweep_days} 天后送入收件箱'));label.setToolTip(text)
+            label.setText(('已选择目录' if n<len(c.watch_roots) else text)+' · '+('已暂停' if c.paused else '约每 10 分钟检查规则'));label.setToolTip(text)
 
     def choose_sync(self):
         path=QFileDialog.getExistingDirectory(self,'选择同步空间')
@@ -175,14 +190,17 @@ class MainWindow(QMainWindow):
             if generation!=self.preview_generation or service is not self.service:return
             self.show_preview(preview)
             if any(not item.error for item in preview.items):self.tag_history.remember(tag,history_token)
-        self.coordinator.submit(lambda:service.preview(paths,tag),ready,self.show_error)
+        self.coordinator.submit(lambda:service.preview(paths,tag),ready,
+            lambda message:self.show_error(message) if generation==self.preview_generation and service is self.service else None)
 
     def show_preview(self,preview):
         self.preview=preview;self.preview_details.setPlainText(self.preview_text(preview));self.preview_details.setToolTip('\n'.join(str(i.source)+'\n'+'\n'.join(map(str,i.targets)) for i in preview.items));self.execute_button.setEnabled(any(not i.error for i in preview.items))
 
     def execute(self):
         preview=self.preview
-        if preview:self.invalidate_preview();self.coordinator.submit(lambda:self.service.execute(preview),self.show_result,self.show_error)
+        if preview:
+            service=self.service;generation=self.automation.state_generation;self.invalidate_preview()
+            self.coordinator.submit(lambda:service.execute(preview),lambda result:self.show_result(result) if service is self.service and generation==self.automation.state_generation else None,self.show_error)
 
     def show_result(self,result):
         summary={'success':'已完成，可在记录中撤销。','partial':'部分完成，请查看记录中的问题。','failed':'未完成，请查看记录。'}[result.status]
@@ -190,6 +208,39 @@ class MainWindow(QMainWindow):
         self.status.setText(summary+('\n'+'\n'.join(details) if details else ''));self.refresh()
         if result.ok:self.set_paths([])
         self.result_ready.emit(result)
+
+    def show_run_outcomes(self,outcomes,service=None,generation=None):
+        service=service or self.service
+        generation=self.automation.state_generation if generation is None else generation
+        ids={outcome.batch_id for outcome in outcomes if outcome.batch_id}
+        def read():return tuple(batch for batch in service.history() if batch.batch_id in ids)
+        self.coordinator.submit(read,lambda batches:self.outcomes_ready.emit((service,generation,tuple(outcomes)),batches),self.show_error)
+
+    def _show_outcome_batches(self,binding,batches):
+        service,generation,outcomes=binding
+        if service is not self.service or generation!=self.automation.state_generation:return
+        for batch in batches:self.show_result(batch)
+        errors=[outcome.error for outcome in outcomes if outcome.error]
+        if errors:self.show_error('；'.join(errors[:3]))
+        elif not outcomes:self.status.setText('已取消，未开始剩余项目。')
+
+    def manual_check(self):
+        if not self.automation.accepting:return
+        if self.manual_check_callback:self.manual_check_callback();return
+        from ..scheduler import Scheduler
+        service,generation=self.service,self.automation.state_generation
+        def check():
+            scheduler=Scheduler(service,automatic_completion=self.automation.completion_hook(service,generation))
+            return scheduler.tick(datetime.now().astimezone()),scheduler.last_errors
+        def ready(value):
+            if service is not self.service or generation!=self.automation.state_generation:return
+            results,errors=value
+            for result in results:
+                if hasattr(result,'items'):self.show_result(result)
+                else:self.show_run_outcomes((result,),service,generation)
+            if errors:self.show_error('；'.join(errors[:3]))
+            if not results and not errors:self.status.setText('立即检查已完成；图片任务如已排队会在完成后更新记录。')
+        self.coordinator.submit(check,ready,self.show_error)
 
     def show_error(self,message):self.status.setText('操作未完成：'+message)
 
@@ -205,9 +256,21 @@ class MainWindow(QMainWindow):
 
     def busy_changed(self,busy):
         self.preview_button.setEnabled(not busy);self.save_button.setEnabled(not busy);self.undo_button.setEnabled(not busy)
+        adapter=getattr(self,'automation',None)
+        self.demo_button.setEnabled(not busy and not self.dialogs and (adapter is None or adapter.accepting))
         self.execute_button.setEnabled(not busy and self.preview is not None and any(not i.error for i in self.preview.items))
 
-    def refresh(self):self.coordinator.submit(self.service.history,self.show_history,self.show_error)
+    def refresh(self):
+        service=self.service;generation=self.automation.state_generation
+        def read():
+            with service.engine.locked():
+                batches=service.history()
+                details={item.operation_id:service.engine.journal.generated(item.operation_id) for batch in batches for item in batch.items if item.kind=='convert'}
+                return batches,details
+        def ready(value):
+            if service is not self.service or generation!=self.automation.state_generation:return
+            batches,self.generated_details=value;self.show_history(batches)
+        self.coordinator.submit(read,ready,lambda message:self.show_error(message) if service is self.service and generation==self.automation.state_generation else None)
 
     def show_history(self,batches):
         self.batches=batches;self.history_list.clear();self.recent_list.clear()
@@ -232,9 +295,16 @@ class MainWindow(QMainWindow):
         if not 0<=index<len(self.batches):self.history_details.clear();return
         batch=self.batches[index];lines=[]
         for item in batch.items:
-            action={'move':'移动','copy':'复制','recycle':'移到回收站'}.get(item.kind,item.kind)
+            action={'move':'移动','copy':'复制','recycle':'移到回收站','convert':'图片转换/替换'}.get(item.kind,item.kind)
             state={'committed':'已完成','undone':'已撤销','recycled':'已回收','manual_restore':'需手动还原','conflict':'存在冲突','failed':'未完成','pending':'等待处理','planned':'等待处理'}.get(item.state,'需要查看')
             lines.append(f'{action} · {state}\n原位置：{item.source}\n目标位置：{item.target or "—"}\n说明：{item.message or "—"}')
+            if item.kind=='convert':
+                generated=self.generated_details.get(item.operation_id)
+                if generated:
+                    if generated.backup:lines.append('原图备份：'+str(generated.backup))
+                    if generated.swap:lines.append('原图暂存：'+str(generated.swap))
+                    if generated.undo_stage:lines.append('恢复暂存：'+str(generated.undo_stage))
+                    if generated.undo_swap:lines.append('恢复交换位置：'+str(generated.undo_swap))
             if item.state=='manual_restore':
                 staging=str(item.staging or item.recycle_identity or '记录未提供回收名称')
                 lines.append(f'需要手动恢复\n回收暂存名称：{staging}\n原文件名：{item.source.name}\n原完整路径：{item.source}\n打开回收站恢复后，可能得到 .filehub 暂存名称，请改回原文件名。')
@@ -254,20 +324,25 @@ class MainWindow(QMainWindow):
         for dialog in self.dialogs:dialog.invalidate()
         config=replace(self.service.config,sync_root=Path(self.sync_path.text()) if self.sync_path.text() else None,watch_roots=tuple(Path(self.watch_list.item(i).text()) for i in range(self.watch_list.count())),paused=self.paused.isChecked(),global_jobs=self.global_jobs.isChecked(),sweep_days=self.sweep_days.value(),inbox_days=self.inbox_days.value(),theme=['dark','light','system'][self.appearance.currentIndex()])
         integration=(self.autostart.isChecked(),self.context_menu.isChecked())
+        service,store,generation=self.service,self.store,self.automation.state_generation
+        self.automation.config_requested(service.config,config)
         def save():
-            self.store.save(config)
-            self.service.config=config
+            with service.engine.locked():
+                store.save(config);service.config=config
             if self.integration_callback:
                 try:self.integration_callback(*integration)
                 except Exception as exc:raise RuntimeError('设置已保存，但 Windows 集成未完成：'+str(exc)) from exc
             return config
-        self.coordinator.submit(save,self.saved,self.settings_failed)
+        self.coordinator.submit(save,lambda value:self.saved(value) if service is self.service and generation==self.automation.state_generation else None,
+            lambda message:self.settings_failed(message) if service is self.service and generation==self.automation.state_generation else None)
 
     def saved(self,config):
         self.invalidate_preview()
         for dialog in self.dialogs:dialog.invalidate()
         self.load_config_controls();apply_theme(self,config.theme);self.configuration_changed.emit(config);self.status.setText('设置已保存。')
         self.refresh_integration()
+        self.automation.config_saved()
+        self.refresh()
 
     def settings_failed(self,message):
         self.load_config_controls();apply_theme(self,self.service.config.theme);self.configuration_changed.emit(self.service.config)
@@ -284,24 +359,50 @@ class MainWindow(QMainWindow):
 
     def toggle_pause(self):
         config=replace(self.service.config,paused=not self.service.config.paused)
+        service,store,generation=self.service,self.store,self.automation.state_generation
+        self.automation.config_requested(service.config,config)
         def change():
-            self.store.save(config);self.service.config=config
+            with service.engine.locked():store.save(config);service.config=config
             if self.pause_callback:self.pause_callback(config.paused)
             return config
-        self.coordinator.submit(change,self.saved,self.show_error)
+        self.coordinator.submit(change,lambda value:self.saved(value) if service is self.service and generation==self.automation.state_generation else None,self.show_error)
 
     def start_demo(self):
         if self.coordinator.pending or self.dialogs:
             self.show_error('请先完成当前操作或关闭归档窗口，再进入演示。');return
-        if self.demo_callback:self.coordinator.submit(self.demo_callback,self.demo_ready,self.show_error)
+        if self.demo_callback:
+            self.demo_button.setEnabled(False);self.status.setText('正在取消图片任务；安全完成当前替换后进入演示。')
+            self.coordinator.begin_wait()
+            def settled():
+                self.coordinator.submit(self.demo_callback,self.demo_ready,self.demo_failed);self.coordinator.end_wait()
+            self.automation.retire(settled)
         else:self.status.setText('演示将在应用启动器接入后启用。')
 
     def demo_ready(self,result):
+        if not result:
+            self.demo_failed('没有创建演示状态；已请求恢复原状态。');return
         if result:
             self.invalidate_preview()
             for dialog in self.dialogs:dialog.invalidate()
-            self.service,self.store,paths=result;self.tag_history.switch_state(self.store.state_dir);self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
+            self.service,self.store,paths=result;self.automation.rebind();self.tag_history.switch_state(self.store.state_dir);self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
         self.status.setText('演示只使用独立示例目录，可尝试归档与撤销。')
+
+    def demo_failed(self,message):
+        # The old executor is already settled and retired. Reconstruct the same
+        # state through a new service; never reset an executor's closing latch.
+        old=self.service
+        def reopen():
+            if self.service_reopen_callback:return self.service_reopen_callback(old)
+            from ..service import FileHubService
+            return FileHubService(old.config,old.engine.state_dir,platform=old.engine.platform,probe=old.probe,source_time=old.source_time)
+        def ready(service):
+            self.service=service;self.automation.rebind();self.load_config_controls();self.refresh()
+            self.service_rebound.emit(service);self.demo_button.setEnabled(True)
+            self.show_error('未进入演示，原状态已恢复：'+message)
+        def failed(error):
+            self.demo_button.setEnabled(False)
+            self.show_error('未进入演示；恢复原状态失败，请安全退出后重新打开。原任务已安全结束：'+message+'；'+error)
+        self.coordinator.submit(reopen,ready,failed)
 
     def refresh_inbox(self):
         def scan():
@@ -338,5 +439,13 @@ class MainWindow(QMainWindow):
         dialog=ArchiveDialog(self,paths);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog));dialog.show();dialog.raise_();dialog.activateWindow();return dialog
 
     def closeEvent(self,event):
-        if self.runtime_close_callback and not self.runtime_close_callback():event.ignore()
-        else:event.accept()
+        if self.runtime_close_callback:
+            if not self.runtime_close_callback():event.ignore()
+            else:event.accept()
+        elif self._close_settled:event.accept()
+        else:
+            event.ignore()
+            if self._close_requested:return
+            self._close_requested=True
+            def closed():self._close_settled=True;self.close()
+            self.automation.retire(closed)

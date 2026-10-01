@@ -155,7 +155,10 @@ def test_slow_demo_swap_never_claims_original_queue(tmp_path,monkeypatch):
     app,rt=runtime(tmp_path);old=rt.state_dir;entered=threading.Event();release=threading.Event();original=module.create_demo
     def slow(base):entered.set();assert release.wait(3);return original(base)
     monkeypatch.setattr(module,'create_demo',slow)
-    rt.window.demo_button.click();assert entered.wait(2)
+    rt.window.demo_button.click()
+    end=time.monotonic()+2
+    while not entered.is_set() and time.monotonic()<end:app.processEvents();time.sleep(.005)
+    assert entered.is_set()
     path=tmp_path/'ordinary';SendQueue(old).enqueue([path],now=9)
     rt.poll();rt.schedule_tick()
     release.set();settle(app,rt)

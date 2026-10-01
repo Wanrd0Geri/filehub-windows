@@ -3,9 +3,10 @@ from uuid import uuid4
 from dataclasses import replace
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QLabel,
-    QLineEdit, QComboBox, QPushButton, QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView)
+    QLineEdit, QComboBox, QPushButton, QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView, QSizePolicy)
 from ..templates import TemplateLibrary
 from ..naming import NAMING_TOKENS, render_pattern
+from .compact_message import CompactMessage
 
 
 class _MappingTable(QWidget):
@@ -82,13 +83,16 @@ class TemplatesPage(QWidget):
         tokens.setWordWrap(True); contents.addWidget(tokens)
         self.example_label = QLabel(); self.example_label.setWordWrap(True); contents.addWidget(self.example_label)
         self.example_button = QPushButton('查看命名示例（不读文件）'); contents.addWidget(self.example_button)
-        contents.addWidget(QLabel('项目分配（项目列表由控制器提供）'))
+        contents.addWidget(QLabel('选择项目并分配模板'))
         assignment_row = QHBoxLayout(); contents.addLayout(assignment_row)
         self.project_combo = QComboBox(); self.assignment_combo = QComboBox()
+        for combo in (self.project_combo, self.assignment_combo, self.template_combo):
+            combo.setMinimumContentsLength(8); combo.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+            combo.setMinimumWidth(0); combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.assign_button = QPushButton('应用分配'); assignment_row.addWidget(self.project_combo); assignment_row.addWidget(self.assignment_combo); assignment_row.addWidget(self.assign_button)
         self.assignment_label = QLabel(); self.assignment_label.setWordWrap(True); contents.addWidget(self.assignment_label); contents.addStretch()
-        self.error_label = QLabel(); self.error_label.setWordWrap(True); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
-        self.dirty_label = QLabel(); box.addWidget(self.dirty_label)
+        self.error_label = CompactMessage(); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
+        self.dirty_label = CompactMessage(); box.addWidget(self.dirty_label)
         self.save_button = QPushButton('保存模板与分配'); box.addWidget(self.save_button)
         self.template_combo.currentIndexChanged.connect(self._select)
         self.copy_button.clicked.connect(lambda: self._guard(self.copy_template)); self.delete_button.clicked.connect(self.delete_template)
@@ -171,7 +175,7 @@ class TemplatesPage(QWidget):
         for code, name in self._projects.items(): self.project_combo.addItem(str(code) + ' · ' + str(name), str(code))
 
     def assign_project(self, code, identifier):
-        if not code or str(code).upper() not in {str(key).upper() for key in self._projects}: raise ValueError('请选择控制器提供的项目')
+        if not code or str(code).upper() not in {str(key).upper() for key in self._projects}: raise ValueError('请选择列表中的项目')
         self._library = self.value().assign(str(code), identifier); self._assignments_text(); self._edited()
 
     def _assignments_text(self):

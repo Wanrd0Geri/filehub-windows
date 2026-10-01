@@ -149,9 +149,13 @@ class Runtime(QObject):
         self.window.known_folder_proposals=bundle.proposals
         self.window.is_demo=self.demo;self.window.load_config_controls()
         self.window.demo_activated.connect(self._demo_ready)
+        self.window.service_reopen_callback=lambda old:runtime_service(old.config,old.engine.state_dir)
+        self.window.service_rebound.connect(self._service_rebound)
         self.window.configuration_changed.connect(self.config_changed)
         self.window.coordinator.busy.connect(self.busy_changed)
         self.window.result_ready.connect(self.result_notification)
+        self.window.manual_check_callback=self.schedule_tick
+        self.window.automation_error.connect(lambda message:self.notify('FileHub · 图片自动整理未完成',message))
         self.tray=QSystemTrayIcon(icon('FileHub'),self);self.tray.setToolTip('FileHub · 自动整理已暂停')
         menu=QMenu();self.open_action=QAction('打开 FileHub',menu);self.open_action.triggered.connect(self.show_window);menu.addAction(self.open_action)
         self.pause_action=QAction('继续整理',menu);self.pause_action.triggered.connect(self.window.toggle_pause);menu.addAction(self.pause_action)
@@ -161,13 +165,15 @@ class Runtime(QObject):
         self.poll_timer=QTimer(self);self.poll_timer.setInterval(200);self.poll_timer.timeout.connect(self.poll)
         self.lease_timer=QTimer(self);self.lease_timer.setInterval(5000);self.lease_timer.timeout.connect(self.renew_claim)
         self.tick_timer=QTimer(self);self.tick_timer.setInterval(TICK_INTERVAL_SECONDS*1000);self.tick_timer.timeout.connect(self.schedule_tick)
-        self.window.coordinator.submit(lambda:Scheduler(self.service),self._scheduler_ready,self.window.show_error)
+        service=self.service;generation=self.window.automation.state_generation
+        self.window.coordinator.submit(lambda:Scheduler(service,automatic_completion=self.window.automation.completion_hook(service,generation)),self._scheduler_ready,self.window.show_error)
         self.window.refresh_integration()
         self.config_changed(self.service.config)
         if bundle.demo_paths:self.window.set_paths(bundle.demo_paths);self.window.tag.setText('DEMO020822')
         if auto_timers:self.poll_timer.start();self.lease_timer.start();self.tick_timer.start()
         if not background:self.window.show()
-        elif self.service.config.sync_root is None:self.notify('FileHub 已在托盘运行','首次运行保持暂停；打开窗口选择目录后再启用。')
+        elif self.service.config.sync_root is None:
+            self.notify('FileHub 已在托盘运行','自动整理已暂停；选择观察文件夹、保存并启用规则后继续。普通规则无需同步空间。' if self.service.config.paused else '自动规则约每 10 分钟检查已选文件夹；送进项目和旧收件箱整理另外需要同步空间。')
 
     def _scheduler_ready(self,scheduler):self.scheduler=scheduler
     def notify(self,title,message):
@@ -178,7 +184,7 @@ class Runtime(QObject):
             details=self.window.duplicate_details(result)
             message=details[0] if details else f'“{result.label}”已记录；打开 FileHub 查看或撤销。'
             if len(details)>1:message+=f'\n另有 {len(details)-1} 项重复文件；完整结果请查看记录。'
-            self.notify('FileHub · '+{'success':'已完成','partial':'部分完成','failed':'需要查看'}[result.status],message)
+            self.notify('FileHub · '+{'success':'已完成','partial':'部分完成','failed':'需要查看'}.get(result.status,'需要查看'),message)
     def show_window(self):self.window.showNormal();self.window.raise_();self.window.activateWindow()
     def close_to_tray(self):
         if self.closed:return True
@@ -190,7 +196,7 @@ class Runtime(QObject):
         self.tray.setToolTip(('FileHub · 演示 · ' if self.demo else 'FileHub · ')+('自动整理已暂停' if config.paused else '自动整理运行中'))
     def busy_changed(self,busy):
         self.pause_action.setEnabled(not busy and not self.quitting)
-        self.window.demo_button.setEnabled(not busy and not self.active_claim and not self.quitting)
+        self.window.demo_button.setEnabled(not busy and not self.active_claim and not self.quitting and self.window.automation.accepting)
         if self.quitting and not busy:self._finish_quit()
     def poll(self):
         if self.quitting or self.poll_pending or self.active_claim or self.window.coordinator.pending:return
@@ -232,20 +238,42 @@ class Runtime(QObject):
             self.window.demo_button.setEnabled(not self.window.coordinator.pending and not self.quitting)
         self.window.coordinator.submit(finish,done,lambda error:(done(None),self.window.show_error(error)))
     def schedule_tick(self):
-        if self.quitting or self.tick_pending or self.scheduler is None or self.window.coordinator.pending:return
-        self.tick_pending=True;scheduler=self.scheduler;now=datetime.now().astimezone()
-        self.window.coordinator.submit(lambda:(scheduler.tick(now),scheduler.last_errors),self._tick_done,self._tick_error)
+        if self.quitting or self.tick_pending or self.scheduler is None or self.window.coordinator.pending or not self.window.automation.accepting:return
+        self.tick_pending=True;scheduler=self.scheduler;now=datetime.now().astimezone();generation=self.generation
+        completion=self.window.automation.completion_hook(self.service,self.window.automation.state_generation)
+        effective_generation=self.window.automation.rule_generation
+        def tick():
+            scheduler.automatic_completion=completion
+            return scheduler.tick(now),scheduler.last_errors
+        self.window.coordinator.submit(tick,lambda value:self._tick_done(value,generation,effective_generation),lambda message:self._tick_error(message) if generation==self.generation and effective_generation==self.window.automation.rule_generation else None)
     def _tick_error(self,message):self.tick_pending=False;self.window.show_error(message);self.notify('FileHub · 后台整理未完成',message)
-    def _tick_done(self,value):
+    def _tick_done(self,value,generation=None,effective_generation=None):
         self.tick_pending=False;results,errors=value
-        for result in results:self.window.show_result(result)
+        if generation is not None and generation!=self.generation:return
+        if effective_generation is not None and effective_generation!=self.window.automation.rule_generation:
+            self.window.refresh();return
+        outcomes=[]
+        for result in results:
+            if hasattr(result,'items'):self.window.show_result(result)
+            else:outcomes.append(result)
+        if outcomes:self.window.show_run_outcomes(outcomes)
         if errors:self.window.show_error('；'.join(errors[:3]))
     def _demo_worker(self):
         service,store,paths=create_demo(self.state_dir);queue=SendQueue(store.state_dir);lease=InstanceLease(store.state_dir)
         if not lease.try_acquire():raise RuntimeError('演示状态已由另一进程使用')
-        scheduler=Scheduler(service);old_lease=self.lease
+        generation=self.window.automation.state_generation+1
+        try:scheduler=Scheduler(service,automatic_completion=self.window.automation.completion_hook(service,generation))
+        except BaseException:lease.close();service.close_conversions();raise
+        old_lease=self.lease
         self.service=service;self.store=store;self.scheduler=scheduler;self.queue=queue;self.lease=lease;self.state_dir=store.state_dir;self.demo=True;self.generation+=1
         old_lease.close();return service,store,paths
+
+    def _service_rebound(self,service):
+        self.service=service;self.generation+=1
+        generation=self.window.automation.state_generation
+        self.scheduler=None
+        self.window.coordinator.submit(lambda:Scheduler(service,automatic_completion=self.window.automation.completion_hook(service,generation)),self._scheduler_ready,self.window.show_error)
+        self.config_changed(service.config)
     def _demo_ready(self):
         self.window.known_folder_proposals={role:self.service.config.watch_roots[0] for role in ('desktop','downloads')} if self.service.config.watch_roots else {}
         self.window.integration_callback=None;self.window.integration_status_callback=None
@@ -256,11 +284,13 @@ class Runtime(QObject):
         if self.closed or self.quitting:return
         self.quitting=True;self.poll_timer.stop();self.tick_timer.stop()
         self.window.setEnabled(False);self.quit_action.setEnabled(False)
+        self.window.coordinator.begin_wait()
+        self.window.automation.retire(self.window.coordinator.end_wait)
         if self.window.coordinator.pending:
             self.window.status.setText('正在完成当前操作，完成后安全退出。');return
         self._finish_quit()
     def _finish_quit(self):
-        if self.closed or self.window.coordinator.pending:return
+        if self.closed or self.window.coordinator.pending or not self.window.automation.settled:return
         if self.active_claim:
             batch=self.active_claim;queue=self.claim_queue
             self.active_claim=None
@@ -269,7 +299,7 @@ class Runtime(QObject):
             return
         self.closed=True;self.lease_timer.stop();self.window.coordinator.close()
         for dialog in tuple(self.window.dialogs):dialog.reject()
-        self.window.runtime_close_callback=None;self.window.close();self.tray.hide();self.lease.close();self.marker.close();self.exit_callback()
+        self.window.runtime_close_callback=None;self.window._close_settled=True;self.window.close();self.tray.hide();self.lease.close();self.marker.close();self.exit_callback()
 
 
 def resource_base():return Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[3]))
@@ -365,6 +395,7 @@ def run(argv=None):
     finally:
         # Even an external event-loop exit must wait for file work before the
         # installer-visible marker and primary lease disappear.
-        if rt and not rt.closed:rt.window.coordinator.close();rt.lease.close()
+        if rt and not rt.closed:
+            rt.service.close_conversions().wait();rt.window.coordinator.close();rt.lease.close()
         elif bundle and bundle.primary and rt is None:bundle.lease.close()
         marker.close()

@@ -1,10 +1,12 @@
 """Independent conversion intentions and progress display, with no image decode."""
 from collections.abc import Mapping
-from PySide6.QtCore import Signal
+from pathlib import Path
+from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
-    QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView, QFileDialog)
+    QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView, QFileDialog, QListWidget, QListWidgetItem)
 from .action_editor import ConversionFields
 from .rule_requests import ConversionRequest
+from .compact_message import CompactMessage
 
 PHASES = {'start': '准备中', 'decoded': '已读取', 'encoded': '已编码', 'verified': '已验证',
           'complete': '正在保存/替换', 'saving': '正在保存/替换', 'replacing': '正在保存/替换', 'committing': '正在保存/替换'}
@@ -27,17 +29,19 @@ class ConversionPage(QWidget):
         self.editor = QWidget(); contents = QVBoxLayout(self.editor); scroll.setWidget(self.editor)
         self.select_button = QPushButton('选择图片（可多选）'); contents.addWidget(self.select_button)
         self.paths_label = QLabel('未选择图片'); self.paths_label.setWordWrap(True); contents.addWidget(self.paths_label)
+        self.sources = QListWidget(); self.sources.setFixedHeight(90); contents.addWidget(self.sources)
         self.fields = ConversionFields(); contents.addWidget(self.fields)
         label = QLabel('先预览确切文件名和冲突，再明确开始。预览会读取图片，但不会转换或替换原图。')
         label.setWordWrap(True); label.setObjectName('muted'); contents.addWidget(label)
         self.results = QTableWidget(0, 4); self.results.setHorizontalHeaderLabels(['原图', '计划目标', '状态', '说明'])
         self.results.setEditTriggers(QTableWidget.NoEditTriggers); self.results.setWordWrap(True)
-        self.results.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
-        self.results.horizontalHeader().setStretchLastSection(True)
-        self.results.setColumnWidth(0, 165); self.results.setColumnWidth(1, 165); self.results.setColumnWidth(2, 125)
+        self.results.setTextElideMode(Qt.ElideNone)
+        self.results.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.results.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.results.horizontalHeader().sectionResized.connect(lambda *_: self.results.resizeRowsToContents())
         self.results.setMinimumHeight(190); contents.addWidget(self.results); contents.addStretch()
-        self.error_label = QLabel(); self.error_label.setWordWrap(True); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
-        self.status_label = QLabel(); self.status_label.setWordWrap(True); box.addWidget(self.status_label)
+        self.error_label = CompactMessage(); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
+        self.status_label = CompactMessage(); box.addWidget(self.status_label)
         buttons = QHBoxLayout(); box.addLayout(buttons)
         self.preview_button = QPushButton('预览转换'); self.execute_button = QPushButton('开始转换'); self.cancel_button = QPushButton('取消')
         self.execute_button.setObjectName('primary')
@@ -57,7 +61,10 @@ class ConversionPage(QWidget):
 
     def set_paths(self, paths):
         self._paths = tuple(str(path) for path in paths)
-        self.paths_label.setText('已选择 %d 张：\n%s' % (len(self._paths), '\n'.join(self._paths)))
+        self.paths_label.setText('已选择 %d 张（完整路径见每项提示）：' % len(self._paths))
+        self.sources.clear()
+        for path in self._paths:
+            item = QListWidgetItem(Path(path).name); item.setToolTip(path); self.sources.addItem(item)
         self.invalidate_preview()
 
     def _choose(self):
@@ -86,7 +93,9 @@ class ConversionPage(QWidget):
             self.results.insertRow(index)
             status = row.get('status', 'ready')
             for column, text in enumerate((row.get('source', ''), row.get('target', ''), STATUSES.get(status, str(status)), row.get('message', ''))):
-                item = QTableWidgetItem(str(text)); item.setToolTip(str(text)); self.results.setItem(index, column, item)
+                full = str(text)
+                item = QTableWidgetItem(Path(full).name if column in (0, 1) and full else full)
+                item.setToolTip(full); self.results.setItem(index, column, item)
         self.results.resizeRowsToContents(); self._token = token
         self._can_execute = bool(can_execute and token is not None); self._buttons()
 

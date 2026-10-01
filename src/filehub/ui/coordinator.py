@@ -14,12 +14,11 @@ class Coordinator(QObject):
 
     def submit(self, action, callback, error=None):
         self.pending += 1; self.busy.emit(True)
-        future = self.executor.submit(action)
-        def done(f):
-            try: result, failure = f.result(), None
+        def run():
+            try: result, failure = action(), None
             except Exception as exc: result, failure = None, exc
             self.delivered.emit((callback, error), result, failure)
-        future.add_done_callback(done)
+        self.executor.submit(run)
 
     def _finish(self, handlers, result, failure):
         self.pending -= 1
@@ -27,6 +26,13 @@ class Coordinator(QObject):
         if failure is None: callback(result)
         elif error: error(str(failure))
         self.busy.emit(bool(self.pending))
+
+    def begin_wait(self):
+        """Account for asynchronous settlement without occupying/joining a worker."""
+        self.pending += 1; self.busy.emit(True)
+
+    def end_wait(self):
+        self.pending -= 1; self.busy.emit(bool(self.pending))
 
     def close(self):
         self.executor.shutdown(wait=True)

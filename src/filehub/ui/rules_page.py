@@ -7,6 +7,7 @@ from ..automation.models import RuleSet, Rule, Predicate, Action, absolute_folde
 from .condition_editor import ConditionEditor
 from .action_editor import ActionEditor
 from .rule_requests import RulePreviewRequest
+from .compact_message import CompactMessage
 
 
 class RulesPage(QWidget):
@@ -16,6 +17,7 @@ class RulesPage(QWidget):
     previewRequested = Signal(object)
     executeRequested = Signal(object)
     checkRequested = Signal()
+    cancelRequested = Signal()
     changed = Signal()
 
     def __init__(self, parent=None):
@@ -24,11 +26,13 @@ class RulesPage(QWidget):
         self._preview_token = None; self._can_execute = False; self._busy = False; self._sample_paths = ()
         self._watch_roots = ()
         self._scope_snapshot = ()
+        self._cancel_pending = False
+        self._cancellable = False
         box = QVBoxLayout(self); box.setContentsMargins(12, 12, 12, 12)
         title = QLabel('自动规则'); title.setObjectName('heading'); box.addWidget(title)
         help_label = QLabel('每项只使用第一条启用且匹配的规则。配置观察文件夹后，显式启用规则并取消暂停；自动检查约每 10 分钟。普通规则无需项目同步目录。')
         help_label.setWordWrap(True); box.addWidget(help_label)
-        self.rule_list = QListWidget(); self.rule_list.setMaximumHeight(124); box.addWidget(self.rule_list)
+        self.rule_list = QListWidget(); self.rule_list.setFixedHeight(82); box.addWidget(self.rule_list)
         tools = QHBoxLayout(); box.addLayout(tools)
         self.edit_buttons = []
         for text, callback in [('新建', self.new_rule), ('复制', self.duplicate_rule), ('删除', self.delete_rule),
@@ -54,13 +58,17 @@ class RulesPage(QWidget):
         self.folder_sample_button.clicked.connect(self._choose_folder_sample)
         self.preview_text = QTextEdit(); self.preview_text.setReadOnly(True); self.preview_text.setMinimumHeight(110); contents.addWidget(self.preview_text)
         contents.addStretch()
-        self.error_label = QLabel(); self.error_label.setWordWrap(True); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
-        self.dirty_label = QLabel(); box.addWidget(self.dirty_label)
+        self.error_label = CompactMessage(); self.error_label.setObjectName('error'); box.addWidget(self.error_label)
+        self.dirty_label = CompactMessage(); box.addWidget(self.dirty_label)
         buttons = QHBoxLayout(); box.addLayout(buttons)
         self.save_button = QPushButton('保存规则'); self.sample_button = QPushButton('选择样本')
         self.preview_button = QPushButton('测试预览'); self.execute_button = QPushButton('明确执行')
         self.check_button = QPushButton('立即检查（执行启用规则）')
-        for button in (self.save_button, self.sample_button, self.preview_button, self.execute_button, self.check_button): buttons.addWidget(button)
+        for button in (self.save_button, self.sample_button, self.preview_button, self.execute_button): buttons.addWidget(button)
+        check_row = QHBoxLayout(); box.addLayout(check_row); check_row.addWidget(self.check_button)
+        self.cancel_button = QPushButton('取消当前测试/执行'); check_row.addWidget(self.cancel_button)
+        self.progress_label = CompactMessage(); box.addWidget(self.progress_label)
+        self.cancel_button.clicked.connect(self._cancel)
         self.save_button.clicked.connect(lambda: self._guard(self._save))
         self.sample_button.clicked.connect(self._choose_samples); self.preview_button.clicked.connect(lambda: self._guard(self._preview))
         self.execute_button.clicked.connect(self._execute); self.check_button.clicked.connect(self.checkRequested)
@@ -227,9 +235,22 @@ class RulesPage(QWidget):
         for button in (*self.edit_buttons, self.save_button, self.sample_button, self.check_button): button.setEnabled(not self._busy)
         self.preview_button.setEnabled(not self._busy and self._selected_id is not None)
         self.rule_list.setEnabled(not self._busy)
+        self.cancel_button.setEnabled(self._busy and self._cancellable and not self._cancel_pending)
 
-    def set_busy(self, busy):
+    def set_busy(self, busy, *, cancellable=False):
+        self._cancellable = bool(busy and cancellable)
         self._busy = bool(busy); self.editor.setEnabled(not busy and self._selected_id is not None); self._buttons()
+        if not busy: self.set_cancel_pending(False)
+
+    def _cancel(self):
+        if self._busy and self._cancellable and not self._cancel_pending:
+            self.set_cancel_pending(True); self.cancelRequested.emit()
+
+    def set_cancel_pending(self, pending=True):
+        if self._cancel_pending and not pending: self.progress_label.clear()
+        self._cancel_pending = bool(pending)
+        if pending: self.progress_label.setText('正在请求取消；当前处理会先安全完成或恢复。已完成的项目保留。')
+        self._buttons()
 
     def show_error(self, message): self.error_label.setText(str(message))
 
