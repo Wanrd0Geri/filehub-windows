@@ -1,0 +1,5 @@
+platform=windows
+demo=True
+paused=True
+tray_tooltip=FileHub · 演示 · 自动整理已暂停
+claim_unacked=True

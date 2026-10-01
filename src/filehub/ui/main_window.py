@@ -10,10 +10,14 @@ from .archive_dialog import ArchiveDialog
 
 class MainWindow(QMainWindow):
     configuration_changed = Signal(object)
-    def __init__(self,service,store,*,demo_callback=None,pause_callback=None,integration_callback=None,inbox_provider=None):
+    demo_activated = Signal()
+    result_ready = Signal(object)
+    def __init__(self,service,store,*,demo_callback=None,pause_callback=None,integration_callback=None,integration_status_callback=None,inbox_provider=None):
         super().__init__();self.service=service;self.store=store
         self.demo_callback=demo_callback;self.pause_callback=pause_callback;self.integration_callback=integration_callback;self.inbox_provider=inbox_provider
+        self.integration_status_callback=integration_status_callback;self.integration_status_ready=integration_status_callback is None;self.runtime_close_callback=None;self.is_demo=False
         self.paths=();self.preview=None;self.preview_generation=0;self.batches=[];self.dialogs=[]
+        self.known_folder_proposals={}
         self.coordinator=Coordinator(self);self.setWindowTitle('FileHub');self.resize(1000,700);self.setMinimumSize(800,620);self.setAcceptDrops(True)
         shell=QWidget();self.setCentralWidget(shell);outer=QHBoxLayout(shell);outer.setContentsMargins(0,0,0,0);outer.setSpacing(0)
         sidebar=QWidget();sidebar.setObjectName('sidebar');sidebar.setFixedWidth(180);nav=QVBoxLayout(sidebar);nav.setContentsMargins(12,22,12,17);nav.setSpacing(5)
@@ -52,6 +56,7 @@ class MainWindow(QMainWindow):
     def build_home(self):
         layout=self.page('文件，各归其位。','留下需要的，其余交给 FileHub。')
         self.first_run=QLabel('欢迎使用 FileHub\n先选择同步空间，再选择要自动整理的目录。\n新发现的文件会完整等待 3 天；首次启动保持暂停。');self.first_run.setObjectName('firstRun');self.first_run.setWordWrap(True);layout.addWidget(self.first_run)
+        self.demo_notice=self.muted('演示 · 当前文件和同步空间均为独立示例。普通启动会返回原设置。');self.demo_notice.hide();layout.addWidget(self.demo_notice)
         row=QHBoxLayout();row.addWidget(self.button('选择文件',self.choose_files));row.addWidget(self.button('选择文件夹',self.choose_source_folder));self.first_sync_button=self.button('选择同步空间',self.first_choose_sync);row.addWidget(self.first_sync_button);row.addStretch();self.demo_button=self.button('演示',self.start_demo);row.addWidget(self.demo_button);layout.addLayout(row)
         self.selection=QLabel('将文件拖到这里，或选择多个文件。');self.selection.setWordWrap(True);layout.addWidget(self.selection)
         self.source_cards=[];self.source_titles=[];cards=QHBoxLayout()
@@ -81,7 +86,7 @@ class MainWindow(QMainWindow):
         layout=self.page('设置','按你的习惯，安静地运行。')
         self.sync_path=QLineEdit();self.sync_path.setReadOnly(True);row=QHBoxLayout();row.addWidget(self.sync_path,1);row.addWidget(self.button('选择同步空间',self.choose_sync));layout.addWidget(QLabel('同步空间'));layout.addLayout(row)
         layout.addWidget(QLabel('自动整理目录 · 明确选择后才生效'));self.watch_list=QListWidget();self.watch_list.setMinimumHeight(92);self.watch_list.setMaximumHeight(130);layout.addWidget(self.watch_list)
-        row=QHBoxLayout();row.addWidget(self.button('添加目录',self.choose_watch));row.addWidget(self.button('移除所选',lambda:self.watch_list.takeItem(self.watch_list.currentRow())));layout.addLayout(row)
+        row=QHBoxLayout();row.addWidget(self.button('添加目录',lambda:self.choose_watch()));row.addWidget(self.button('桌面…',lambda:self.choose_watch('desktop')));row.addWidget(self.button('下载…',lambda:self.choose_watch('downloads')));row.addWidget(self.button('移除所选',lambda:self.watch_list.takeItem(self.watch_list.currentRow())));layout.addLayout(row)
         row=QHBoxLayout();row.addWidget(QLabel('首次发现后等待'));self.sweep_days=QSpinBox();self.sweep_days.setRange(1,365);self.sweep_days.setSuffix(' 天');row.addWidget(self.sweep_days);row.addStretch();row.addWidget(QLabel('外观'));self.appearance=QComboBox();self.appearance.addItems(['深色','浅色','跟随系统']);row.addWidget(self.appearance);layout.addLayout(row)
         self.paused=QCheckBox('暂停自动整理（仍可手动归档）');layout.addWidget(self.paused)
         self.global_jobs=QCheckBox('由这台电脑管理共享任务（高级）');layout.addWidget(self.global_jobs)
@@ -102,6 +107,9 @@ class MainWindow(QMainWindow):
         c=self.service.config;self.sync_path.setText(str(c.sync_root or ''));self.watch_list.clear();self.watch_list.addItems([str(p) for p in c.watch_roots]);self.sweep_days.setValue(c.sweep_days);self.inbox_days.setValue(c.inbox_days);self.appearance.setCurrentIndex(['dark','light','system'].index(c.theme));self.paused.setChecked(c.paused);self.global_jobs.setChecked(c.global_jobs)
         self.first_run.setVisible(c.sync_root is None);self.running.setText('自动整理已暂停' if c.paused else '自动整理运行中');self.pause_button.setText('继续整理' if c.paused else '暂停整理')
         self.first_sync_button.setVisible(c.sync_root is None)
+        self.setWindowTitle('FileHub · 演示' if self.is_demo else 'FileHub')
+        self.demo_notice.setVisible(self.is_demo)
+        if self.is_demo:self.running.setText('演示 · '+self.running.text())
         for n,label in enumerate(self.source_cards):
             text=str(c.watch_roots[n]) if n<len(c.watch_roots) else '未选择目录'
             self.source_titles[n].setText(c.watch_roots[n].name if n<len(c.watch_roots) else ('桌面','下载')[n])
@@ -114,8 +122,8 @@ class MainWindow(QMainWindow):
     def first_choose_sync(self):
         self.navigate(3);self.choose_sync()
 
-    def choose_watch(self):
-        path=QFileDialog.getExistingDirectory(self,'选择自动整理目录')
+    def choose_watch(self,role='downloads'):
+        path=QFileDialog.getExistingDirectory(self,'选择自动整理目录',str(self.known_folder_proposals.get(role,'')))
         if path:self.watch_list.addItem(path)
 
     def choose_files(self):
@@ -164,6 +172,7 @@ class MainWindow(QMainWindow):
     def show_result(self,result):
         self.status.setText({'success':'已完成，可在记录中撤销。','partial':'部分完成，请查看记录中的问题。','failed':'未完成，请查看记录。'}[result.status]);self.refresh()
         if result.ok:self.set_paths([])
+        self.result_ready.emit(result)
 
     def show_error(self,message):self.status.setText('操作未完成：'+message)
 
@@ -211,6 +220,8 @@ class MainWindow(QMainWindow):
             batch_id=self.batches[index].batch_id;self.coordinator.submit(lambda:self.service.undo(batch_id),self.show_result,self.show_error)
 
     def save_settings(self):
+        if self.integration_status_callback and not self.integration_status_ready:
+            self.show_error('正在读取 Windows 集成设置，请稍候。');return
         self.invalidate_preview()
         for dialog in self.dialogs:dialog.invalidate()
         config=replace(self.service.config,sync_root=Path(self.sync_path.text()) if self.sync_path.text() else None,watch_roots=tuple(Path(self.watch_list.item(i).text()) for i in range(self.watch_list.count())),paused=self.paused.isChecked(),global_jobs=self.global_jobs.isChecked(),sweep_days=self.sweep_days.value(),inbox_days=self.inbox_days.value(),theme=['dark','light','system'][self.appearance.currentIndex()])
@@ -218,14 +229,30 @@ class MainWindow(QMainWindow):
         def save():
             self.store.save(config)
             self.service.config=config
-            if self.integration_callback:self.integration_callback(*integration)
+            if self.integration_callback:
+                try:self.integration_callback(*integration)
+                except Exception as exc:raise RuntimeError('设置已保存，但 Windows 集成未完成：'+str(exc)) from exc
             return config
-        self.coordinator.submit(save,self.saved,self.show_error)
+        self.coordinator.submit(save,self.saved,self.settings_failed)
 
     def saved(self,config):
         self.invalidate_preview()
         for dialog in self.dialogs:dialog.invalidate()
         self.load_config_controls();apply_theme(self,config.theme);self.configuration_changed.emit(config);self.status.setText('设置已保存。')
+        self.refresh_integration()
+
+    def settings_failed(self,message):
+        self.load_config_controls();apply_theme(self,self.service.config.theme);self.configuration_changed.emit(self.service.config)
+        self.refresh_integration();self.show_error(message)
+
+    def refresh_integration(self):
+        if self.integration_status_callback:
+            self.integration_status_ready=False;self.autostart.setEnabled(False);self.context_menu.setEnabled(False)
+            self.coordinator.submit(self.integration_status_callback,self.show_integration_status,self.show_error)
+
+    def show_integration_status(self,status):
+        self.integration_status_ready=True;self.autostart.setEnabled(True);self.context_menu.setEnabled(True)
+        self.autostart.setChecked(status['autostart']);self.context_menu.setChecked(status['context_menu'])
 
     def toggle_pause(self):
         config=replace(self.service.config,paused=not self.service.config.paused)
@@ -236,12 +263,16 @@ class MainWindow(QMainWindow):
         self.coordinator.submit(change,self.saved,self.show_error)
 
     def start_demo(self):
+        if self.coordinator.pending or self.dialogs:
+            self.show_error('请先完成当前操作或关闭归档窗口，再进入演示。');return
         if self.demo_callback:self.coordinator.submit(self.demo_callback,self.demo_ready,self.show_error)
         else:self.status.setText('演示将在应用启动器接入后启用。')
 
     def demo_ready(self,result):
         if result:
-            self.service,self.store,paths=result;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh()
+            self.invalidate_preview()
+            for dialog in self.dialogs:dialog.invalidate()
+            self.service,self.store,paths=result;self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
         self.status.setText('演示只使用独立示例目录，可尝试归档与撤销。')
 
     def refresh_inbox(self):
@@ -277,3 +308,7 @@ class MainWindow(QMainWindow):
 
     def open_archive_dialog(self,paths):
         dialog=ArchiveDialog(self,paths);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog));dialog.show();dialog.raise_();dialog.activateWindow();return dialog
+
+    def closeEvent(self,event):
+        if self.runtime_close_callback and not self.runtime_close_callback():event.ignore()
+        else:event.accept()

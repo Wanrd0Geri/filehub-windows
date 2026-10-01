@@ -23,6 +23,7 @@ class Config:
         state=checked_path(state_dir)
         roots=[checked_path(p) for p in self.watch_roots]
         sync=checked_path(self.sync_root) if self.sync_root else None
+        if sync and sync==Path(sync.anchor):raise ValueError('同步空间不能选择磁盘根目录')
         def overlap(a,b):return a==b or a in b.parents or b in a.parents
         if sync and overlap(state,sync):raise ValueError('状态目录不能与同步项目重叠')
         for i,root in enumerate(roots):

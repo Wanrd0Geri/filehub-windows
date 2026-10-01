@@ -1,0 +1,240 @@
+import os
+os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
+from pathlib import Path
+import json
+import time
+import threading
+from datetime import datetime, timezone
+import pytest
+from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QImage
+from filehub.config import Config, ConfigStore
+from filehub.service import FileHubService
+from filehub.integration import SendQueue
+from filehub.ui.app import create_demo, self_test, Runtime, bootstrap, ProgramUseMutex
+
+
+def settle(app,runtime):
+    end=time.monotonic()+10
+    while runtime.window.coordinator.pending and time.monotonic()<end:
+        app.processEvents();time.sleep(.01)
+    app.processEvents();assert not runtime.window.coordinator.pending
+
+
+def runtime(tmp_path,*,now=10):
+    app=QApplication.instance() or QApplication([])
+    bundle=bootstrap(tmp_path/'state')
+    notices=[];exits=[]
+    rt=Runtime(bundle,auto_timers=False,wall_clock=lambda:now,notifier=lambda *x:notices.append(x),exit_callback=lambda:exits.append(True))
+    rt._test_notices=notices;rt._test_exits=exits;settle(app,rt)
+    return app,rt
+
+
+def cleanup(app,rt):
+    if not rt.quitting:rt.request_quit()
+    settle(app,rt)
+
+
+def test_demo_png_is_valid_and_defaults_remain_unconfigured(tmp_path):
+    service,store,paths=create_demo(tmp_path)
+    image=QImage(str(paths[0]));assert not image.isNull() and image.width()==32
+    assert service.config.paused and not service.config.global_jobs
+    normal=bootstrap(tmp_path/'normal')
+    assert normal.service.config==Config() and normal.service.config.watch_roots==()
+    normal.lease.close()
+
+
+def test_runtime_claim_is_not_acked_on_show_cancel_is_acked(tmp_path):
+    app,rt=runtime(tmp_path);p=tmp_path/'中文 path.png';p.write_bytes(b'data')
+    rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
+    assert rt.active_claim and rt.claim_dialog.isVisible()
+    assert SendQueue(rt.state_dir).claim(now=11) is None
+    rt.renew_claim();settle(app,rt)
+    assert SendQueue(rt.state_dir).claim(now=35) is None
+    rt.claim_dialog.reject();settle(app,rt)
+    assert not rt.active_claim and SendQueue(rt.state_dir).claim(now=50) is None and p.exists()
+    rt.poll();settle(app,rt);assert not rt.claim_dialog
+    cleanup(app,rt)
+
+
+def test_open_dialog_crash_lease_redelivers_on_restart(tmp_path):
+    app,rt=runtime(tmp_path);p=tmp_path/'a';p.write_bytes(b'a');rt.queue.enqueue([p],now=9)
+    rt.poll();settle(app,rt);first=rt.active_claim
+    # Model abrupt exit: no finished/cancel callback, no acknowledge/release.
+    rt.poll_timer.stop();rt.lease_timer.stop();rt.tick_timer.stop()
+    rt.claim_dialog.finished.disconnect();rt.claim_dialog.reject()
+    rt.window.runtime_close_callback=None;rt.window.close()
+    rt.window.coordinator.close();rt.lease.close();rt.marker.close()
+    queue=SendQueue(rt.state_dir);assert queue.claim(now=20) is None
+    retry=queue.claim(now=41);assert retry.paths==(p,) and retry.token!=first.token
+    queue.ack(retry.token)
+
+
+def test_demo_swap_coherent_ownership_and_disabled_integration(tmp_path):
+    app,rt=runtime(tmp_path);old_state=rt.state_dir
+    rt.window.demo_button.click();settle(app,rt)
+    assert rt.service is rt.window.service and rt.scheduler.service is rt.service
+    assert rt.state_dir==rt.service.engine.state_dir==rt.queue.state_dir==rt.lease.state_dir==rt.window.store.state_dir
+    assert rt.state_dir!=old_state and '演示' in rt.window.windowTitle()
+    assert not rt.window.autostart.isEnabled() and not rt.window.context_menu.isEnabled()
+    assert rt.window.paths and not QImage(str(rt.window.paths[0])).isNull()
+    SendQueue(old_state).enqueue([tmp_path/'ordinary'],now=10)
+    assert rt.queue.claim(now=11) is None
+    cleanup(app,rt)
+
+def test_busy_quit_retains_marker_and_lease_until_worker_finishes(tmp_path):
+    app,rt=runtime(tmp_path);entered=threading.Event();release=threading.Event()
+    rt.window.coordinator.submit(lambda:(entered.set(),release.wait(5)),lambda _:None)
+    assert entered.wait(2)
+    rt.request_quit();assert rt.quitting and not rt.closed and rt.marker.handle and rt.lease.file
+    release.set();settle(app,rt)
+    assert rt.closed and rt.marker.handle is None and rt.lease.file is None and rt._test_exits==[True]
+
+
+def test_claim_execute_ack_only_after_persisted_result(tmp_path):
+    app,rt=runtime(tmp_path);rt.window.demo_button.click();settle(app,rt)
+    p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
+    dialog=rt.claim_dialog;dialog.request_preview();settle(app,rt);assert dialog.preview
+    dialog.execute();settle(app,rt)
+    assert not rt.active_claim and rt.service.history()[0].ok and not p.exists()
+    assert rt.queue.claim(now=50) is None
+    cleanup(app,rt)
+
+
+def test_claim_execute_exception_retains_unacked_request(tmp_path):
+    app,rt=runtime(tmp_path);rt.window.demo_button.click();settle(app,rt)
+    p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
+    dialog=rt.claim_dialog;dialog.request_preview();settle(app,rt)
+    def fail(preview):raise OSError('before persistent result')
+    rt.service.execute=fail;dialog.execute();settle(app,rt)
+    assert rt.active_claim and dialog.isVisible() and p.exists() and not rt.service.history()
+    rt.request_quit();settle(app,rt)
+    redelivered=SendQueue(rt.state_dir).claim(now=11);assert redelivered.paths==(p,)
+    SendQueue(rt.state_dir).ack(redelivered.token)
+
+
+def test_selftest_writes_json_without_stdout_and_actual_probe(tmp_path,monkeypatch):
+    import filehub.ui.app as module
+    monkeypatch.setattr(module.sys,'stdout',None)
+    assert module.run(['--self-test','--state-dir',str(tmp_path/'selftest')])==0
+    report=json.loads((tmp_path/'selftest'/'self-test.json').read_text(encoding='utf-8'))
+    assert report['ok'] and all(report['checks'].values()) and report['probe']['width']==64
+    assert Path(report['probe']['path']).is_relative_to(Path.cwd())
+    assert Path(report['state_dir']).is_relative_to(tmp_path/'selftest')
+
+
+def test_multiple_invocations_aggregate_one_dialog_and_plain_launch_reveals(tmp_path):
+    app,rt=runtime(tmp_path);state=rt.state_dir
+    paths=[tmp_path/f'素材 {n}.txt' for n in range(3)]
+    for p in paths:p.write_bytes(b'a')
+    for p in paths:
+        secondary=bootstrap(state,send=[p]);assert not secondary.primary
+    rt.wall_clock=lambda:time.time()+1;rt.poll();settle(app,rt)
+    assert rt.claim_dialog.paths==tuple(paths)
+    rt.claim_dialog.reject();settle(app,rt)
+    rt.window.hide();secondary=bootstrap(state);assert not secondary.primary
+    rt.poll();settle(app,rt);assert rt.window.isVisible()
+    cleanup(app,rt)
+
+
+def test_slow_demo_swap_never_claims_original_queue(tmp_path,monkeypatch):
+    import filehub.ui.app as module
+    app,rt=runtime(tmp_path);old=rt.state_dir;entered=threading.Event();release=threading.Event();original=module.create_demo
+    def slow(base):entered.set();assert release.wait(3);return original(base)
+    monkeypatch.setattr(module,'create_demo',slow)
+    rt.window.demo_button.click();assert entered.wait(2)
+    path=tmp_path/'ordinary';SendQueue(old).enqueue([path],now=9)
+    rt.poll();rt.schedule_tick()
+    release.set();settle(app,rt)
+    assert rt.state_dir!=old and rt.active_claim is None
+    preserved=SendQueue(old).claim(now=11);assert preserved.paths==(path,)
+    SendQueue(old).ack(preserved.token);cleanup(app,rt)
+
+class Registry:
+    def __init__(self):self.data={}
+    def exists(self,key):return key in self.data
+    def get(self,key,name):return self.data.get(key,{}).get(name)
+    def set(self,key,name,value):self.data.setdefault(key,{})[name]=value
+    def delete_value(self,key,name):self.data.get(key,{}).pop(name,None)
+    def delete_key_if_empty(self,key):
+        if not self.data.get(key) and not any(k.startswith(key+'\\') for k in self.data):self.data.pop(key,None)
+
+
+def test_existing_owned_registration_read_before_first_save_preserved(tmp_path):
+    from filehub.ui.app import IntegrationController
+    from filehub.integration import install_context_menu, set_autostart
+    app=QApplication.instance() or QApplication([]);reg=Registry();exe=tmp_path/'app.exe'
+    install_context_menu(exe,registry=reg);set_autostart(exe,True,registry=reg)
+    control=IntegrationController(exe,reg);before={key:dict(v) for key,v in reg.data.items()}
+    bundle=bootstrap(tmp_path/'state');rt=Runtime(bundle,auto_timers=False,integration=control,notifier=lambda *x:None,exit_callback=lambda:None)
+    assert not rt.window.integration_status_ready and not rt.window.autostart.isEnabled()
+    settle(app,rt);assert rt.window.autostart.isChecked() and rt.window.context_menu.isChecked()
+    rt.window.appearance.setCurrentIndex(1);rt.window.save_settings();settle(app,rt)
+    assert reg.data==before and rt.service.config.theme=='light'
+    cleanup(app,rt)
+
+
+def test_partial_settings_save_keeps_tray_config_and_actual_registration(tmp_path):
+    from filehub.ui.app import IntegrationController
+    from filehub.integration import install_context_menu, RUN_KEY
+    app=QApplication.instance() or QApplication([]);reg=Registry();exe=tmp_path/'app.exe'
+    foreign='Software\\Classes\\*\\shell\\FileHub.Send';reg.set(foreign,'','foreign')
+    bundle=bootstrap(tmp_path/'state');rt=Runtime(bundle,auto_timers=False,integration=IntegrationController(exe,reg),notifier=lambda *x:None,exit_callback=lambda:None);settle(app,rt)
+    rt.window.paused.setChecked(False);rt.window.autostart.setChecked(True);rt.window.context_menu.setChecked(True)
+    rt.window.save_settings();settle(app,rt)
+    assert not rt.service.config.paused and '运行中' in rt.tray.toolTip()
+    assert rt.window.autostart.isChecked() and not rt.window.context_menu.isChecked()
+    assert reg.get(RUN_KEY,'FileHub')==f'"{exe}" --background' and reg.get(foreign,'')=='foreign'
+    assert '设置已保存' in rt.window.status.text() and '集成未完成' in rt.window.status.text()
+    cleanup(app,rt)
+
+
+def test_arbitrary_cwd_runtime_service_archives_real_video(tmp_path,monkeypatch):
+    from filehub.ui.app import runtime_service,resource_base
+    root=tmp_path/'sync';(root/'1_工作'/'项目'/'261001_XYZ_测试').mkdir(parents=True)
+    source=tmp_path/'video.mp4';source.write_bytes((resource_base()/'resources/selftest/tiny.mp4').read_bytes())
+    changed=tmp_path/'different-cwd';changed.mkdir();monkeypatch.chdir(changed)
+    service=runtime_service(Config(sync_root=root),tmp_path/'state')
+    preview=service.preview([source],'XYZ020822');assert preview.items[0].video_width==64 and not preview.items[0].error
+    result=service.execute(preview);assert result.ok and not source.exists()
+    assert service.undo(result.batch_id).ok and source.exists()
+    assert service.config.ffprobe_path=='resources/ffprobe/ffprobe.exe'
+
+
+def test_startup_marker_already_exists_during_recovery_and_closes_after_quit(tmp_path,monkeypatch):
+    import ctypes
+    from ctypes import wintypes
+    import filehub.ui.app as module
+    from PySide6.QtCore import QTimer
+    kernel=ctypes.WinDLL('kernel32',use_last_error=True);kernel.OpenMutexW.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.LPCWSTR];kernel.OpenMutexW.restype=wintypes.HANDLE;kernel.CloseHandle.argtypes=[wintypes.HANDLE]
+    original=module.bootstrap;seen=[]
+    def boot(*args,**kwargs):
+        handle=kernel.OpenMutexW(0x100000,False,ProgramUseMutex.name)
+        assert handle;kernel.CloseHandle(handle);seen.append(threading.get_ident());return original(*args,**kwargs)
+    monkeypatch.setattr(module,'bootstrap',boot)
+    original_runtime=module.Runtime
+    def make(*args,**kwargs):
+        rt=original_runtime(*args,**kwargs);QTimer.singleShot(0,rt.request_quit);return rt
+    monkeypatch.setattr(module,'Runtime',make)
+    assert module.run(['--background','--state-dir',str(tmp_path/'state')])==0
+    assert seen and seen[0]!=threading.get_ident()
+
+def test_sync_drive_root_validation_rejects_before_any_runtime_scan(tmp_path):
+    with pytest.raises(ValueError,match='同步.*根目录'):
+        # Pure validation only: a different-volume state path, never created.
+        other_state=Path('C:/FileHub_validation_only') if tmp_path.anchor.upper()!='C:\\' else Path('D:/FileHub_validation_only')
+        Config(sync_root=Path(tmp_path.anchor)).validate(other_state)
+
+def test_knownfolder_proposals_are_not_watch_roots_and_only_seed_dialog(tmp_path,monkeypatch):
+    from PySide6.QtWidgets import QFileDialog
+    proposed={'desktop':tmp_path/'redirected desktop','downloads':tmp_path/'redirected downloads'}
+    seen=[]
+    def resolve(guid):return proposed['desktop'] if guid.startswith('B4BF') else proposed['downloads']
+    bundle=bootstrap(tmp_path/'state',proposal_resolver=resolve)
+    assert bundle.proposals==proposed and bundle.service.config.watch_roots==()
+    app=QApplication.instance() or QApplication([]);rt=Runtime(bundle,auto_timers=False,notifier=lambda *x:None,exit_callback=lambda:None);settle(app,rt)
+    monkeypatch.setattr(QFileDialog,'getExistingDirectory',lambda parent,title,start:seen.append(start) or '')
+    rt.window.choose_watch('desktop');rt.window.choose_watch('downloads')
+    assert seen==[str(proposed['desktop']),str(proposed['downloads'])] and rt.window.watch_list.count()==0
+    assert not proposed['desktop'].exists() and not proposed['downloads'].exists()
+    cleanup(app,rt)
