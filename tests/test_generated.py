@@ -35,6 +35,205 @@ def publish(engine, source, target, stage, **kwargs):
                                     stage.output_fingerprint, '图片转换', **kwargs)
 
 
+def chain_original(root):
+    source = root / 'chain.jpg'
+    value = QImage(96, 64, QImage.Format.Format_RGB32)
+    for y in range(value.height()):
+        for x in range(value.width()):
+            value.setPixelColor(x, y, QColor(x * 17 % 256, y * 23 % 256, (x + y) * 13 % 256))
+    assert value.save(str(source), 'JPEG', 98)
+    with open(str(source) + ':metadata', 'wb') as stream:
+        stream.write(b'original chain ADS')
+    return source
+
+
+def chain_stage(engine, source, quality):
+    from filehub.generated import generate_owned
+    from filehub.conversion import ConversionSpec
+    return generate_owned(engine, source, source, ConversionSpec(output_format='jpeg', quality=quality))
+
+
+def assert_chain_restored(source, original, before):
+    restored = Fingerprint.capture(source)
+    assert source.read_bytes() == original
+    assert restored.same_content(before) and restored.streams == before.streams
+    assert (restored.creation_ns, restored.mtime_ns) == (before.creation_ns, before.mtime_ns)
+    with open(str(source) + ':metadata', 'rb') as stream:
+        assert stream.read() == b'original chain ADS'
+
+
+@pytest.mark.parametrize('count', [2, 3])
+def test_same_path_replace_chain_commits_and_full_inverse_restores_original(tmp_path, count):
+    source = chain_original(tmp_path)
+    before, original = Fingerprint.capture(source), source.read_bytes()
+    engine = OperationEngine(tmp_path / 'state')
+    batch = engine.journal.create_batch('same subject', [])
+    for quality in (90, 80, 70)[:count]:
+        stage = chain_stage(engine, source, quality)
+        result = publish(engine, source, source, stage, mode='replace', batch_id=batch)
+        assert result.ok, [(i.state, i.message) for i in result.items]
+        assert result.items[-1].target_fingerprint == Fingerprint.capture(source)
+    assert len(result.items) == count
+    assert all(a.target_fingerprint == b.expected_source for a, b in zip(result.items, result.items[1:]))
+    assert source.read_bytes() != original
+    undone = engine.undo(batch)
+    assert undone.ok and all(i.state == 'undone' for i in undone.items), undone
+    assert_chain_restored(source, original, before)
+
+
+@pytest.mark.parametrize('count', [2, 3])
+def test_rule_preview_same_path_replace_chain_finishes_and_full_inverse_restores(tmp_path, count):
+    from filehub.config import Config
+    from filehub.service import FileHubService
+    from filehub.automation.models import Rule, RuleSet, Predicate, Action
+    watch = tmp_path / 'watch'
+    watch.mkdir()
+    source = chain_original(watch)
+    before, original = Fingerprint.capture(source), source.read_bytes()
+    service = FileHubService(Config(watch_roots=(watch,), paused=False), tmp_path / 'state')
+    executor = service.conversions
+    try:
+        rule = Rule(name='same path JPEG chain', enabled=True,
+                    condition=Predicate('extension', 'equals', '.jpg'),
+                    actions=tuple(Action('image_convert', {'output_format': 'jpeg', 'mode': 'replace', 'quality': q})
+                                  for q in (90, 80, 70)[:count]))
+        service.rules.save(RuleSet((rule,)))
+        preview = executor.submit_rule_preview([source], rule.id).future.result(10)
+        assert not preview.errors and len(preview.plans) == 1
+        assert len(preview.plans[0].steps) == count
+        assert all(step.source == source == step.target for step in preview.plans[0].steps)
+        outcome = executor.submit_rule(preview).future.result(10)[0]
+        assert outcome.status == 'success' and len(outcome.steps) == count, outcome
+        items = service.engine.journal.items(outcome.batch_id)
+        assert len(items) == count and all(i.state == 'committed' for i in items)
+        assert service.undo(outcome.batch_id).ok
+        assert_chain_restored(source, original, before)
+    finally:
+        assert executor.close().wait(5)
+
+
+@pytest.mark.parametrize('state,kind', [('prepared', 'copy'), ('failed', 'convert'),
+                                       ('committed', 'copy'), ('committed', 'convert')])
+def test_same_path_chain_never_exempts_unrelated_selected_source(tmp_path, state, kind):
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    assert first.ok
+    current = Fingerprint.capture(source)
+    unrelated = engine.journal.append_operations(first.batch_id, [Operation(kind, source, tmp_path / 'elsewhere.jpg', current)])[0]
+    engine.journal.transition(unrelated, state, target_fp=current if state == 'committed' else None)
+    stage = chain_stage(engine, source, 80)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=first.batch_id)
+    assert result.items[-1].state == 'failed' and '选中' in result.items[-1].message
+    assert Fingerprint.capture(source) == current
+    from filehub.generated import discard_owned
+    discard_owned(engine, stage)
+
+
+@pytest.mark.parametrize('field', ['file_id', 'creation_ns', 'mtime_ns', 'streams'])
+def test_same_path_chain_requires_every_predecessor_full_fingerprint_field(tmp_path, field):
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    assert first.ok
+    current = Fingerprint.capture(source)
+    value = (Fingerprint.capture(engine.journal.generated(first.items[0].operation_id).backup).streams
+             if field == 'streams' else getattr(current, field) + 100)
+    engine.journal.transition(first.items[0].operation_id, 'committed', target_fp=replace(current, **{field: value}))
+    stage = chain_stage(engine, source, 80)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=first.batch_id)
+    assert result.items[-1].state == 'failed' and '选中' in result.items[-1].message
+    assert Fingerprint.capture(source) == current
+    from filehub.generated import discard_owned
+    discard_owned(engine, stage)
+
+
+def test_same_path_chain_requires_older_links_even_with_exact_current_predecessor(tmp_path):
+    from filehub.generated import discard_owned
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    second = publish(engine, source, source, chain_stage(engine, source, 80), mode='replace', batch_id=first.batch_id)
+    assert second.ok
+    current = Fingerprint.capture(source)
+    assert second.items[-1].target_fingerprint == current
+    older = second.items[0]
+    engine.journal.transition(older.operation_id, 'committed',
+                              target_fp=replace(older.target_fingerprint, file_id=older.target_fingerprint.file_id + 100))
+    stage = chain_stage(engine, source, 70)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=first.batch_id)
+    assert result.items[-1].state == 'failed' and '选中' in result.items[-1].message
+    assert Fingerprint.capture(source) == current
+    discard_owned(engine, stage)
+
+
+@pytest.mark.parametrize('ownership', ['missing', 'prepared', 'keep'])
+def test_same_path_chain_requires_committed_replace_ownership(tmp_path, ownership):
+    from filehub.generated import discard_owned
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    assert first.ok
+    current = Fingerprint.capture(source)
+    operation_id = first.items[0].operation_id
+    with engine.journal.connection() as db:
+        if ownership == 'missing':
+            db.execute('DELETE FROM generated_operations WHERE operation=?', (operation_id,))
+        elif ownership == 'prepared':
+            db.execute("UPDATE generated_operations SET phase='prepared' WHERE operation=?", (operation_id,))
+        else:
+            db.execute("UPDATE generated_operations SET mode='keep' WHERE operation=?", (operation_id,))
+    stage = chain_stage(engine, source, 80)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=first.batch_id)
+    assert result.items[-1].state == 'failed' and '选中' in result.items[-1].message
+    assert Fingerprint.capture(source) == current
+    discard_owned(engine, stage)
+
+
+@pytest.mark.parametrize('after_ticket', [False, True])
+def test_same_path_chain_rejects_external_identical_bytes_new_identity(tmp_path, after_ticket):
+    from filehub.generated import discard_owned
+    from filehub.platform.metadata import set_times
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    assert first.ok
+    current, content = Fingerprint.capture(source), source.read_bytes()
+    stage = chain_stage(engine, source, 80) if after_ticket else None
+    source.rename(tmp_path / 'retained-prior.jpg')
+    with engine.platform.create_target(source) as external:
+        external.stream.write(content)
+        external.flush()
+        set_times(external.handle, current.creation_ns, current.mtime_ns)
+    changed = Fingerprint.capture(source)
+    assert changed.same_content(current)
+    assert (changed.creation_ns, changed.mtime_ns) == (current.creation_ns, current.mtime_ns)
+    assert changed.file_id != current.file_id
+    if stage is None:
+        stage = chain_stage(engine, source, 80)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=first.batch_id)
+    assert result.items[-1].state == ('conflict' if after_ticket else 'failed'), result
+    assert Fingerprint.capture(source) == changed
+    assert not engine.journal.generated(first.items[0].operation_id).backup.read_bytes() == content
+    if not after_ticket:
+        discard_owned(engine, stage)
+
+
+def test_same_path_chain_cannot_borrow_committed_predecessor_from_another_batch(tmp_path):
+    from filehub.generated import discard_owned
+    source = chain_original(tmp_path)
+    engine = OperationEngine(tmp_path / 'state')
+    first = publish(engine, source, source, chain_stage(engine, source, 90), mode='replace')
+    assert first.ok
+    current = Fingerprint.capture(source)
+    second_batch = engine.journal.create_batch('unrelated selection', [Operation('copy', source, tmp_path / 'copy.jpg', current)])
+    stage = chain_stage(engine, source, 80)
+    result = publish(engine, source, source, stage, mode='replace', batch_id=second_batch)
+    assert result.items[-1].state == 'failed' and '选中' in result.items[-1].message
+    assert Fingerprint.capture(source) == current
+    discard_owned(engine, stage)
+
+
 @pytest.mark.parametrize('mode,same', [('keep', False), ('replace', False), ('replace', True)])
 def test_real_publication_and_undo(tmp_path, mode, same):
     source = image(tmp_path, 'original.jpg' if same else 'original.png')

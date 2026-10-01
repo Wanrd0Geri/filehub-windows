@@ -146,6 +146,32 @@ def _cleanup_stage(engine, item):
         _remove_owned(engine, item.staging, item.target_fingerprint)
 
 
+def _same_path_predecessors(engine, item, overlapping):
+    """Prove every reserved source alias belongs to this committed subject.
+
+    Walk newest output to oldest input with complete identity/metadata equality.
+    The held original must still verify the current input before any mutation;
+    neither a matching pathname nor equal image bytes establishes this lineage.
+    ``overlapping`` contains only earlier rows from this exact ordered batch.
+    """
+    subject = path_key(item.source)
+    expected = item.expected_source
+    for prior in reversed(overlapping):
+        if (prior.batch_id != item.batch_id or prior.kind != 'convert' or prior.state != 'committed'
+                or prior.target is None or path_key(prior.source) != subject or path_key(prior.target) != subject
+                or not isinstance(expected, Fingerprint) or not isinstance(prior.expected_source, Fingerprint)
+                or prior.target_fingerprint != expected):
+            return False
+        try:
+            record = _record(engine, prior)
+        except ValueError:
+            return False
+        if record.mode != 'replace' or record.phase != 'committed':
+            return False
+        expected = prior.expected_source
+    return True
+
+
 def publish_generated(engine, source, target, expected_source, staging, expected_output,
                       label, *, mode='keep', batch_id=None, cancel_event=None):
     source, target = Path(os.path.abspath(source)), Path(os.path.abspath(target))
@@ -168,9 +194,17 @@ def publish_generated(engine, source, target, expected_source, staging, expected
             if not same and engine.overlaps(source, target):
                 raise ValueError('源与目标路径重叠')
             # Also protect originals already selected into this shared batch.
-            for other in engine.journal.items(batch_id):
-                if other.operation_id != item.operation_id and path_key(other.source) == path_key(target):
-                    raise ValueError('目标与批次其他选中源重叠')
+            # Historical same-path replacements may reserve its name only
+            # through their exact committed lineage, strictly before this item.
+            batch_items = engine.journal.items(batch_id)
+            position = next(index for index, row in enumerate(batch_items) if row.operation_id == item.operation_id)
+            earlier = {row.operation_id for row in batch_items[:position]}
+            overlapping = [other for other in batch_items
+                           if other.operation_id != item.operation_id and path_key(other.source) == path_key(target)]
+            if overlapping and not (same and mode == 'replace'
+                    and all(other.operation_id in earlier for other in overlapping)
+                    and _same_path_predecessors(engine, item, overlapping)):
+                raise ValueError('目标与批次其他选中源重叠')
             if not same and target.exists():
                 raise FileExistsError('目标已存在，不能覆盖')
             path = _consume(engine, source, target, expected_source, staging, expected_output)

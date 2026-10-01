@@ -1,0 +1,9 @@
+# Generated same-path chain fix — independent review P2
+
+Root independent backend reviewer reproduced: one valid rule with two consecutive JPEG replace actions (quality90 then80) previews two valid steps, first commits, second generated.publish_generated rejects current source as another selected batch source. Source-overlap check currently does not distinguish prior same-chain source from unrelated selected input. Same-rule PNG→JPG→PNG is deliberately rejected by conservative planner before execution; do NOT expand planner for that case.
+
+Fresh Sol ownership ONLY generated.py, tests/test_generated.py, report generated-chain-sol.md. Backend runtime/UI/operations/journal/planner remain frozen. No fullsuite/stage/commit/pip/live operations. Work solely managed filehub-rules worktree, originalF andsharedvenv read-only.
+
+Make narrow same-path replacement exception only when current subject full fingerprint is proven by a committed predecessor target in this exact batch (not same path/hash alone). Preserve unrelated selected-source overlap, occupied target, external identical-byte replacement, ticket engine/source/target binding and source guard checks. Earlier historical source rows from two or more repeated same-path replacements must not falsely invalidate the verified current subject; test three if useful to prove relation. Do not accept cross-extension return to reserved earlier source or general bypass.
+
+Reproduce RED using actual image generator/publication and runtime rule path as appropriate; verify two consecutive same-path replacements both commit in onebatch and undo returns exact original bytes/ADS/times through existing inverse lineage. Keep false currentfp/unrelated batch predecessor/selectedsource overlap/occupied guards; focused generated tests plus exact new runtime regression only. Report evidence and exact provenance predicate, freeze for director review/commit. Root independent reviewer will recheck finding after fix.
