@@ -26,6 +26,7 @@ class Config:
         def overlap(a,b):return a==b or a in b.parents or b in a.parents
         if sync and overlap(state,sync):raise ValueError('状态目录不能与同步项目重叠')
         for i,root in enumerate(roots):
+            if root==Path(root.anchor):raise ValueError('不能监控磁盘根目录')
             if overlap(state,root):raise ValueError('状态目录不能与监控目录重叠')
             if sync and overlap(root,sync):raise ValueError('监控目录不能与同步项目重叠')
             if any(overlap(root,r) for r in roots[:i]):raise ValueError('监控目录相互重叠')

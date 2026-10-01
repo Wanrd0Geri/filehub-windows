@@ -11,7 +11,7 @@ import time
 import uuid
 
 from ..models import Fingerprint, checked_path
-from .metadata import NamedStream, held_streams, final_path, set_times, winpath
+from .metadata import NamedStream, held_streams, final_path, set_times, winpath, stream_names
 
 kernel = ctypes.WinDLL("kernel32", use_last_error=True)
 kernel.CreateFileW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
@@ -189,6 +189,9 @@ def process_lock(state_dir):
 
 
 class WindowsPlatform:
+    def directory_guard(self,path,*,destructive=False):
+        return DirectoryGuard(path,destructive=destructive)
+
     def guard(self, path, *, destructive=False):
         return Guard(path, destructive=destructive)
 
@@ -270,3 +273,29 @@ class WindowsPlatform:
                 method(operation, 2)(operation)
             if initialized:
                 ole.CoUninitialize()
+
+class DirectoryGuard:
+    """Pin a directory against rename/replacement; children may still arrive.
+
+    Handle disposition refuses a nonempty directory; it never deletes a tree.
+    """
+    def __init__(self,path,*,destructive=False):
+        self.path=checked_path(path)
+        self.handle=kernel.CreateFileW(winpath(self.path),0x80|0x100|(0x10000 if destructive else 0),3,None,3,0x02000000|0x00200000,None)
+        if self.handle==ctypes.c_void_p(-1).value:raise ctypes.WinError(ctypes.get_last_error())
+        self._closed=False
+        try:
+            checked_path(self.path)
+            if not self.path.is_dir():raise ValueError('需要普通目录')
+        except BaseException:
+            self.close();raise
+    def __enter__(self):return self
+    def __exit__(self,*args):self.close()
+    def close(self):
+        if not self._closed:self._closed=True;kernel.CloseHandle(self.handle)
+    def remove(self):
+        checked_path(self.path)
+        if any(self.path.iterdir()):raise ValueError('目录非空，保留')
+        if stream_names(self.path):raise ValueError('空目录仍有命名流元数据，保留')
+        disposition=ctypes.c_ubyte(1)
+        if not kernel.SetFileInformationByHandle(self.handle,4,ctypes.byref(disposition),1):raise ctypes.WinError(ctypes.get_last_error())

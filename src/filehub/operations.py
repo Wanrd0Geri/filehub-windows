@@ -5,12 +5,14 @@ Copies are exclusively created and held throughout verification/source removal.
 Recovery only classifies known states; it never deletes an unconfirmed survivor.
 """
 from pathlib import Path
+from contextlib import ExitStack
 import os
 import uuid
 
 from .journal import Journal
 from .models import Fingerprint, Operation, checked_path
 from .platform.windows import WindowsPlatform, process_lock
+from .trees import TreeFingerprint, transfer_tree, undo_tree, prepare_move_inverse
 
 
 class OperationEngine:
@@ -44,8 +46,8 @@ class OperationEngine:
                 raise ValueError("不能操作应用状态目录")
             if op.source.suffix.lower() in {".crdownload", ".download", ".part", ".partial", ".tmp"} or op.source.name.startswith("~$"):
                 raise ValueError("下载临时文件或活动锁文件，已跳过")
-            if op.source.is_dir():
-                raise ValueError("此阶段暂不支持文件夹；源保持不变")
+            if op.source.is_dir() and not isinstance(op.expected_source,TreeFingerprint):
+                raise ValueError("缺少目录树指纹；源保持不变")
             if op.expected_source is None:
                 raise ValueError("缺少计划时的源指纹")
             if op.target:
@@ -82,7 +84,9 @@ class OperationEngine:
                 return self.journal.batch(batch_id)
             for item in new_items:
                 try:
-                    if item.kind == "recycle":
+                    if isinstance(item.expected_source,TreeFingerprint):
+                        transfer_tree(self,item)
+                    elif item.kind == "recycle":
                         self._recycle(item)
                     else:
                         self._transfer(item)
@@ -94,6 +98,20 @@ class OperationEngine:
                     self.journal.transition(item.operation_id, "conflict" if ambiguous else "failed",
                                             f"操作停止：{exc}；请核对源/目标" if ambiguous else str(exc))
             return self.journal.batch(batch_id)
+
+    def tree_child_items(self,item):
+        with self.journal.connection() as db:
+            ids={r[0] for r in db.execute('SELECT child FROM tree_children WHERE parent=?',(item.operation_id,))}
+        return [i for i in self.journal.items(item.batch_id) if i.operation_id in ids]
+
+    def execute_existing_child(self,operation_id,batch_id):
+        item=next(i for i in self.journal.items(batch_id) if i.operation_id==operation_id)
+        try:
+            self._validate([Operation(item.kind,item.source,item.target,item.expected_source)])
+            if item.kind=='recycle':self._recycle(item)
+            else:self._transfer(item)
+        except Exception as exc:
+            self.journal.transition(item.operation_id,'conflict',f'目录条目保留：{exc}')
 
     def _copy(self, source_guard, target_guard, item):
         source_guard.stream.seek(0)
@@ -191,19 +209,45 @@ class OperationEngine:
             self.journal.transition(item.operation_id, "recycle_unknown", "回收结果未知；请检查回收站：" + staging.name)
 
     def undo(self, batch_id: str):
-        with self.locked():
+        with self.locked(),ExitStack() as pinned:
+            blocked=set()
+            for root in self.journal.items(batch_id):
+                with self.journal.connection() as db:
+                    already_blocked=db.execute('SELECT 1 FROM tree_undo_blocks WHERE operation=?',(root.operation_id,)).fetchone()
+                    owned_inverse=db.execute('SELECT 1 FROM tree_inverse_roots WHERE operation=?',(root.operation_id,)).fetchone()
+                if already_blocked:
+                    blocked.add(root.operation_id);blocked.update(c.operation_id for c in self.tree_child_items(root));continue
+                if isinstance(root.expected_source,TreeFingerprint) and root.kind=='recycle' and root.state in {'recycled','manual_restore','recycle_unknown'}:
+                    blocked.update(c.operation_id for c in self.tree_child_items(root))
+                if isinstance(root.expected_source,TreeFingerprint) and (root.state=='committed' or owned_inverse and root.state=='conflict'):
+                    try:
+                        if root.kind=='move':prepare_move_inverse(self,root,pinned)
+                        elif not self._matches(root.target,root.target_fingerprint):raise ValueError('目标目录树已变化')
+                    except (OSError,ValueError) as exc:
+                        blocked.add(root.operation_id)
+                        blocked.update(c.operation_id for c in self.tree_child_items(root))
+                        with self.journal.connection() as db:db.execute('INSERT OR REPLACE INTO tree_undo_blocks VALUES(?,?)',(root.operation_id,str(exc)))
+                        self.journal.transition(root.operation_id,'conflict',f'{exc}；拒绝全部子项撤销')
             for item in reversed(self.journal.items(batch_id)):
+                if item.operation_id in blocked:continue
                 if item.state == "undone":
                     continue
                 if item.state == "recycled":
                     # Native recycle supplies no trustworthy item identity. Do not
                     # claim generic send-to-trash is programmatically undoable.
-                    self.journal.transition(item.operation_id, "manual_restore",
-                        f"请从回收站手动还原 {item.staging.name} 到 {item.source}；自动撤销不可用")
+                    if isinstance(item.expected_source,TreeFingerprint):
+                        message=f'请从回收站手动还原整个目录 {item.staging.name} 到 {item.source}；包含原空目录结构；自动撤销不可用'
+                    else:message=f"请从回收站手动还原 {item.staging.name} 到 {item.source}；自动撤销不可用"
+                    self.journal.transition(item.operation_id, "manual_restore",message)
                     continue
-                if item.state != "committed":
+                with self.journal.connection() as db:
+                    owned_inverse=db.execute('SELECT 1 FROM tree_inverse_roots WHERE operation=?',(item.operation_id,)).fetchone()
+                if item.state != "committed" and not (owned_inverse and item.state=='conflict'):
                     continue
                 try:
+                    if isinstance(item.expected_source,TreeFingerprint):
+                        undo_tree(self,item)
+                        continue
                     with self.platform.guard(item.target, destructive=True) as target:
                         target.verify(item.target_fingerprint)
                         if item.kind == "copy":
@@ -258,6 +302,7 @@ class OperationEngine:
         if path is None or expected is None:
             return False
         try:
+            if isinstance(expected,TreeFingerprint):return Fingerprint.capture(path)==expected
             with self.platform.guard(path) as guard:
                 guard.verify(expected)
             return True

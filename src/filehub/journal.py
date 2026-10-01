@@ -14,6 +14,10 @@ class Journal:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connection() as db:
             db.executescript("""
+                CREATE TABLE IF NOT EXISTS tree_children(parent TEXT NOT NULL,child TEXT PRIMARY KEY);
+                CREATE TABLE IF NOT EXISTS tree_lineage(previous_operation TEXT NOT NULL,restoration_operation TEXT NOT NULL,old_fp TEXT NOT NULL,new_fp TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS tree_inverse_roots(operation TEXT PRIMARY KEY,directories TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS tree_undo_blocks(operation TEXT PRIMARY KEY,reason TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS batches (
                     id TEXT PRIMARY KEY, label TEXT NOT NULL,
                     created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')));
@@ -87,12 +91,12 @@ class Journal:
 
     def items(self, batch_id):
         with self.connection() as db:
-            rows = db.execute("SELECT * FROM operations WHERE batch_id=? ORDER BY ordinal", (batch_id,)).fetchall()
+            rows = db.execute("SELECT o.*,t.parent AS parent_id FROM operations o LEFT JOIN tree_children t ON t.child=o.id WHERE o.batch_id=? ORDER BY ordinal", (batch_id,)).fetchall()
         return [ItemResult(
             r["id"], r["batch_id"], r["kind"], Path(r["source"]),
             Path(r["target"]) if r["target"] else None, r["state"], r["message"],
             self.decode(r["expected"]), self.decode(r["target_fp"]),
-            Path(r["staging"]) if r["staging"] else None, r["recycle_identity"], self.decode(r["undo_fp"])) for r in rows]
+            Path(r["staging"]) if r["staging"] else None, r["recycle_identity"], self.decode(r["undo_fp"]),r['parent_id']) for r in rows]
 
     def batch(self, batch_id):
         with self.connection() as db:

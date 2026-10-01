@@ -40,6 +40,9 @@ class Fingerprint:
     @classmethod
     def capture(cls, path: Path) -> "Fingerprint":
         path = checked_path(path)
+        if path.is_dir():
+            from .trees import TreeFingerprint
+            return TreeFingerprint.capture(path)
         with path.open("rb") as stream:
             result = cls.from_stream(stream)
         info = path.stat()
@@ -92,6 +95,9 @@ class Fingerprint:
 
     @classmethod
     def from_dict(cls, value):
+        if 'entries' in value:
+            from .trees import TreeFingerprint
+            return TreeFingerprint.from_dict(value)
         data = dict(value)
         data["streams"] = tuple(StreamFingerprint(**stream) for stream in data.get("streams", ()))
         return cls(**data)
@@ -121,6 +127,7 @@ class ItemResult:
     staging: Path | None = None
     recycle_identity: str | None = None
     undo_fingerprint: Fingerprint | None = None
+    parent_operation_id: str | None = None
 
     @property
     def ok(self):
