@@ -22,3 +22,8 @@ Final suite runs once after final build inputs, focused retests for later fixes.
 - LGPL-shared ffprobe candidate: `https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-30-13-08/ffmpeg-n8.1.3-9-g29e619e767-win64-lgpl-shared-8.1.zip`, 80,733,362 bytes, SHA256 `3e47bda1607740550141e37c0e49d1e5182b34699f15adfd137ee266d346811a`.
 - Static alternative same tag: `ffmpeg-n8.1.3-9-g29e619e767-win64-lgpl-8.1.zip`, 170,611,883 bytes, SHA256 `4a7642b2264c03e8a0ce8a3825b933ee5580656f45695a086fe7e294045ffc0a`.
 - Upstream build README `https://raw.githubusercontent.com/BtbN/FFmpeg-Builds/master/README.md` states LGPL variants exclude GPL-only dependencies and month-end builds retained 2 years. These are candidate sources, **not completed license acceptance**. Extract and inspect `ffprobe -L/-buildconf`, included notices, DLL dependency set and matching FFmpeg source/build links before choosing package contents. Root has downloaded nothing.
+
+## Root live environment evidence
+2026-09-30 read-only check: x64, DisplayVersion 25H2, CurrentBuild 26200; LongPathsEnabled=1 already present (not changed). Both C: and F: Healthy/Fixed/NTFS, suitable for true cross-volume test using newly created explicitly named sandbox on C: plus workspace F:. Registry ProductName still says Windows10Pro (stale naming field); acceptance should report actual build/architecture, not claim Windows10 tested from that field.
+
+- Include a clearly labeled one-click 演示入口 (installer shortcut or GUI button) backed by isolated --demo, with no command/config editing required. User can double-click to try fake archive/undo before real folder configuration. Preserve unconfigured/paused normal launch.

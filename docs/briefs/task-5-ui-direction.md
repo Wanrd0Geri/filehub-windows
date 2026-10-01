@@ -12,3 +12,7 @@ Read `reference/filehub-ui-graphite.html` including final overrides beginning `C
 - Capture real Qt-rendered dark main, light main, archive preview, records, settings and first-run state to `docs/evidence/ui/` for Astra visual review. Tests should verify key controls trigger actual service flow, not just string presence.
 - Font refinement: system already has Inter Regular/Medium/SemiBold and NotoSansSC-VF. Prefer QFont families Inter + Noto Sans SC, fallback Segoe UI + Microsoft YaHei UI; do not replace approved typography unnecessarily. Bundling optional only with exact OFL notices.
 - manual_restore must be actionable: show exact recycle staging name, original file name and original full path, provide 打开回收站. Explain restore may bring back .filehub staging name and user must rename to original; do not offer fuzzy automatic restore or raw HRESULT-only errors. Keep details copyable.
+
+- Root delivery refinement: expose --demo via a clear 演示 button/shortcut requiring no typed command or config. One-click creates only self-owned fake sync/watch/sample files and isolated state; novice user can try archive/undo before selecting real directories. Ordinary launch remains unconfigured/paused.
+
+- Advanced global_jobs switch must state both effects beside it: 共享收件箱到期清理 + 同步空间不合规文件名修正（包括已有项目），仅一台电脑开启；默认由 Mac 管理/关闭。Normal names and project routing remain unchanged. No silent ownership takeover.
