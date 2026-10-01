@@ -1,0 +1,14 @@
+# Task 5 Sol report — phase A
+
+Implemented real Chinese PySide6 Widgets, four tabs, select/drop batches, tag preview and real service execution, persistent history/undo, leaf-level inbox payloads, first-run directory choices, atomic settings, dark/light/system theme, small archive dialog, injected demo/integration/pause callbacks. All service calls, filesystem scans, demo creation and settings saves use one serial worker; GUI completion callbacks use Qt signals. No actual Desktop/Downloads, sync account, registry, remote push or Mac execution.
+
+PySide6 6.11.2 installed only in workspace `.venv`. Icons drawn locally using Qt vectors. Inter/Noto Sans SC/system fallbacks; no network font requests. Settings scroll at minimum window size. Preview shows labeled names and relative destination, full paths retained as tooltips/copyable history. Manual recycle restore shows exact staging identity/original filename/path and recycle-bin action. Parent-linked typed items remain in details; recent summaries count root actions only.
+
+Verification (focused only during Task 4 parallel work):
+
+- Initial RED `tests/test_ui.py --basetemp sandbox/task5-ui-red`: collection failed on missing main_window.
+- Initial GREEN: 2 passed. Theme RED: missing resolver; GREEN: 3 passed. Stale preview RED: edited tag accepted old asynchronous preview; generation guards fixed main and dialog, immutable submission captures execute preview.
+- Final `.venv/Scripts/python.exe -X utf8 -m pytest tests/test_ui.py -q --basetemp sandbox/task5-ui-phase-a-final`: **8 passed in 1.26s**. Tests cover real service archive/history/undo, persistence, first-run/demo callbacks/navigation, system scheme resolution, worker thread execution, stale async main/dialog invalidation, root A preview invalidated after saved root B, source preservation and save failure retaining service config, actual inbox leaves. Additional final checks cover dialog execute capturing an immutable submitted preview, dialog controls disabled before a delayed settings save, and integration failure after successful config save never leaving an old executable preview.
+- Native Windows Qt screenshots at `docs/evidence/ui/`: dark-main, light-main, archive-preview, records, settings, first-run. Captured with Windows Qt platform, actual DPR1.5. Reproduce: set PYTHONPATH to workspace src; run `.venv/Scripts/python.exe -X utf8 docs/evidence/ui/render_native.py`. Demo fixtures exclusively under `sandbox/task5-ui-render`.
+
+Phase A is **not full Task 5 completion**. CLI/application launch, scheduler timer, IPC primary ownership and dialog delivery, tray notifications/close behavior, registration status callbacks, single demo runtime service ownership and packaged launch are pending Task 4 API approval/final integration. Controller accepted phase A visuals after compact recent rows, real filename summaries, header action, correct watch labels and scroll-safe settings. No full-suite test while Task 4 edits.
