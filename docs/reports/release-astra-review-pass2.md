@@ -26,6 +26,14 @@ The reviewer independently rechecked the corrected artifacts: all 364 files / 21
 
 The reviewer inspected the final clean-installed 10-check self-test, refreshed native normal-launch evidence and actual HKCU registration/settings evidence. It also independently read the restored whole-directory test file (`owned tree content`) and checked that the restored empty directory exists. Twenty installed send processes, their durable requests, one claim/dialog and cancellation acknowledgement were inspected; the recorded source `InstanceLease` timing gate remains explicit.
 
-## Final review pending
+## Final review — approved for local delivery
 
-Final approval requires corrected payload/source-input manifests, rebuilt installer and executable hashes, affected installed launch/self-test evidence, remaining native integration and uninstall preservation evidence, accurate Chinese user documentation, and the exact final source SHA. Earlier core and unrelated acceptance tests need not be repeated unless a concrete correction affects them.
+Reviewed commit: `b3b2fd8d6806f959cf2f7caa7eb4bd164db44f5a`. Evidence window ends 2026-10-01, approximately 02:31 UTC−07. The independent Astra reviewer confirmed HEAD and a clean working tree, and approved local FileHub Windows 0.1.0 delivery with **no open Critical or Important findings**.
+
+The reviewer confirmed that `src` and `tests` have not changed after the frozen product head `fc5a656`. It independently checked all 364 payload files / 213,038,842 bytes and all 212 committed Git blobs against pinned hashes. The narrowly scoped `.gitattributes` rules preserve those committed notice bytes. The installer and portable hashes above are the approved final artifacts.
+
+The reviewer read the final Chinese README, usage instructions, acceptance classifications, actual final test output (**255 passed in 20.69s**), installed ten-check self-test, native GUI/Shell/registry evidence, upgrade preservation and final uninstall preservation of 104 files. It performed no installation, registry mutation or broad test rerun. Root additionally verified 33 local documentation links and independently observed that the test program, its two Start menu shortcuts, both FileHub context keys, the FileHub Run value and all FileHub processes were absent after cleanup.
+
+There is no new minor finding. The earlier unconfigured “Continue sorting” status observation remains nonblocking. Windows 10, a clean VM, Mac execution, real two-machine synchronization, physical tray clicking and Explorer mouse multiselection remain explicitly unverified. Source-native harness results and controlled timing are distinguished from installed mouse interaction; WM_QUIT establishes graceful event-loop exit, not a tray click. These limitations are within the agreed local-delivery scope.
+
+This final approval supersedes the pending status recorded during pre-review. The subsequent root commit contains only this review conclusion and the implementation ledger; it does not change the approved product, package inputs or artifact bytes.
