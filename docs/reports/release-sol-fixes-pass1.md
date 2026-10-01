@@ -21,3 +21,14 @@ Two real Qt regressions use FileHubService with an isolated fake recycle adapter
 - Final focused matrix `.venv/Scripts/python.exe -X utf8 -m pytest -q tests/test_directories.py tests/test_operations.py tests/test_ui.py --basetemp=sandbox/review-fixes-final-green`: **93 passed in 8.71s**.
 
 Files frozen for controller diff review and independent scoped re-review. No full repository run, Git index change or commit performed in this fix phase.
+
+## Background notification closure
+
+Controller identified that a background send-dialog completion leaves MainWindow hidden; its immediate status alone was not visible, while the existing toast was generic. Runtime.result_notification now reuses MainWindow's pure duplicate formatter for the first duplicate, including same-content reason, full existing-copy path and source recycle outcome. Multiple duplicates append a remaining count and instruction to inspect history. No I/O or deduplication changes; ordinary notification text remains the same.
+
+Two added runtime tests use actual background primary startup, send queue claim, visible dialog preview/execute and successful/failed fake recycle adapters. Both assert the main window remains hidden after dialog closure, while the injected notifier receives duplicate reason/path/correct recycle state, and source/existing-copy bytes match the real result.
+
+- RED `tests/test_app_runtime.py -k background_duplicate --basetemp=sandbox/review-toast-red`: **2 failed, 17 deselected in 0.75s**, both showed only generic toast text.
+- GREEN `.venv/Scripts/python.exe -X utf8 -m pytest -q tests/test_app_runtime.py tests/test_ui.py --basetemp=sandbox/review-toast-green`: **29 passed in 5.03s** (includes concurrent packaging self-test regression already in the working tree).
+
+This closure changed only result_notification, its two parametrized runtime cases and this report append. Other uncommitted app/self-test hunks belong to packaging. Frozen without staging/commit for controller review and selective hunk integration.

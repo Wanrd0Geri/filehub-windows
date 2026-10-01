@@ -123,6 +123,19 @@ def test_selftest_writes_json_without_stdout_and_actual_probe(tmp_path,monkeypat
     assert Path(report['state_dir']).is_relative_to(tmp_path/'selftest')
 
 
+def test_selftest_archives_two_distinct_real_1920_videos_and_undo(tmp_path):
+    report=self_test(tmp_path/'selftest-1920')
+    assert report['ok'] and report['checks']['video_1920_archive_naming']
+    assert report['checks']['video_1920_distinct_sequence']
+    assert report['checks']['video_1920_undo']
+    videos=report['videos']
+    assert [item['width'] for item in videos]==[1920,1920]
+    assert [item['sequence'] for item in videos]==['01','02']
+    assert all(item['target_name']==item['expected_name'] and item['target_name'].endswith('_1080p.mp4') for item in videos)
+    assert all(Path(item['source']).is_file() and not Path(item['target']).exists() for item in videos)
+    assert Path(videos[0]['source']).read_bytes()!=Path(videos[1]['source']).read_bytes()
+
+
 def test_multiple_invocations_aggregate_one_dialog_and_plain_launch_reveals(tmp_path):
     app,rt=runtime(tmp_path);state=rt.state_dir
     paths=[tmp_path/f'素材 {n}.txt' for n in range(3)]
@@ -237,4 +250,30 @@ def test_knownfolder_proposals_are_not_watch_roots_and_only_seed_dialog(tmp_path
     rt.window.choose_watch('desktop');rt.window.choose_watch('downloads')
     assert seen==[str(proposed['desktop']),str(proposed['downloads'])] and rt.window.watch_list.count()==0
     assert not proposed['desktop'].exists() and not proposed['downloads'].exists()
+    cleanup(app,rt)
+
+@pytest.mark.parametrize('recycled',[True,False])
+def test_background_duplicate_dialog_notifies_existing_copy_and_recycle_status(tmp_path,recycled):
+    from filehub.platform.windows import WindowsPlatform,RecycleOutcome
+    root=tmp_path/'sync';project=root/'1_工作'/'项目'/'261001_XYZ_测试';project.mkdir(parents=True)
+    existing=project/'已有副本.png';existing.write_bytes(b'image')
+    source=tmp_path/'素材.png';source.write_bytes(b'image');bin_dir=tmp_path/'fake-bin';bin_dir.mkdir()
+    class FakeRecycle(WindowsPlatform):
+        def recycle(self,path):
+            if recycled:path.rename(bin_dir/path.name);return RecycleOutcome('recycled',message='fake recycled')
+            return RecycleOutcome('failed',message='fake failed')
+    state=tmp_path/'state';ConfigStore(state).save(Config(sync_root=root))
+    bundle=bootstrap(state);bundle.service.engine.platform=FakeRecycle()
+    app=QApplication.instance() or QApplication([]);notices=[]
+    rt=Runtime(bundle,background=True,auto_timers=False,wall_clock=lambda:10,notifier=lambda *args:notices.append(args),exit_callback=lambda:None)
+    settle(app,rt);assert not rt.window.isVisible()
+    rt.queue.enqueue([source],now=9);rt.poll();settle(app,rt)
+    dialog=rt.claim_dialog;assert dialog and dialog.isVisible()
+    dialog.tag.setText('XYZ020822');dialog.preview_button.click();settle(app,rt)
+    dialog.execute_button.click();settle(app,rt)
+    assert not rt.window.isVisible() and not dialog.isVisible()
+    message='\n'.join(str(part) for notice in notices for part in notice)
+    assert '重复' in message and '相同内容' in message and str(existing) in message
+    assert ('来源已回收' if recycled else '来源回收未完成') in message
+    assert existing.read_bytes()==b'image' and source.exists()!=recycled
     cleanup(app,rt)

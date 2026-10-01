@@ -174,7 +174,11 @@ class Runtime(QObject):
         if self.notifier:self.notifier(title,message)
         else:self.tray.showMessage(title,message,QSystemTrayIcon.Information,5000)
     def result_notification(self,result):
-        if result.items:self.notify('FileHub · '+{'success':'已完成','partial':'部分完成','failed':'需要查看'}[result.status],f'“{result.label}”已记录；打开 FileHub 查看或撤销。')
+        if result.items:
+            details=self.window.duplicate_details(result)
+            message=details[0] if details else f'“{result.label}”已记录；打开 FileHub 查看或撤销。'
+            if len(details)>1:message+=f'\n另有 {len(details)-1} 项重复文件；完整结果请查看记录。'
+            self.notify('FileHub · '+{'success':'已完成','partial':'部分完成','failed':'需要查看'}[result.status],message)
     def show_window(self):self.window.showNormal();self.window.raise_();self.window.activateWindow()
     def close_to_tray(self):
         if self.closed:return True
@@ -305,6 +309,33 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
         width=probe_width(video,binary);report['probe']={'path':str(binary),'fixture':str(sample),'width':width}
         report['checks']['bundled_probe_width_64']=width==64
         report['checks']['paused_no_source_mutation']=Scheduler(service).tick(datetime.now().astimezone())==[] and video.exists()
+        # Fixed bundled media exercise the real service/default probe resolver,
+        # independently of the 64px probe smoke check and ordinary user state.
+        project=service.config.sync_root/'1_工作'/'项目'/'261001_LYX_验收项目'
+        project.mkdir()
+        report['videos']=[];video_results=[];originals=[]
+        for color,sequence in (('yellow','01'),('blue','02')):
+            source=paths[0].with_name('真实1920-'+color+'.mp4')
+            content=(root/'resources'/'selftest'/('tiny-1920-'+color+'.mp4')).read_bytes()
+            source.write_bytes(content);originals.append(content)
+            preview=service.preview([source],'LYX020822');item=preview.items[0]
+            stamp=item.source_time.strftime('%Y%m%d')+('AM' if item.source_time.hour<12 else 'PM')
+            expected='02_08_22_'+sequence+'_'+stamp+'_1080p.mp4'
+            result=service.execute(preview);video_results.append(result)
+            target=result.outcomes[0].targets[0] if result.outcomes and result.outcomes[0].targets else item.targets[0]
+            report['videos'].append({'source':str(source),'target':str(target),
+                'target_name':target.name,'expected_name':expected,'sequence':sequence,
+                'width':item.video_width,'batch_id':result.batch_id})
+        report['checks']['video_1920_distinct_content']=originals[0]!=originals[1]
+        report['checks']['video_1920_archive_naming']=all(result.ok for result in video_results) and all(
+            item['width']==1920 and item['target_name']==item['expected_name'] and
+            Path(item['target']).is_relative_to(project/'3_制作'/'E02'/'S08') and
+            Path(item['target']).is_file() and not Path(item['source']).exists() for item in report['videos'])
+        report['checks']['video_1920_distinct_sequence']=len({item['target'] for item in report['videos']})==2
+        inverse_ok=all(service.undo(result.batch_id).ok for result in reversed(video_results))
+        report['checks']['video_1920_undo']=inverse_ok and all(
+            Path(item['source']).read_bytes()==content and not Path(item['target']).exists()
+            for item,content in zip(report['videos'],originals))
         report['ok']=all(report['checks'].values())
     except Exception as exc:report['error']=str(exc)
     encoded=json.dumps(report,ensure_ascii=False,indent=2)
