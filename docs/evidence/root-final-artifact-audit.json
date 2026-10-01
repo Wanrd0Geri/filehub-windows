@@ -1,0 +1,24 @@
+{
+  "audited_at": "2026-10-01T02:17:37.7055796-07:00",
+  "product_head": "fc5a656d03d2f0798eb7c0900399b494ca3a714e",
+  "pinned_inputs_passed": true,
+  "pinned_input_output": "Pinned runtime and notice input hashes verified",
+  "artifacts": [
+    {
+      "file": "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+      "bytes": 2330634,
+      "sha256": "49de4a22af285a7d03fa36658a8def165302faf3bb77034eebf14e2c6dc2b0d1",
+      "manifest_matches": true,
+      "product_version": null
+    },
+    {
+      "file": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.0-windows-x64-setup.exe",
+      "bytes": 139798744,
+      "sha256": "0de7a4cf0c246087318a60c9f77c782c1d05d684bc6d6ea22b7cc39efcb422f8",
+      "manifest_matches": true,
+      "product_version": "0.1.0                                             "
+    }
+  ],
+  "portable_mesa_present": false,
+  "libmpdec_notice_present": true
+}

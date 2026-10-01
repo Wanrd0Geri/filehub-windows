@@ -1,0 +1,55 @@
+{
+  "classification": "Windows native source OperationEngine (not installed GUI)",
+  "C_owned_root": "C:\\FileHub-Task6-CrossVolume-2028c0e9ce1c403382e8c2ab21bc7646",
+  "source": "C:\\FileHub-Task6-CrossVolume-2028c0e9ce1c403382e8c2ab21bc7646\\源.txt",
+  "target": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\cross-volume-target.txt",
+  "before": {
+    "device": 10293559555737634045,
+    "file_id": 77124143618781555,
+    "size": 21,
+    "mtime_ns": 1790845234900769200,
+    "sha256": "36c8694debf92d6092ed0ba52fadb65281bbaf587e1cbe04e71c15f0449e3164",
+    "creation_ns": 1790845234900769200,
+    "streams": [
+      {
+        "name": ":Zone.Identifier:$DATA",
+        "size": 24,
+        "sha256": "2b01ab8871ab8fa7d2f32c390a866fbb60aa06eff495a9cb81f1b0cf8b282832"
+      }
+    ]
+  },
+  "after": {
+    "device": 11279401552646490738,
+    "file_id": 6473924464628709,
+    "size": 21,
+    "mtime_ns": 1790845234900769200,
+    "sha256": "36c8694debf92d6092ed0ba52fadb65281bbaf587e1cbe04e71c15f0449e3164",
+    "creation_ns": 1790845234900769200,
+    "streams": [
+      {
+        "name": ":Zone.Identifier:$DATA",
+        "size": 24,
+        "sha256": "2b01ab8871ab8fa7d2f32c390a866fbb60aa06eff495a9cb81f1b0cf8b282832"
+      }
+    ]
+  },
+  "restored": {
+    "device": 10293559555737634045,
+    "file_id": 77405618595492211,
+    "size": 21,
+    "mtime_ns": 1790845234900769200,
+    "sha256": "36c8694debf92d6092ed0ba52fadb65281bbaf587e1cbe04e71c15f0449e3164",
+    "creation_ns": 1790845234900769200,
+    "streams": [
+      {
+        "name": ":Zone.Identifier:$DATA",
+        "size": 24,
+        "sha256": "2b01ab8871ab8fa7d2f32c390a866fbb60aa06eff495a9cb81f1b0cf8b282832"
+      }
+    ]
+  },
+  "batch_id": "0ed41cd3773049edab61dc20c7430893",
+  "move_ok": true,
+  "undo_ok": true,
+  "fixtures_retained": true
+}

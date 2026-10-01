@@ -1,0 +1,17 @@
+{
+  "action": "install",
+  "command": [
+    "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.0-windows-x64-setup.exe",
+    "/VERYSILENT",
+    "/SUPPRESSMSGBOXES",
+    "/NORESTART",
+    "/CURRENTUSER",
+    "/DIR=F:\\Hazel Windows\\sandbox\\installed",
+    "/GROUP=FileHub-QA-d26ef8d9820b41e2a3e1e93da787377f",
+    "/TASKS=contextmenu,autostart",
+    "/LOG=F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\final-clean-install.log"
+  ],
+  "pid": 43572,
+  "exit_code": 0,
+  "log": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\final-clean-install.log"
+}

@@ -1,0 +1,17 @@
+{
+  "classification": "Native Shell.Application single-file owned verb, not Explorer mouse selection",
+  "shell_verb": "送进项目 Task6 QA d26ef8d9",
+  "command": "\"F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe\" --state-dir \"F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\shell-state\" --send \"%1\"",
+  "dialog_count": 1,
+  "claimed_requests": 1,
+  "paths": [
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\shell-files\\owned-0.txt"
+    ]
+  ],
+  "single_claim_token": true,
+  "cancel_ack_remaining": 0,
+  "exit_code": 0,
+  "screenshot": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\shell-dialog.png",
+  "quit_method": "dialog WM_CLOSE cancellation, GUI thread WM_QUIT"
+}

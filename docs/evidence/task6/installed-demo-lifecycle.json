@@ -1,0 +1,56 @@
+{
+  "command": [
+    "F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe",
+    "--demo"
+  ],
+  "pid": 78604,
+  "windows": [
+    {
+      "hwnd": 132585102,
+      "thread": 10360,
+      "title": "_q_titlebar",
+      "visible": false
+    },
+    {
+      "hwnd": 1316022,
+      "thread": 10360,
+      "title": "FileHub · 演示",
+      "visible": true
+    },
+    {
+      "hwnd": 2759686,
+      "thread": 10360,
+      "title": "QTrayIconMessageWindow",
+      "visible": false
+    },
+    {
+      "hwnd": 1644178,
+      "thread": 10360,
+      "title": "",
+      "visible": false
+    },
+    {
+      "hwnd": 12063866,
+      "thread": 10360,
+      "title": "",
+      "visible": false
+    },
+    {
+      "hwnd": 21107576,
+      "thread": 10360,
+      "title": "MSCTFIME UI",
+      "visible": false
+    },
+    {
+      "hwnd": 1580020,
+      "thread": 10360,
+      "title": "Default IME",
+      "visible": false
+    }
+  ],
+  "mode": "demo",
+  "screenshot": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\installed-demo.png",
+  "loaded_modules": "[\n    {\n        \"ModuleName\":  \"VCRUNTIME140.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\VCRUNTIME140.dll\"\n    },\n    {\n        \"ModuleName\":  \"VCRUNTIME140_1.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\shiboken6\\\\VCRUNTIME140_1.dll\"\n    },\n    {\n        \"ModuleName\":  \"MSVCP140.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\shiboken6\\\\MSVCP140.dll\"\n    },\n    {\n        \"ModuleName\":  \"Qt6Core.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\PySide6\\\\Qt6Core.dll\"\n    },\n    {\n        \"ModuleName\":  \"MSVCP140_1.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\PySide6\\\\MSVCP140_1.dll\"\n    },\n    {\n        \"ModuleName\":  \"icuuc.dll\",\n        \"FileName\":  \"C:\\\\WINDOWS\\\\SYSTEM32\\\\icuuc.dll\"\n    },\n    {\n        \"ModuleName\":  \"icu.DLL\",\n        \"FileName\":  \"C:\\\\WINDOWS\\\\SYSTEM32\\\\icu.DLL\"\n    },\n    {\n        \"ModuleName\":  \"MSVCP140_2.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\PySide6\\\\MSVCP140_2.dll\"\n    },\n    {\n        \"ModuleName\":  \"Qt6Gui.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\PySide6\\\\Qt6Gui.dll\"\n    },\n    {\n        \"ModuleName\":  \"Qt6Widgets.dll\",\n        \"FileName\":  \"F:\\\\Hazel Windows\\\\sandbox\\\\installed\\\\_internal\\\\PySide6\\\\Qt6Widgets.dll\"\n    }\n]\n",
+  "exit_code": 0,
+  "exit_method": "Owned GUI thread WM_QUIT; run() finally waits coordinator, not tray mouse invocation"
+}

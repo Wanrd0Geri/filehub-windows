@@ -1,0 +1,11 @@
+{
+  "files": 104,
+  "changed": [],
+  "program_removed": true,
+  "owned_shortcuts_removed": true,
+  "controlled_foreign_command_and_Run_preserved": true,
+  "controlled_foreign_fixture_exact_cleanup": true,
+  "preserved_menu_metadata_exact_cleanup": true,
+  "context_and_Run_restored_absent": true,
+  "cleanup_note": "First verifier correctly asserted foreign command/Run preservation, removed them, then failed an overstrict absent-key assertion because installer intentionally preserved the modified menu metadata; exact captured owned metadata subsequently removed."
+}

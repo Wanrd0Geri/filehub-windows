@@ -1,0 +1,13 @@
+{
+  "action": "uninstall",
+  "command": [
+    "F:\\Hazel Windows\\sandbox\\installed\\unins000.exe",
+    "/VERYSILENT",
+    "/SUPPRESSMSGBOXES",
+    "/NORESTART",
+    "/LOG=F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\final-uninstall.log"
+  ],
+  "pid": 29492,
+  "exit_code": 0,
+  "log": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\final-uninstall.log"
+}

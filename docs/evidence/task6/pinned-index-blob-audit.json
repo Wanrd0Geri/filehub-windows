@@ -1,0 +1,6 @@
+{
+  "pinned_index_blobs_verified": 212,
+  "errors": [],
+  "attributes": "third_party/** -text; exact docs/第三方许可.md -text",
+  "payload_rebuild_required": false
+}

@@ -1,0 +1,12 @@
+﻿[
+    {
+        "file":  "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+        "bytes":  2330634,
+        "sha256":  "49de4a22af285a7d03fa36658a8def165302faf3bb77034eebf14e2c6dc2b0d1"
+    },
+    {
+        "file":  "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.0-windows-x64-setup.exe",
+        "bytes":  139798744,
+        "sha256":  "0de7a4cf0c246087318a60c9f77c782c1d05d684bc6d6ea22b7cc39efcb422f8"
+    }
+]

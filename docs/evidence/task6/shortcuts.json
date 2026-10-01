@@ -1,0 +1,12 @@
+[
+  {
+    "path": "C:\\Users\\Gerry-UltraPC\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\FileHub\\FileHub 演示（隔离示例）.lnk",
+    "target": "F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe",
+    "arguments": "--demo"
+  },
+  {
+    "path": "C:\\Users\\Gerry-UltraPC\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\FileHub\\FileHub.lnk",
+    "target": "F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe",
+    "arguments": ""
+  }
+]

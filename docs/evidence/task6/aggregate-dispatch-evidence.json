@@ -1,0 +1,95 @@
+{
+  "classification": "Native installed processes and dialog; aggregation initial timing gated by source InstanceLease",
+  "secondary_exits": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "durable_before_primary": 20,
+  "dialog_count": 1,
+  "claimed_requests": 20,
+  "paths": [
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-1.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-8.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-9.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-11.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-16.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-18.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-5.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-7.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-12.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-14.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-15.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-17.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-19.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-10.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-13.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-4.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-6.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-0.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-2.txt"
+    ],
+    [
+      "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-files\\owned-3.txt"
+    ]
+  ],
+  "single_claim_token": true,
+  "cancel_ack_remaining": 0,
+  "exit_code": 0,
+  "screenshot": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\aggregate-dialog.png",
+  "quit_method": "dialog WM_CLOSE cancellation, GUI thread WM_QUIT"
+}

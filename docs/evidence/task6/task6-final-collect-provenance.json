@@ -1,0 +1,1828 @@
+{
+  "toc": "build/pyinstaller/filehub/COLLECT-00.toc",
+  "entries": [
+    {
+      "destination": "FileHub.exe",
+      "source": "F:\\Hazel Windows\\build\\pyinstaller\\filehub\\FileHub.exe",
+      "type": "EXECUTABLE"
+    },
+    {
+      "destination": "resources\\ffprobe\\avcodec-62.dll",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\bin\\avcodec-62.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "resources\\ffprobe\\avformat-62.dll",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\bin\\avformat-62.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "resources\\ffprobe\\avutil-60.dll",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\bin\\avutil-60.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "resources\\ffprobe\\ffprobe.exe",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\bin\\ffprobe.exe",
+      "type": "BINARY"
+    },
+    {
+      "destination": "python312.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\python312.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\styles\\qmodernwindowsstyle.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\styles\\qmodernwindowsstyle.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\platforms\\qwindows.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\platforms\\qoffscreen.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qoffscreen.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\platforms\\qdirect2d.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\platforms\\qminimal.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qminimal.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\imageformats\\qwbmp.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\imageformats\\qwbmp.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\imageformats\\qico.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\imageformats\\qico.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\imageformats\\qjpeg.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\imageformats\\qjpeg.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\plugins\\imageformats\\qgif.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\plugins\\imageformats\\qgif.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "_decimal.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_decimal.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_hashlib.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_hashlib.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_lzma.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_lzma.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_bz2.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_bz2.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "unicodedata.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\unicodedata.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "select.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\select.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_socket.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_socket.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_multiprocessing.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_multiprocessing.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "pyexpat.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\pyexpat.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_ssl.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_ssl.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_ctypes.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_ctypes.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_queue.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_queue.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "PySide6\\QtWidgets.pyd",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\QtWidgets.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "shiboken6\\Shiboken.pyd",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6\\Shiboken.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "PySide6\\QtGui.pyd",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\QtGui.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "PySide6\\QtCore.pyd",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\QtCore.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_sqlite3.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_sqlite3.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_uuid.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_uuid.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "_wmi.pyd",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\_wmi.pyd",
+      "type": "EXTENSION"
+    },
+    {
+      "destination": "VCRUNTIME140.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\VCRUNTIME140.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\Qt6Core.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\Qt6Core.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "shiboken6\\MSVCP140.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6\\MSVCP140.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\Qt6Gui.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\Qt6Gui.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\Qt6Widgets.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\Qt6Widgets.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "VCRUNTIME140_1.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\VCRUNTIME140_1.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "libcrypto-3.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\libcrypto-3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "libssl-3.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\libssl-3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "libffi-8.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\libffi-8.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\VCRUNTIME140_1.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\VCRUNTIME140_1.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "python3.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\python3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\MSVCP140.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\MSVCP140.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\pyside6.abi3.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\pyside6.abi3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\VCRUNTIME140.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\VCRUNTIME140.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "shiboken6\\shiboken6.abi3.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6\\shiboken6.abi3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "shiboken6\\VCRUNTIME140.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6\\VCRUNTIME140.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "shiboken6\\VCRUNTIME140_1.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6\\VCRUNTIME140_1.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\MSVCP140_2.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\MSVCP140_2.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "sqlite3.dll",
+      "source": "C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs\\sqlite3.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "ucrtbase.dll",
+      "source": "C:\\WINDOWS\\System32\\ucrtbase.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "PySide6\\MSVCP140_1.dll",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\MSVCP140_1.dll",
+      "type": "BINARY"
+    },
+    {
+      "destination": "resources\\app.ico",
+      "source": "F:\\Hazel Windows\\resources\\app.ico",
+      "type": "DATA"
+    },
+    {
+      "destination": "resources\\selftest\\tiny-1920-blue.mp4",
+      "source": "F:\\Hazel Windows\\resources\\selftest\\tiny-1920-blue.mp4",
+      "type": "DATA"
+    },
+    {
+      "destination": "resources\\selftest\\tiny-1920-yellow.mp4",
+      "source": "F:\\Hazel Windows\\resources\\selftest\\tiny-1920-yellow.mp4",
+      "type": "DATA"
+    },
+    {
+      "destination": "resources\\selftest\\tiny.mp4",
+      "source": "F:\\Hazel Windows\\resources\\selftest\\tiny.mp4",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\components.json",
+      "source": "F:\\Hazel Windows\\third_party\\components.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\LICENSE-GPL-3.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\LICENSE-GPL-3.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\LICENSE-LGPL-2.1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\LICENSE-LGPL-2.1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\LICENSE-LGPL-3.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\LICENSE-LGPL-3.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\UPSTREAM-LICENSE.md",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\UPSTREAM-LICENSE.md",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\build-recipe\\ffprobe-build-local.cmd",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\build-recipe\\ffprobe-build-local.cmd",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\build-recipe\\ffprobe-configure.sh",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\build-recipe\\ffprobe-configure.sh",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\build-recipe\\patch-ffmpeg.py",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\build-recipe\\patch-ffmpeg.py",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\build-recipe\\prepare-ffprobe.ps1",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\build-recipe\\prepare-ffprobe.ps1",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\ffprobe\\filehub.patch",
+      "source": "F:\\Hazel Windows\\third_party\\ffprobe\\filehub.patch",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\inno\\ChineseSimplified.isl",
+      "source": "F:\\Hazel Windows\\third_party\\inno\\ChineseSimplified.isl",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\inno\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\inno\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\microsoft\\Visual-Studio-2022-Community-license.html",
+      "source": "F:\\Hazel Windows\\third_party\\microsoft\\Visual-Studio-2022-Community-license.html",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\microsoft\\Visual-Studio-2022-redistribution.html",
+      "source": "F:\\Hazel Windows\\third_party\\microsoft\\Visual-Studio-2022-redistribution.html",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\pyinstaller\\COPYING.txt",
+      "source": "F:\\Hazel Windows\\third_party\\pyinstaller\\COPYING.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE-OpenSSL-3.0.16.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE-OpenSSL-3.0.16.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE-SQLite-3.49.1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE-SQLite-3.49.1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE-expat-2.7.1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE-expat-2.7.1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE-libffi-3.4.4.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE-libffi-3.4.4.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE-zlib-1.3.1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE-zlib-1.3.1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\python\\libmpdec-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\python\\libmpdec-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\Apache-2.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\Apache-2.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\BSD-3-Clause.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\BSD-3-Clause.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\GFDL-1.3-no-invariants-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\GFDL-1.3-no-invariants-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\GPL-2.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\GPL-2.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\GPL-3.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\GPL-3.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\LGPL-3.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\LGPL-3.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\LicenseRef-Qt-Commercial.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\LicenseRef-Qt-Commercial.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\LICENSES\\Qt-GPL-exception-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\LICENSES\\Qt-GPL-exception-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\attributions.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\attributions.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\demos\\colorpaletteclient\\icons\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\demos\\colorpaletteclient\\icons\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\MARKDOWN-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\MARKDOWN-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\MARKED-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\MARKED-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\webenginewidgets\\markdowneditor\\resources\\3rdparty\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\webenginewidgets\\simplebrowser\\data\\3rdparty\\COPYING",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\webenginewidgets\\simplebrowser\\data\\3rdparty\\COPYING",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\examples\\webenginewidgets\\simplebrowser\\data\\3rdparty\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\examples\\webenginewidgets\\simplebrowser\\data\\3rdparty\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\sources\\shiboken6\\libshiboken\\bufferprocs_py37.h",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\sources\\shiboken6\\libshiboken\\bufferprocs_py37.h",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\sources\\shiboken6\\libshiboken\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\sources\\shiboken6\\libshiboken\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\sources\\shiboken6\\shibokenmodule\\files.dir\\shibokensupport\\signature\\PSF-3.7.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\sources\\shiboken6\\shibokenmodule\\files.dir\\shibokensupport\\signature\\PSF-3.7.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\pyside\\sources\\shiboken6\\shibokenmodule\\files.dir\\shibokensupport\\signature\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\pyside\\sources\\shiboken6\\shibokenmodule\\files.dir\\shibokensupport\\signature\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\AFL-2.1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\AFL-2.1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Apache-2.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Apache-2.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\BSD-2-Clause.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\BSD-2-Clause.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\BSD-3-Clause.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\BSD-3-Clause.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\BSD-4-Clause.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\BSD-4-Clause.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\BSL-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\BSL-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Bitstream-Vera.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Bitstream-Vera.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\CC0-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\CC0-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\FTL.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\FTL.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\GFDL-1.3-no-invariants-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\GFDL-1.3-no-invariants-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\GPL-2.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\GPL-2.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\GPL-2.0-or-later.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\GPL-2.0-or-later.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\GPL-3.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\GPL-3.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\HPND.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\HPND.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\IJG.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\IJG.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\IPL-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\IPL-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Imlib2.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Imlib2.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LGPL-2.1-or-later.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LGPL-2.1-or-later.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LGPL-3.0-only.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LGPL-3.0-only.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Libpng.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Libpng.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LicenseRef-ICC-License.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LicenseRef-ICC-License.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LicenseRef-Lcs-Telegraphics.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LicenseRef-Lcs-Telegraphics.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LicenseRef-Qt-Commercial.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LicenseRef-Qt-Commercial.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\LicenseRef-SHA1-Public-Domain.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\LicenseRef-SHA1-Public-Domain.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Linux-syscall-note.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Linux-syscall-note.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\MIT-Khronos-old.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\MIT-Khronos-old.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\MIT-open-group.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\MIT-open-group.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\MIT.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\MIT.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\MPL-2.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\MPL-2.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Qt-GPL-exception-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Qt-GPL-exception-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\SPL-1.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\SPL-1.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Unicode-3.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Unicode-3.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\X11.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\X11.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Xerox.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Xerox.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\Zlib.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\Zlib.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\blessing.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\blessing.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\LICENSES\\libpng-2.0.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\LICENSES\\libpng-2.0.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\attributions.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\attributions.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\cmake\\3rdparty\\extra-cmake-modules\\COPYING-CMAKE-SCRIPTS",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\cmake\\3rdparty\\extra-cmake-modules\\COPYING-CMAKE-SCRIPTS",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\cmake\\3rdparty\\extra-cmake-modules\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\cmake\\3rdparty\\extra-cmake-modules\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\cmake\\3rdparty\\kwin\\COPYING-CMAKE-SCRIPTS",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\cmake\\3rdparty\\kwin\\COPYING-CMAKE-SCRIPTS",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\cmake\\3rdparty\\kwin\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\cmake\\3rdparty\\kwin\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\D3D12MemoryAllocator\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\D3D12MemoryAllocator\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\D3D12MemoryAllocator\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\D3D12MemoryAllocator\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\VulkanMemoryAllocator\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\VulkanMemoryAllocator\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\VulkanMemoryAllocator\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\VulkanMemoryAllocator\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\android\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\android\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\android\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\android\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\blake2\\COPYING",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\blake2\\COPYING",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\blake2\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\blake2\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\double-conversion\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\double-conversion\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\double-conversion\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\double-conversion\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\easing\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\easing\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\easing\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\easing\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\emoji-segmenter\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\emoji-segmenter\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\forkfd\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\forkfd\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\forkfd\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\forkfd\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\BDF-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\BDF-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\PCF-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\PCF-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\ZLIB-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\ZLIB-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\freetype\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\gradle\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\gradle\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\gradle\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\gradle\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\harfbuzz-ng\\COPYING",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\harfbuzz-ng\\COPYING",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\harfbuzz-ng\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\harfbuzz-ng\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\icc\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\icc\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\icc\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\icc\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libjpeg\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libjpeg\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libpng\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libpng\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libpng\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libpng\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\PSL-LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\PSL-LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\src\\LICENSE.chromium",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\libpsl\\src\\LICENSE.chromium",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\md4\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\md4\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\md4c\\LICENSE.md",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\md4c\\LICENSE.md",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\md4c\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\md4c\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\md5\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\md5\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\LICENCE.md",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\LICENCE.md",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\LICENSE-SLJIT",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\LICENSE-SLJIT",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\pcre2\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\pixman\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\pixman\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\pixman\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\pixman\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\rfc6234\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\rfc6234\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\rfc6234\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\rfc6234\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\sha1\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\sha1\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\BRG_ENDIAN_LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\BRG_ENDIAN_LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\CC0_LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\CC0_LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\sha3\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\siphash\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\siphash\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\sqlite\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\sqlite\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\tinycbor\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\tinycbor\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\tinycbor\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\tinycbor\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wasm\\DEJAVU-LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wasm\\DEJAVU-LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wasm\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wasm\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\MIT_LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\MIT_LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\appmenu\\LGPL-2.1-or-later.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\appmenu\\LGPL-2.1-or-later.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\appmenu\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\appmenu\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\color-management\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\color-management\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\fractional-scale\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\fractional-scale\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\fullscreen-shell\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\fullscreen-shell\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\linux-dmabuf\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\linux-dmabuf\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\pointer-gestures\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\pointer-gestures\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\pointer-warp\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\pointer-warp\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\presentation-time\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\presentation-time\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\scaler\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\scaler\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\session-management\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\session-management\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\tablet\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\tablet\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v1\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v1\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v2\\HPND_LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v2\\HPND_LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v2\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v2\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v3\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\text-input\\v3\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\viewporter\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\viewporter\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wayland\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wayland\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wl-eglstream\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wl-eglstream\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wlr-data-control\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wlr-data-control\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wp-primary-selection\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\wp-primary-selection\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-activation\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-activation\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-decoration\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-decoration\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-dialog\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-dialog\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-foreign\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-foreign\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-output\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-output\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-shell\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-shell\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-system-bell\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-system-bell\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-toplevel-icon\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wayland\\protocols\\xdg-toplevel-icon\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\wintab\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\wintab\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\xcb\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\xcb\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\xcb\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\xcb\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\zlib\\LICENSE",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\zlib\\LICENSE",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\3rdparty\\zlib\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\3rdparty\\zlib\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\corelib\\global\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\corelib\\global\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\corelib\\kernel\\LICENSE.QEVENTDISPATCHER_CF.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\corelib\\kernel\\LICENSE.QEVENTDISPATCHER_CF.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\corelib\\kernel\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\corelib\\kernel\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\corelib\\mimetypes\\3rdparty\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\corelib\\mimetypes\\3rdparty\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\corelib\\text\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\corelib\\text\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\dbus\\LICENSE.LIBDBUS-1.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\dbus\\LICENSE.LIBDBUS-1.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\dbus\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\dbus\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\opengl\\LICENSE.KHRONOS.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\opengl\\LICENSE.KHRONOS.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\opengl\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\opengl\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\painting\\LICENSE.QIMAGETRANSFORM.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\painting\\LICENSE.QIMAGETRANSFORM.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\painting\\LICENSE.XCONSORTIUM.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\painting\\LICENSE.XCONSORTIUM.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\painting\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\painting\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\rhi\\LICENSE.MiniEngine.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\rhi\\LICENSE.MiniEngine.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\rhi\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\rhi\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\text\\LICENSE.AGLFN.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\text\\LICENSE.AGLFN.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\text\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\text\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\vulkan\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\vulkan\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\gui\\vulkan\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\gui\\vulkan\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\plugins\\platforms\\cocoa\\LICENSE.COCOA.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\plugins\\platforms\\cocoa\\LICENSE.COCOA.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\plugins\\platforms\\cocoa\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\plugins\\platforms\\cocoa\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testinternal\\3rdparty\\cmake\\Copyright.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testinternal\\3rdparty\\cmake\\Copyright.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testinternal\\3rdparty\\cmake\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testinternal\\3rdparty\\cmake\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\catch2\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\catch2\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\catch2\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\catch2\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\cycle\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\cycle\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\cycle\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\cycle\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\linux\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\linux\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\linux\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\linux\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\valgrind\\LICENSE.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\valgrind\\LICENSE.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\valgrind\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\src\\testlib\\3rdparty\\valgrind\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\util\\gradientgen\\LICENSE.WEBGRADIENTS.txt",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\util\\gradientgen\\LICENSE.WEBGRADIENTS.txt",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\qt\\qtbase\\util\\gradientgen\\qt_attribution.json",
+      "source": "F:\\Hazel Windows\\third_party\\qt\\qtbase\\util\\gradientgen\\qt_attribution.json",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\sources\\ffmpeg-source.zip",
+      "source": "F:\\Hazel Windows\\sandbox\\vendor-downloads\\ffmpeg-source.zip",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\sources\\pyside-source.zip",
+      "source": "F:\\Hazel Windows\\sandbox\\vendor-downloads\\pyside-source.zip",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\sources\\qtbase-source.zip",
+      "source": "F:\\Hazel Windows\\sandbox\\vendor-downloads\\qtbase-source.zip",
+      "type": "DATA"
+    },
+    {
+      "destination": "third_party\\\u7b2c\u4e09\u65b9\u8bb8\u53ef.md",
+      "source": "F:\\Hazel Windows\\docs\\\u7b2c\u4e09\u65b9\u8bb8\u53ef.md",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_pt_BR.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_pt_BR.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_zh_TW.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_zh_TW.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_sk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_sk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_en.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_en.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_cs.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_cs.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ka.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ka.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ka.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ka.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_hr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_hr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_zh_CN.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_zh_CN.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ru.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ru.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_gd.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_gd.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ja.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ja.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_cs.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_cs.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ar.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ar.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_sk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_sk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_pt_PT.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_pt_PT.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_nl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_nl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ja.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ja.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_hu.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_hu.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_tr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_tr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_uk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_uk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_bg.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_bg.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_fa.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_fa.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_lv.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_lv.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_de.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_de.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_he.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_he.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_nl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_nl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_de.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_de.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_sk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_sk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_hu.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_hu.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_fr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_fr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_es.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_es.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_sl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_sl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_hr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_hr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_nn.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_nn.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_da.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_da.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_bg.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_bg.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_fr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_fr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_it.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_it.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_es.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_es.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_zh_TW.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_zh_TW.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_sv.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_sv.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_zh_TW.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_zh_TW.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_lt.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_lt.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_pl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_pl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_en.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_en.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_fi.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_fi.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_pt_BR.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_pt_BR.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_nn.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_nn.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ru.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ru.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_sv.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_sv.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_gl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_gl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ka.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ka.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_hr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_hr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_tr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_tr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ca.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ca.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_it.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_it.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_bg.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_bg.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ca.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ca.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_pl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_pl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ko.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ko.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_es.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_es.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_sl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_sl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_pl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_pl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_uk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_uk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_hu.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_hu.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_lv.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_lv.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_ko.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_ko.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_da.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_da.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_pt_BR.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_pt_BR.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ru.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ru.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_fa.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_fa.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_sv.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_sv.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_fr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_fr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ar.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ar.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_nl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_nl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_cs.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_cs.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_en.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_en.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_fi.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_fi.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_gd.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_gd.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_nn.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_nn.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ar.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ar.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_zh_CN.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_zh_CN.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_de.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_de.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_lg.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_lg.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_tr.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_tr.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_gl.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_gl.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ko.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ko.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_zh_CN.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_zh_CN.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qtbase_ca.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qtbase_ca.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_he.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_he.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_it.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_it.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_uk.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_uk.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_lg.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_lg.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_help_da.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_help_da.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "PySide6\\translations\\qt_ja.qm",
+      "source": "F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6\\translations\\qt_ja.qm",
+      "type": "DATA"
+    },
+    {
+      "destination": "base_library.zip",
+      "source": "F:\\Hazel Windows\\build\\pyinstaller\\filehub\\base_library.zip",
+      "type": "DATA"
+    }
+  ],
+  "binaries": 55,
+  "disallowed_sources": [],
+  "scope": "final COLLECT post-filter actual shipped provenance; earlier Analysis provenance diagnostic is superseded"
+}

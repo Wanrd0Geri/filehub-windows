@@ -1,0 +1,15 @@
+{
+  "classification": "Windows native source service and real Recycle Bin; portable probe",
+  "source": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-dedup\\duplicate.mp4",
+  "existing_survivor": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-dedup\\sync\\1_工作\\项目\\261001_LYX_临渊行\\existing.mp4",
+  "survivor_hash": "bf1452612e036b7df70ed25f775fa7fbbd8797a86b50df6cbb70d2203131dd08",
+  "recycle_staging": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-dedup\\duplicate.filehub-7ab03010.mp4",
+  "batch": "c23a73ec2f2e40f9831f3ddb271f2771",
+  "result_ok": true,
+  "existing_path_exposed": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-dedup\\sync\\1_工作\\项目\\261001_LYX_临渊行\\existing.mp4",
+  "undo_ok": false,
+  "undo_messages": [
+    "请从回收站手动还原 duplicate.filehub-7ab03010.mp4 到 F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-dedup\\duplicate.mp4；自动撤销不可用"
+  ],
+  "manual_shell_restore_verified": true
+}

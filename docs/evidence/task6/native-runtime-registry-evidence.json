@@ -1,0 +1,20 @@
+{
+  "classification": "Windows native source Qt Runtime setting widgets and real HKCU; not installed mouse UI",
+  "installer_optional_registration": {
+    "Software\\Classes\\*\\shell\\FileHub.Send": {
+      "owner": "FileHub.Windows.v1",
+      "command": "\"F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe\" --send \"%1\"",
+      "model": "Player"
+    },
+    "Software\\Classes\\Directory\\shell\\FileHub.Send": {
+      "owner": "FileHub.Windows.v1",
+      "command": "\"F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe\" --send \"%1\"",
+      "model": "Player"
+    }
+  },
+  "installer_run": "\"F:\\Hazel Windows\\sandbox\\installed\\FileHub.exe\" --background",
+  "GUI_setting_off_removed_owned_registration": true,
+  "GUI_setting_on_restored_owned_registration": true,
+  "pause_resume_actual_config_and_tray": true,
+  "Mesa_absent_installed": true
+}

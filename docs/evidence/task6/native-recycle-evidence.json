@@ -1,0 +1,25 @@
+{
+  "classification": "Windows native source OperationEngine recycle",
+  "origin": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-recycle-owned-tree",
+  "batch": "3aa2f09ed56247d0b160cf4e6c31de9c",
+  "items": [
+    {
+      "state": "recycled",
+      "staging": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-recycle-owned-tree.filehub-19ed9f85",
+      "recycle_identity": null,
+      "message": "整个目录已回收；名称：native-recycle-owned-tree.filehub-19ed9f85"
+    },
+    {
+      "state": "committed",
+      "staging": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-recycle-owned-tree.filehub-19ed9f85\\nested\\.filehub-7b0ce23324c24c108e7b4de6f51033be.tmp",
+      "recycle_identity": null,
+      "message": "移动完成"
+    }
+  ],
+  "manual_restore": {
+    "shell_undelete": true,
+    "explicit_owned_staging_rename_to_origin": true,
+    "empty_directory_preserved": true,
+    "content_verified": true
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "classification": "Windows native source FileHubService, installed ffprobe and real media; no installed UI claim",
+  "cases": [
+    {
+      "tag": "LYX020815+20",
+      "source_time": "2026-10-01 02:01:23.188222-07:00",
+      "width": 1920,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\3_制作\\E02\\S08\\02_08_15_01_20261001AM_1080p.mp4",
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\3_制作\\E02\\S08\\02_08_20_01_20261001AM_1080p.mp4"
+      ],
+      "warnings": [],
+      "kinds": [
+        "copy",
+        "move"
+      ],
+      "batch": "c5035999345d4d5aa044b786abb184d5",
+      "undo": true
+    },
+    {
+      "tag": "LYX020815+16+17",
+      "source_time": "2026-10-01 02:01:23.361203-07:00",
+      "width": 1920,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\3_制作\\E02\\S08\\02_08_15_01_20261001AM_1080p.mp4"
+      ],
+      "warnings": [
+        "三镜及以上仅保留第一镜母文件，请通知制片"
+      ],
+      "kinds": [
+        "move"
+      ],
+      "batch": "1ea32c2a5b7b43c6bc54897aacfc7dae",
+      "undo": true
+    },
+    {
+      "tag": "LYX020822",
+      "source_time": "2026-10-01 02:01:23.533324-07:00",
+      "width": null,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\3_制作\\E02\\S08\\E02S08_C022_261001-1.png"
+      ],
+      "warnings": [],
+      "kinds": [
+        "move"
+      ],
+      "batch": "a848d995f24d432b823e9f0390826613",
+      "undo": true
+    },
+    {
+      "tag": "LYX苏云法相",
+      "source_time": "2026-10-01 02:01:23.619727-07:00",
+      "width": null,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\1_设定\\角色\\苏云法相\\苏云法相_261001-1.png"
+      ],
+      "warnings": [],
+      "kinds": [
+        "move"
+      ],
+      "batch": "88faf95e7b144c43925c51d75192f5ab",
+      "undo": true
+    },
+    {
+      "tag": "LYX破败庠序",
+      "source_time": "2026-10-01 02:01:23.700446-07:00",
+      "width": null,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\1_设定\\场景\\庠序\\庠序_破败_261001-1.png"
+      ],
+      "warnings": [],
+      "kinds": [
+        "move"
+      ],
+      "batch": "fea58a5468904469892d955d218bd585",
+      "undo": true
+    },
+    {
+      "tag": "LYX角色新角色",
+      "source_time": "2026-10-01 02:01:23.783514-07:00",
+      "width": null,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\1_设定\\角色\\新角色\\新角色_261001-1.png"
+      ],
+      "warnings": [],
+      "kinds": [
+        "move"
+      ],
+      "batch": "d96004a44f164d80bb1eee823496d744",
+      "undo": true
+    },
+    {
+      "tag": "LYXPV决战",
+      "source_time": "2026-10-01 02:01:23.865395-07:00",
+      "width": 1920,
+      "targets": [
+        "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\native-rules\\sync\\1_工作\\项目\\261001_LYX_临渊行\\3_制作\\PV\\PV_决战_261001-1_1080p.mp4"
+      ],
+      "warnings": [],
+      "kinds": [
+        "move"
+      ],
+      "batch": "233447d09b664a1a881e52ddd9ee2ccb",
+      "undo": true
+    },
+    {
+      "invalid_unchanged": true,
+      "notification_once": true
+    }
+  ]
+}
