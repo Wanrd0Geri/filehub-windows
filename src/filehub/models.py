@@ -132,7 +132,15 @@ class BatchResult:
     batch_id: str
     label: str
     items: tuple[ItemResult, ...]
+    created: str = ""
+    outcomes: tuple = ()
 
     @property
     def ok(self):
-        return bool(self.items) and all(item.ok for item in self.items)
+        return bool(self.items) and all(item.ok for item in self.items) and all(not item.error for item in self.outcomes)
+
+    @property
+    def status(self):
+        if self.ok: return 'success'
+        if any(item.ok for item in self.items): return 'partial'
+        return 'failed'

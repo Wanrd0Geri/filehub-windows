@@ -60,7 +60,7 @@ class OperationEngine:
         if any(self.overlaps(a, b) for i, a in enumerate(targets) for b in targets[i + 1:]):
             raise ValueError("批次目标路径重复或重叠")
 
-    def execute(self, operations, label: str):
+    def execute(self, operations, label: str, *, batch_id=None):
         operations = tuple(Operation(op.kind, Path(os.path.abspath(op.source)),
                                      Path(os.path.abspath(op.target)) if op.target else None,
                                      op.expected_source) for op in operations)
@@ -68,14 +68,19 @@ class OperationEngine:
             # Validate kinds before SQL CHECK; all other preflight failures get a record.
             if any(op.kind not in {"move", "copy", "recycle"} for op in operations):
                 raise ValueError("未知操作类型")
-            batch_id = self.journal.create_batch(label, operations)
+            if batch_id is None:
+                batch_id = self.journal.create_batch(label, operations)
+                new_items=self.journal.items(batch_id)
+            else:
+                ids=set(self.journal.append_operations(batch_id,operations))
+                new_items=[i for i in self.journal.items(batch_id) if i.operation_id in ids]
             try:
                 self._validate(operations)
             except (OSError, ValueError) as exc:
-                for item in self.journal.items(batch_id):
+                for item in new_items:
                     self.journal.transition(item.operation_id, "failed", str(exc))
                 return self.journal.batch(batch_id)
-            for item in self.journal.items(batch_id):
+            for item in new_items:
                 try:
                     if item.kind == "recycle":
                         self._recycle(item)

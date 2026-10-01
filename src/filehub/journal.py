@@ -54,13 +54,23 @@ class Journal:
         batch_id = uuid.uuid4().hex
         with self.connection() as db:
             db.execute("INSERT INTO batches(id,label) VALUES(?,?)", (batch_id, label))
-            for ordinal, op in enumerate(operations):
+        self.append_operations(batch_id,operations)
+        return batch_id
+
+    def append_operations(self,batch_id,operations):
+        ids=[]
+        with self.connection() as db:
+            if db.execute('SELECT id FROM batches WHERE id=?',(batch_id,)).fetchone() is None:
+                raise KeyError(batch_id)
+            start=db.execute('SELECT COALESCE(MAX(ordinal)+1,0) FROM operations WHERE batch_id=?',(batch_id,)).fetchone()[0]
+            for ordinal, op in enumerate(operations,start):
+                operation_id=uuid.uuid4().hex;ids.append(operation_id)
                 db.execute("""INSERT INTO operations
                     (id,batch_id,ordinal,kind,source,target,expected,state)
                     VALUES(?,?,?,?,?,?,?,'prepared')""", (
-                    uuid.uuid4().hex, batch_id, ordinal, op.kind, str(op.source),
+                    operation_id, batch_id, ordinal, op.kind, str(op.source),
                     str(op.target) if op.target else None, self.encode(op.expected_source)))
-        return batch_id
+        return ids
 
     def transition(self, operation_id, state, message="", **fields):
         allowed = {"target_fp", "staging", "recycle_identity", "undo_fp"}
@@ -86,10 +96,10 @@ class Journal:
 
     def batch(self, batch_id):
         with self.connection() as db:
-            row = db.execute("SELECT label FROM batches WHERE id=?", (batch_id,)).fetchone()
+            row = db.execute("SELECT label,created FROM batches WHERE id=?", (batch_id,)).fetchone()
         if row is None:
             raise KeyError(batch_id)
-        return BatchResult(batch_id, row["label"], tuple(self.items(batch_id)))
+        return BatchResult(batch_id, row["label"], tuple(self.items(batch_id)), row['created'])
 
     def history(self):
         with self.connection() as db:
