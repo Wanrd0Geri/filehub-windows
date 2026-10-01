@@ -31,6 +31,36 @@ class OperationEngine:
         """
         return self._lock.acquire()
 
+    def publish_generated(self, source, target, expected_source, staging, expected_output,
+                          label, *, mode='keep', batch_id=None, cancel_event=None):
+        from .generated import publish_generated
+        return publish_generated(self, source, target, expected_source, staging, expected_output,
+                                 label, mode=mode, batch_id=batch_id, cancel_event=cancel_event)
+
+    def _complete_file_inverse(self, item, restored_fp):
+        """Persist only the identity created by this verified inverse operation.
+
+        Caller holds the restored survivor guard and has removed the exact old
+        target. Full original metadata must match, and prior target identity must
+        equal this operation's bound input identity, not merely its bytes.
+        """
+        old = item.expected_source
+        if not restored_fp.same_content(old) or (restored_fp.creation_ns, restored_fp.mtime_ns) != (old.creation_ns, old.mtime_ns):
+            raise ValueError('逆向恢复内容或时间不匹配')
+        with self.journal.connection() as db:
+            row = db.execute('SELECT state,batch_id,ordinal FROM operations WHERE id=?', (item.operation_id,)).fetchone()
+            if row is None or row['state'] != 'undo_removing_target':
+                raise ValueError('未验证完成的逆向操作不能关联身份')
+            for prior in db.execute("SELECT id,batch_id,ordinal,target,target_fp FROM operations WHERE state='committed' AND id<>?", (item.operation_id,)).fetchall():
+                if prior['batch_id'] == row['batch_id'] and prior['ordinal'] >= row['ordinal']:
+                    continue
+                if (prior['target'] is not None and os.path.normcase(os.path.abspath(prior['target'])) == os.path.normcase(str(item.source))
+                        and self.journal.decode(prior['target_fp']) == old):
+                    db.execute('INSERT OR IGNORE INTO file_lineage VALUES(?,?,?,?)',
+                               (prior['id'], item.operation_id, self.journal.encode(old), self.journal.encode(restored_fp)))
+                    db.execute('UPDATE operations SET target_fp=? WHERE id=?', (self.journal.encode(restored_fp), prior['id']))
+            db.execute("UPDATE operations SET state='undone',message='撤销完成' WHERE id=?", (item.operation_id,))
+
     @staticmethod
     def overlaps(a, b):
         return a == b or a in b.parents or b in a.parents
@@ -236,6 +266,9 @@ class OperationEngine:
                         location=root.staging or root.target
                         self.journal.transition(root.operation_id,'conflict',f'{exc}；拒绝全部子项撤销；保留位置：{location or root.source}，请人工核对恢复')
             for item in reversed(self.journal.items(batch_id)):
+                # A later inverse may durably rebind this earlier target to its
+                # restored Windows identity. Read that verified lineage now.
+                item = next(i for i in self.journal.items(batch_id) if i.operation_id == item.operation_id)
                 if item.operation_id in blocked:continue
                 if item.state == "undone":
                     continue
@@ -252,6 +285,10 @@ class OperationEngine:
                 if item.state != "committed" and not (owned_inverse and item.state=='conflict'):
                     continue
                 try:
+                    if item.kind == 'convert':
+                        from .generated import undo_generated
+                        undo_generated(self, item)
+                        continue
                     if isinstance(item.expected_source,TreeFingerprint):
                         undo_tree(self,item)
                         continue
@@ -300,9 +337,17 @@ class OperationEngine:
                                     target.remove()
                                     target.close()
                                     self.platform.checkpoint("undo_target_removed", item)
-                                    self.journal.transition(item.operation_id, "undone", "撤销完成")
+                                    self._complete_file_inverse(item, undo_fp)
                 except Exception as exc:
-                    self.journal.transition(item.operation_id, "conflict", f"撤销停止：{exc}；文件保持现状，请人工核对")
+                    if item.kind == 'convert':
+                        from .generated import recover_generated
+                        current = next(i for i in self.journal.items(batch_id) if i.operation_id == item.operation_id)
+                        try:
+                            recover_generated(self, current, failure=exc)
+                        except Exception as settle_exc:
+                            self.journal.transition(item.operation_id, 'conflict', f'撤销停止：{exc}；恢复停止：{settle_exc}；保留备份和交换文件')
+                    else:
+                        self.journal.transition(item.operation_id, "conflict", f"撤销停止：{exc}；文件保持现状，请人工核对")
             return self.journal.batch(batch_id)
 
     def _matches(self, path, expected):
@@ -324,6 +369,14 @@ class OperationEngine:
                 for item in batch.items:
                     if item.state in stable:
                         continue
+                    if item.kind == 'convert':
+                        from .generated import recover_generated
+                        try:
+                            recover_generated(self, item)
+                        except Exception as exc:
+                            self.journal.transition(item.operation_id, 'conflict', f'转换恢复停止：{exc}；所有副本保留')
+                        recovered.append(next(i for i in self.journal.items(item.batch_id) if i.operation_id == item.operation_id))
+                        continue
                     state, message = "conflict", "操作中断；文件保持现状，请人工核对源、目标或暂存文件"
                     if item.state == "prepared":
                         state, message = "failed", "操作未开始；源保持现状"
@@ -336,6 +389,9 @@ class OperationEngine:
                     elif item.state == "undo_removing_copy" and not item.target.exists():
                         state, message = "undone", "副本已移除；撤销记录已恢复"
                     elif item.state == "undo_removing_target" and not item.target.exists() and self._matches(item.source, item.undo_fingerprint):
+                        with self.platform.guard(item.source) as survivor:
+                            survivor.verify(item.undo_fingerprint)
+                            self._complete_file_inverse(item, item.undo_fingerprint)
                         state, message = "undone", "移动撤销记录已恢复"
                     elif item.state in {"staging_recycle", "recycling"}:
                         if item.staging and item.staging.exists():
