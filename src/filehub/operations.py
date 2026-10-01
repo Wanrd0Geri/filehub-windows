@@ -219,15 +219,22 @@ class OperationEngine:
                     blocked.add(root.operation_id);blocked.update(c.operation_id for c in self.tree_child_items(root));continue
                 if isinstance(root.expected_source,TreeFingerprint) and root.kind=='recycle' and root.state in {'recycled','manual_restore','recycle_unknown'}:
                     blocked.update(c.operation_id for c in self.tree_child_items(root))
-                if isinstance(root.expected_source,TreeFingerprint) and (root.state=='committed' or owned_inverse and root.state=='conflict'):
+                    continue
+                if isinstance(root.expected_source,TreeFingerprint) and (root.state=='committed' or owned_inverse and root.state=='conflict' or any(c.state=='committed' for c in self.tree_child_items(root))):
                     try:
+                        if root.state!='committed' and not (owned_inverse and root.kind=='move' and root.state=='conflict'):
+                            raise ValueError('目录操作未完整完成，原目录逆向归属无法确认')
                         if root.kind=='move':prepare_move_inverse(self,root,pinned)
-                        elif not self._matches(root.target,root.target_fingerprint):raise ValueError('目标目录树已变化')
+                        elif root.kind=='copy':
+                            if not self._matches(root.source,root.expected_source):raise ValueError('原目录树已变化；无法确认保留副本边界')
+                            if not self._matches(root.target,root.target_fingerprint):raise ValueError('目标目录树已变化')
+                        else:raise ValueError('目录回收仅支持人工恢复')
                     except (OSError,ValueError) as exc:
                         blocked.add(root.operation_id)
                         blocked.update(c.operation_id for c in self.tree_child_items(root))
                         with self.journal.connection() as db:db.execute('INSERT OR REPLACE INTO tree_undo_blocks VALUES(?,?)',(root.operation_id,str(exc)))
-                        self.journal.transition(root.operation_id,'conflict',f'{exc}；拒绝全部子项撤销')
+                        location=root.staging or root.target
+                        self.journal.transition(root.operation_id,'conflict',f'{exc}；拒绝全部子项撤销；保留位置：{location or root.source}，请人工核对恢复')
             for item in reversed(self.journal.items(batch_id)):
                 if item.operation_id in blocked:continue
                 if item.state == "undone":

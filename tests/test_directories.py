@@ -261,3 +261,24 @@ def test_owned_inverse_root_restart_accepts_only_exact_restored_children(tmp_pat
     else:
         assert result.ok and (s/'second.txt').read_bytes()==b'second'
         assert (s/'nested'/'文件.txt').read_bytes()==b'original' and not t.exists()
+
+@pytest.mark.parametrize('kind',['recycle','move'])
+def test_conflicted_tree_undo_blocks_children_when_original_root_reoccupied(tmp_path,kind):
+    from filehub.platform.windows import RecycleOutcome
+    s=tree(tmp_path);t=tmp_path/'target'
+    class Partial(WindowsPlatform):
+        def recycle(self,path):return RecycleOutcome('failed',message='isolated failure')
+        def checkpoint(self,stage,item):
+            if kind=='move' and stage=='copy_verified':(t/'external-target.txt').write_bytes(b'keep-target')
+    engine=OperationEngine(tmp_path/'state',Partial())
+    result=engine.execute([Operation(kind,s,t if kind=='move' else None,Fingerprint.capture(s))],'partial-tree')
+    root=result.items[0];assert root.state=='conflict' and not s.exists()
+    destination=t if kind=='move' else root.staging
+    s.mkdir();external=s/'external.txt';external.write_bytes(b'keep-source')
+    after=engine.undo(result.batch_id)
+    assert external.read_bytes()==b'keep-source' and not (s/'nested').exists()
+    assert (destination/'nested'/'文件.txt').read_bytes()==b'original'
+    assert all(c.state=='committed' for c in after.items if c.parent_operation_id)
+    assert str(destination) in after.items[0].message
+    again=engine.undo(result.batch_id)
+    assert all(c.state=='committed' for c in again.items if c.parent_operation_id)

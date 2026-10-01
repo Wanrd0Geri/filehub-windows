@@ -170,11 +170,23 @@ class MainWindow(QMainWindow):
         if preview:self.invalidate_preview();self.coordinator.submit(lambda:self.service.execute(preview),self.show_result,self.show_error)
 
     def show_result(self,result):
-        self.status.setText({'success':'已完成，可在记录中撤销。','partial':'部分完成，请查看记录中的问题。','failed':'未完成，请查看记录。'}[result.status]);self.refresh()
+        summary={'success':'已完成，可在记录中撤销。','partial':'部分完成，请查看记录中的问题。','failed':'未完成，请查看记录。'}[result.status]
+        details=self.duplicate_details(result)
+        self.status.setText(summary+('\n'+'\n'.join(details) if details else ''));self.refresh()
         if result.ok:self.set_paths([])
         self.result_ready.emit(result)
 
     def show_error(self,message):self.status.setText('操作未完成：'+message)
+
+    @staticmethod
+    def duplicate_details(batch):
+        lines=[]
+        for outcome in batch.outcomes:
+            if not outcome.duplicate:continue
+            recycled=any(i.source==outcome.source and i.kind=='recycle' and i.state in {'recycled','manual_restore'} for i in batch.items)
+            state='来源已回收' if recycled else '来源回收未完成，请核对原位置、暂存或回收站'
+            lines.append(f'重复文件：{outcome.source}\n原因：项目中已有相同内容的副本\n已有副本完整路径：{outcome.duplicate}\n{state}')
+        return lines
 
     def busy_changed(self,busy):
         self.preview_button.setEnabled(not busy);self.save_button.setEnabled(not busy);self.undo_button.setEnabled(not busy)
@@ -212,6 +224,7 @@ class MainWindow(QMainWindow):
                 staging=str(item.staging or item.recycle_identity or '记录未提供回收名称')
                 lines.append(f'需要手动恢复\n回收暂存名称：{staging}\n原文件名：{item.source.name}\n原完整路径：{item.source}\n打开回收站恢复后，可能得到 .filehub 暂存名称，请改回原文件名。')
         lines.extend(str(o.source)+'\n'+o.error for o in batch.outcomes if o.error)
+        lines.extend(self.duplicate_details(batch))
         self.history_details.setPlainText('\n\n'.join(lines))
 
     def undo(self):
