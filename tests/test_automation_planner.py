@@ -99,16 +99,16 @@ def test_conversion_subject_replace_binding_and_unknown_fingerprint(tmp_path, mo
     assert source.read_bytes() == b'original'
 
 
-def test_replace_other_selected_source_and_keep_same_path_rejected(tmp_path):
+def test_replace_other_selected_source_and_keep_same_path_numbered(tmp_path):
     source, facts, service = setup(tmp_path)
     other = tmp_path/'a.jpg'
     reservations = PlanReservations(selected_sources=(source, other))
     replace = plan_rule(make_rule(Action('image_convert', {'mode': 'replace', 'output_format': 'jpeg'})),
                         facts, service, occupied=reservations, now=NOW)
-    assert replace.errors
+    assert not replace.errors and replace.steps[0].target == tmp_path/'a-1.jpg'
     keep = plan_rule(make_rule(Action('image_convert', {'output_format': 'png', 'destination': str(tmp_path)})),
                      facts, service, now=NOW)
-    assert keep.errors
+    assert not keep.errors and keep.steps[0].target == tmp_path/'a-1.png'
 
 
 def test_project_route_requires_sync_only_for_project_action(tmp_path):
@@ -163,7 +163,35 @@ def test_replace_virtual_subject_and_unrelated_case_collision(tmp_path):
     assert plan.steps[1].source_fingerprint is None and plan.steps[1].requires_backup
     (tmp_path/'A.JPG').write_bytes(b'other')
     bad = plan_rule(make_rule(Action('image_convert', {'mode': 'replace', 'output_format': 'jpeg'})), facts, service, now=NOW)
-    assert bad.errors and (tmp_path/'A.JPG').read_bytes() == b'other'
+    assert not bad.errors and bad.steps[0].target == tmp_path/'a-1.jpg'
+    assert (tmp_path/'A.JPG').read_bytes() == b'other'
+
+
+def test_conversion_numbering_reserves_selected_and_batch_intermediate(tmp_path):
+    source, facts, service = setup(tmp_path, 'a.jpg')
+    other, other_facts, _ = setup(tmp_path, 'a.png')
+    reservations = PlanReservations((source, other))
+    r = make_rule(Action('image_convert', {'mode': 'replace', 'output_format': 'webp'}),
+                  Action('image_convert', {'mode': 'replace', 'output_format': 'png'}))
+    first = plan_rule(r, facts, service, occupied=reservations, now=NOW)
+    assert not first.errors
+    assert [s.target.name for s in first.steps] == ['a.webp', 'a-1.png']
+    second = plan_rule(make_rule(Action('image_convert', {'mode': 'replace', 'output_format': 'webp'})),
+                       other_facts, service, occupied=reservations, now=NOW)
+    assert not second.errors and second.steps[0].target.name == 'a-1.webp'
+    assert first.steps[1].source == first.steps[0].target
+
+
+def test_failed_numbered_plan_does_not_leak_reservations(tmp_path):
+    source, facts, service = setup(tmp_path)
+    (tmp_path/'a.jpg').write_bytes(b'occupied')
+    reservations = PlanReservations((source,))
+    conversion = Action('image_convert', {'mode': 'replace', 'output_format': 'jpeg'})
+    bad = plan_rule(make_rule(conversion, Action('rename', {'pattern': '{original}'})),
+                    facts, service, occupied=reservations, now=NOW)
+    assert bad.errors and not reservations.targets
+    good = plan_rule(make_rule(conversion), facts, service, occupied=reservations, now=NOW)
+    assert good.ok and good.steps[0].target == tmp_path/'a-1.jpg'
 
 
 def test_injected_inspection_plan_binds_source_fingerprint_and_spec(tmp_path):

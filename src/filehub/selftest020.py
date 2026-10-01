@@ -152,6 +152,38 @@ def extend_report(fixture, report):
                 'restored_bytes_ads_times': True})
             checks['image_' + ('same_path' if same_path else 'cross_extension') + '_replace_backup_undo'] = True
 
+        collision_source = image(work / 'images' / 'numbered-006.png')
+        collision_original = collision_source.read_bytes()
+        collision_before = Fingerprint.capture(collision_source)
+        occupied = [image(work / 'images' / name, format='JPEG')
+                    for name in ('numbered-006.jpg', 'numbered-019.jpg')]
+        occupied_bytes = [path.read_bytes() for path in occupied]
+        target, outcome, decoded = convert(owner, collision_source,
+            ConversionSpec(output_format='jpeg', quality=25), mode='replace')
+        require(target.name == 'numbered-020.jpg' and not collision_source.exists(), 'collision family max replacement')
+        require(all(path.read_bytes() == raw for path, raw in zip(occupied, occupied_bytes)), 'occupied JPEG preservation')
+        row = owner.engine.journal.items(outcome.batch_id)[0]
+        backup = owner.engine.journal.generated(row.operation_id)
+        require(backup.mode == 'replace' and backup.backup is not None
+                and backup.backup.read_bytes() == collision_original, 'numbered replacement verified backup')
+        require(owner.undo(outcome.batch_id).ok and not target.exists()
+                and collision_source.read_bytes() == collision_original
+                and Fingerprint.capture(collision_source).same_content(collision_before), 'numbered replacement inverse')
+        require(all(path.read_bytes() == raw for path, raw in zip(occupied, occupied_bytes)), 'inverse occupied JPEG preservation')
+        checks['image_collision_max_number_replace_backup_undo'] = True
+        preview = owner.conversions.submit_image_preview([collision_source],
+            ConversionSpec(output_format='jpeg'), mode='replace').future.result(30)
+        require(not preview.items[0].error and preview.items[0].target == target, 'bound collision preview')
+        race_bytes = image(target, format='JPEG').read_bytes()
+        outcomes = owner.conversions.submit_images(preview).future.result(30)
+        require(len(outcomes) == 1 and not outcomes[0].ok and '重新预览' in outcomes[0].error,
+                'late occupancy requires re-preview')
+        require(target.read_bytes() == race_bytes and not target.with_name('numbered-021.jpg').exists()
+                and Fingerprint.capture(collision_source).same_content(collision_before), 'late occupancy freezes exact target')
+        details['collision_numbering'] = {'target': str(target), 'occupied_preserved': True,
+            'backup_verified': True, 'undone': True, 'late_occupancy_rejected': True}
+        checks['image_collision_preview_late_occupancy_rejected'] = True
+
         watch = work / 'generic' / 'watch'; watch.mkdir(parents=True)
         generic = service('generic', Config(watch_roots=(watch,), paused=False))
         text = watch / 'fresh.txt'; text.write_bytes(b'newly observed, no sync root')

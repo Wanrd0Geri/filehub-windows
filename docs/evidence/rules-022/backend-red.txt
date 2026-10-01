@@ -1,0 +1,30 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_numbered_real_execute_backup_undo[replace-False-False] _________
+
+owner = (<filehub.service.FileHubService object at 0x0000027EED842B70>, WindowsPath('C:/Users/Gerry-UltraPC/.codex/worktrees/f...ules/Hazel Windows/sandbox/backend022-red-5a895e57-c982-432d-b38b-50f39cdab5df/test_numbered_real_execute_bac0/watch'))
+rules = False, mode = 'replace', same = False
+
+    @pytest.mark.parametrize('rules', [False, True])
+    @pytest.mark.parametrize('mode,same', [('replace', False), ('replace', True), ('keep', True)])
+    def test_numbered_real_execute_backup_undo(owner, rules, mode, same):
+        service, watch = owner
+        source = image(watch/('图片-006.jpg' if same else '图片-006.png'), 'JPEG' if same else 'PNG')
+        original = source.read_bytes(); before = Fingerprint.capture(source)
+        occupied = watch/'图片-019.jpg'; image(occupied, 'JPEG'); occupied_bytes = occupied.read_bytes()
+        if not same: image(watch/'图片-006.jpg', 'JPEG')
+        spec = ConversionSpec(output_format='jpeg')
+        if rules:
+            preview = rule_preview(service, [source], spec, mode, watch if mode == 'keep' else None)
+            assert not preview.errors
+            target = preview.plans[0].steps[0].target
+        else:
+            preview = service.conversions.preview_images([source], spec, mode=mode, output_dir=watch if mode == 'keep' else None)
+>           assert not preview.items[0].error
+E           AssertionError: assert not '目标在预览期间已被占用，请重新预览'
+E            +  where '目标在预览期间已被占用，请重新预览' = ImagePreviewItem(source=WindowsPath('C:/Users/Gerry-UltraPC/.codex/worktrees/filehub-rules/Hazel Windows/sandbox/backe...-b38b-50f39cdab5df/test_numbered_real_execute_bac0/watch/图片-006.jpg'), conversion_plan=None, error='目标在预览期间已被占用，请重新预览').error
+
+tests\test_conversion_numbering_runtime.py:50: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_conversion_numbering_runtime.py::test_numbered_real_execute_backup_undo[replace-False-False]
+1 failed, 10 deselected in 0.15s

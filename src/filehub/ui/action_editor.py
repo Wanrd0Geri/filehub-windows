@@ -37,7 +37,7 @@ class ConversionFields(QWidget):
             form.addRow(label, widget)
         form.addRow(self.destination_label, self.destination_box)
         self.mode_help = QLabel(); self.mode_help.setWordWrap(True); self.mode_help.setObjectName('muted'); form.addRow(self.mode_help)
-        help_label = QLabel('保持像素尺寸；最多 4000 万像素。拍摄日期、色彩信息等元数据可能丢失。取消会在当前图片处理结束后生效；正在替换时会先完成或恢复原文件。')
+        help_label = QLabel('另存或跨格式转换目标同名时自动续接版本号，预览显示最终文件名。保持像素尺寸；最多 4000 万像素。拍摄日期、色彩信息等元数据可能丢失。取消会在当前图片处理结束后生效；正在替换时会先完成或恢复原文件。')
         help_label.setWordWrap(True); help_label.setObjectName('muted'); form.addRow(help_label)
         self._timeout = 60; self._max_pixels = 40000000
         self.mode.currentIndexChanged.connect(self._refresh)

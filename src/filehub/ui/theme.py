@@ -25,6 +25,7 @@ def apply_theme(widget, appearance='dark'):
     appearance=resolved_theme(appearance,QApplication.styleHints().colorScheme())
     light=appearance=='light'
     bg,side,surface,top,text,muted,line,gold=('#f7f7f5','#eeeeeb','#ffffff','#ffffff','#242422','#73736b','#deded7','#927216') if light else ('#19191b','#111113','#202022','#252527','#ececea','#969693','#303032','#d8bd65')
+    scroll_handle,scroll_hover=('#c7c7bf','#aaa99f') if light else ('#47474b','#626267')
     QFont.insertSubstitutions('Inter',['Noto Sans SC','Microsoft YaHei UI'])
     font=QFont();font.setFamilies(['Inter','Noto Sans SC','Segoe UI','Microsoft YaHei UI']);font.setPixelSize(13);widget.setFont(font)
     QApplication.instance().setFont(font)
@@ -55,9 +56,20 @@ def apply_theme(widget, appearance='dark'):
     QListWidget::item:selected {{background:{top};color:{text};}}
     QCheckBox {{spacing:8px;}}
     QScrollArea {{border:0;}}
+    QScrollBar:vertical {{background:transparent;border:0;width:8px;margin:0;}}
+    QScrollBar:horizontal {{background:transparent;border:0;height:8px;margin:0;}}
+    QScrollBar::handle:vertical {{background:{scroll_handle};border-radius:4px;min-height:24px;}}
+    QScrollBar::handle:horizontal {{background:{scroll_handle};border-radius:4px;min-width:24px;}}
+    QScrollBar::handle:hover {{background:{scroll_hover};}}
+    QScrollBar::add-line,QScrollBar::sub-line {{background:transparent;border:0;width:0;height:0;}}
+    QScrollBar::up-arrow,QScrollBar::down-arrow,QScrollBar::left-arrow,QScrollBar::right-arrow {{width:0;height:0;}}
+    QScrollBar::add-page,QScrollBar::sub-page {{background:transparent;}}
     QStatusBar#appStatusBar {{background:{side};border-top:1px solid {line};padding:0;}}
     QStatusBar#appStatusBar::item {{border:0;}}
     QScrollArea#statusFooter,QScrollArea#statusFooter QWidget {{background:{side};border:0;}}
+    QScrollArea#statusFooter QScrollBar {{background:transparent;}}
+    QScrollArea#statusFooter QScrollBar::handle {{background:{scroll_handle};}}
+    QScrollArea#statusFooter QScrollBar::handle:hover {{background:{scroll_hover};}}
     QLabel#statusMessage {{background:{side};padding:8px 16px;}}
     QPushButton#historyClear {{background:transparent;border:0;color:{muted};padding:1px 4px;font-size:11px;}}
     QWidget#historyChip {{background:{surface};border:1px solid {line};border-radius:6px;}}

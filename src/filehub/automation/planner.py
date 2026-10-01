@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 
 from ..conversion.models import ConversionPlan, ConversionSpec
+from ..conversion.naming import allocate_conversion_target
 from ..models import checked_path
 from ..naming import render_pattern, validate_component
 from ..rules import build_targets, discover_projects, parse_tag
@@ -178,6 +179,12 @@ def plan_rule(rule: Rule, facts: FileFacts, service, occupied=None, *, ruleset_r
                 replacement = options['mode'] == 'replace'
                 folder = current.parent if replacement else Path(options['destination'])
                 target = folder/(current.stem+spec.extension)
+                own = replacement and path_key(target) == path_key(current)
+                reserved = [path for path in reservations.selected_sources
+                            if not (own and path_key(path) == path_key(current) == path_key(original))]
+                reserved.extend(reservations.targets)
+                reserved.extend(path for path in local if not (own and path_key(path) == path_key(current)))
+                target = allocate_conversion_target(target, reserved=reserved, own_source=current if own else None)
                 inspected = (conversion_plans or {}).get(index)
                 if inspected is not None:
                     if not isinstance(inspected, ConversionPlan) or path_key(inspected.source) != path_key(current) or inspected.spec != spec:

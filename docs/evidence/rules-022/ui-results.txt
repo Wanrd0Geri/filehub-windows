@@ -1,0 +1,8 @@
+Native Qt windows platform, owned UUID state only; no desktop automation or user-app process stop.
+960x640 settings actual window DPR1;1200x800 settings actual DPR1.99999999995;960x640 conversion at both DPRs.
+PASS both themes/DPRs: exactly2 settings day controls NoButtons,1..365,typed12,Up13,Down12,end bounds;conversion quality arrows preserved.
+PASS both themes/DPRs:vertical scrollbar8px,end control rects empty,native keyboard/wheel/thumb drag value changes.
+Four representative screenshots copied; no desktop screenshots.
+Existing tests/test_conversion_ui021.py:26 passed in2.59s,isolated UUID basetemp.
+Initial offscreen screenshots had font boxes; final native windows evidence readable Chinese.
+Source script recorded for reproducibility; run via explicit workspace Python -B -X utf8 with PYTHONPATH=<worktree>/src and PYTHONDONTWRITEBYTECODE=1.

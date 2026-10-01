@@ -1,0 +1,23 @@
+{
+  "app_version": "0.2.2",
+  "frozen_inputs": 228,
+  "source_archives": 4,
+  "changed_input_hashes": [
+    "docs/第三方许可.md",
+    "packaging/version-info.txt"
+  ],
+  "pinned_dependencies_and_sources_unchanged": true,
+  "historical_installers": [
+    {
+      "file": "FileHub-0.2.1-windows-x64-setup.exe",
+      "bytes": 143130835,
+      "sha256": "9268a5c324d311476bca00538321166d42b18f45bfb167442c45e70b7b544f07"
+    },
+    {
+      "file": "FileHub-0.2.0-windows-x64-setup.exe",
+      "bytes": 143135555,
+      "sha256": "a36ac5a9f21e319d3a35c6aaf31a8a16dcad44254e997688a738659943053735"
+    }
+  ],
+  "verification": "verify-inputs.py exit0; no build yet"
+}

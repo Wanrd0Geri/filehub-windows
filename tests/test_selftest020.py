@@ -17,6 +17,8 @@ NEW_CHECKS = {
     'image_same_path_replace_backup_undo', 'generic_rule_no_sync_before_legacy_gate',
     'ordered_copy_convert_move_history_undo', 'imported_rule_disabled_persisted',
     'template_route_persisted_undo',
+    'image_collision_max_number_replace_backup_undo',
+    'image_collision_preview_late_occupancy_rejected',
 }
 
 
@@ -34,6 +36,9 @@ def test_existing_selftest_runs_real_020_acceptance_in_owned_fixture(tmp_path):
     assert details['rule_chain']['journal_kinds'] == ['copy', 'convert', 'move']
     assert details['rule_chain']['restored_original']
     assert details['template']['persisted'] and details['template']['undone']
+    assert details['collision_numbering']['target'].endswith('numbered-020.jpg')
+    assert details['collision_numbering']['backup_verified'] and details['collision_numbering']['undone']
+    assert details['collision_numbering']['occupied_preserved'] and details['collision_numbering']['late_occupancy_rejected']
     fixture = Path(report['fixture_dir'])
     assert fixture.is_relative_to(tmp_path / 'acceptance')
     for row in details['images']:

@@ -11,6 +11,7 @@ import uuid
 from ..models import Fingerprint, checked_path
 from ..conversion.images import inspect
 from ..conversion.models import ConversionCancelled
+from ..conversion.naming import allocate_conversion_target
 from ..generated import generate_owned, discard_owned
 from .planner import path_key, paths_overlap, _existing_collision, PlannedStep, RulePlan
 from .runner import RunOutcome, config_revision, AuthorityChanged
@@ -150,14 +151,17 @@ class ConversionExecutor:
                 if sum(path_key(source)==path_key(p) for p in sources)>1:raise ValueError('重复选择或路径大小写别名')
                 if paths_overlap(source,e.state_dir):raise ValueError('不能转换应用状态目录')
                 target=checked_path((source.parent if mode=='replace' else Path(output_dir))/(source.stem+spec.extension))
+                own=mode=='replace' and path_key(target)==path_key(source)
+                reserved=(*targets, *(p for p in sources if not (own and path_key(p)==path_key(source))))
+                target=allocate_conversion_target(target,reserved=reserved,own_source=source if own else None)
                 if paths_overlap(target,e.state_dir):raise ValueError('目标与应用状态目录重叠')
                 own=mode=='replace' and path_key(target)==path_key(source)
                 if any(paths_overlap(target,p) and not (own and path_key(p)==path_key(source)) for p in sources):raise ValueError('目标与另一个选择的源重叠')
                 if any(paths_overlap(target,p) for p in targets):raise ValueError('本批次目标重复或重叠')
-                if _existing_collision(target) and not own:raise ValueError('目标已存在；不会覆盖或重新分配文件名')
-                targets.append(target)
+                if _existing_collision(target) and not own:raise ValueError('目标在预览期间已被占用，请重新预览')
                 validation=inspect(source,spec)
                 if cancel_event and cancel_event.is_set():raise ValueError('已取消预览')
+                targets.append(target)
                 items.append(ImagePreviewItem(source,target,validation))
             except (OSError,ValueError) as exc:items.append(ImagePreviewItem(source,target,error=str(exc)))
         if cancel_event and cancel_event.is_set():raise ValueError('已取消预览')

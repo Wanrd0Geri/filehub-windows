@@ -340,7 +340,8 @@ def test_close_before_lazy_submit_retires_service(setup):
 def test_image_preview_reserves_all_sources_and_duplicate_targets(setup):
     s,w=setup;p=w/'a.png';png(p);other=w/'a.jpg';png(other);ex=s.conversions
     preview=ex.submit_image_preview([p,other],ConversionSpec(),mode='replace').future.result(5)
-    assert preview.items[0].error and '重叠' in preview.items[0].error
+    assert not any(item.error for item in preview.items)
+    assert [item.target for item in preview.items] == [w/'a-1.jpg', other]
     dup=ex.submit_image_preview([p,p],ConversionSpec(),mode='replace').future.result(5)
     assert all(item.error for item in dup.items)
     assert all(not r.ok for r in ex.submit_images(dup).future.result(5))

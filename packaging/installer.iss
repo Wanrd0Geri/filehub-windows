@@ -1,4 +1,4 @@
-#define AppVersion "0.2.1"
+#define AppVersion "0.2.2"
 #define AppExe "FileHub.exe"
 #define Owner "FileHub.Windows.v1"
 #ifndef PayloadRoot
