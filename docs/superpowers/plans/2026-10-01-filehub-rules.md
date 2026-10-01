@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the existing OperationEngine and default route implementation. Add state-local template definitions, a focused automation package for rule validation/matching/planning/execution/ledger, and independent Qt editor modules; connect all I/O through the existing serial worker.
 
-**Tech Stack:** Existing Python 3.12+, PySide6 6.11.2, SQLite, pytest and PyInstaller/Inno; media uses reviewed Qt WebP and CPU FFmpeg/OpenH264 dependencies per conversion addendum.
+**Tech Stack:** Existing Python 3.12+, PySide6 6.11.2, SQLite, pytest and PyInstaller/Inno; image conversion uses reviewed Qt WebP plugin/source materials per conversion addendum; no video encoder dependency.
 
 **Spec:** `docs/superpowers/specs/2026-10-01-filehub-rules-design.md`.
 
@@ -14,7 +14,7 @@
 
 - Worktree `C:/Users/Gerry-UltraPC/.codex/worktrees/filehub-rules/Hazel Windows`; original `F:/Hazel Windows` is read-only dependency source.
 - Version target 0.2.0; empty rules/default template preserve 0.1.1 behavior. No automatic enabling/migration side effects.
-- Include image/video conversion and rule conversion actions per `docs/superpowers/specs/2026-10-01-filehub-conversion-addendum.md`; exclude OCR/scripts/upload/permanent-delete/recursive scan. No live install, registry, real watch/sync/process operations; no push/merge.
+- Include image conversion and image rule actions per `docs/superpowers/specs/2026-10-01-filehub-conversion-addendum.md`; exclude video conversion/OCR/scripts/upload/permanent-delete/recursive scan. No live install, registry, real watch/sync/process operations; no push/merge.
 - New, copied and imported rules default disabled. Top-level scan, first enabled match, ordered actions, copy changes subject, failure stops following actions.
 - Conditions max 4 group levels/100 leaves; actions max 20. Finite non-evaluating naming tokens. Full source/template/rule revisions bind previews.
 - Shared worker/process lock; state-local JSON definitions and SQLite automation ledger; existing engine is sole material mutation authority.
@@ -96,12 +96,10 @@
 
 Root baseline: 276 passed in 21.10s; pinned inputs verified; evidence `sandbox/rules-baseline-pytest.txt`. User already supplied execution method and explicitly authorized start; no redundant plan approval request. Director performs task reviews per user-directed Astra/Sol arrangement rather than additional review agents. Record rulings/progress in `docs/implementation-ledger.md`; tracked briefs/reports persist across context compaction. Managed worktree is retained for delivery, not deleted by generic skill cleanup.
 
-## User scope extension: full image/video conversion
+## Current image-conversion scope extension
 
-The user's explicit follow-up includes all image/video conversions. Read `docs/superpowers/specs/2026-10-01-filehub-conversion-addendum.md`, which supersedes the conversion exclusions above. Task1 unchanged and already running. Parallel Task M (fresh Sol) implements independent conversion backend/dependency preparation per `docs/briefs/rules-020/media-core.md`. It owns no shared engine/UI/rule files.
+User explicitly removed video conversion and retained all other work. Read current `docs/superpowers/specs/2026-10-01-filehub-conversion-addendum.md`. Task1 unchanged. Parallel Task M (fresh Sol) implements IMAGE-only backend/plugin provenance per `docs/briefs/rules-020/media-core.md`; no shared engine/UI/rule files, no new FFmpeg/OpenH264 build or deliverable.
 
-Task M steps: [ ] backend API proposal; [ ] image/video/cancel/validation RED; [ ] Qt JPEG/PNG/WebP implementation and real outputs; [ ] minimal FFmpeg/OpenH264 CPU build with exact provenance/license/source recipe; [ ] real video/remux/progress/cancel/invalid tests GREEN; [ ] report and freeze. Director reviews interface/media evidence before dependent integration.
+Task M steps: [ ] image-only API; [ ] image/cancel/validation RED; [ ] Qt JPEG/PNG/WebP implementation and actual output verification; [ ] exact plugin/runtime QtImageFormats/libwebp provenance; [ ] focused GREEN; [ ] report/freeze. Director reviews before integration.
 
-Task2 now includes image_convert/video_convert actions using ConversionSpec but does not execute them; planner records exact output and new subject. Task3 consumes reviewed TaskM.generate API, implements explicit generated-publication/convert journal migration/undo and tests listed in addendum. Task4 also creates ui/conversion_page.py with standalone batch preview/start/cancel and rule preset editors; UI integration remains serial after backend freeze. Task5 packages actual Qt WebP and minimal encoder components, corresponding sources/notices, and real image/video bundled smoke before final installer. Goal cannot be completed after rules alone. No new user approval needed; this is direct authorized scope expansion.
-
-`Task3 concurrency supplement`: add focused ConversionExecutor(max_workers=1) for conversions and conversion-bearing rule chains; scheduler claims/enqueues without blocking Coordinator. No global engine lock during encoding, short guarded publication locks only. Test ordinary archive worker stays responsive during delayed conversion, cancellation reaches active child without queueing, obsolete/demo jobs and queued stale revisions never publish. Task4 forwards progress/completion safely and cancels obsolete jobs. This supersedes shared-worker-only language for encoding; definition I/O and ordinary operations keep their existing worker.
+Task2 includes declarative image_convert action using ConversionSpec, no video_convert. Task3 consumes generate API, adds explicit generated-publication/convert journal migration/undo and addendum tests. Add one dedicated ConversionExecutor(max_workers=1): scheduler claims/enqueues conversion-bearing rules promptly; no global lock during codec work, short locked publication only. Test ordinary archive responsiveness, cancellation and obsolete/demo/queued snapshots never publish. Task4 creates ui/conversion_page.py for standalone IMAGE batch preset/preview/start/cancel, rule image action editor and lifecycle. Task5 includes qwebp and exact notices/source, real packaged image roundtrip. Existing ffprobe/video archive remains unchanged. No video conversion code/UI/encoder material in payload. Goal completion requires templates+rules+images+installer.

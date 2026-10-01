@@ -1,0 +1,18 @@
+# Task2 brief — rule schema, explanations and plans
+
+Status: ready after reviewed Task1; do not implement before director dispatch. Read Task2/global constraints in plan and both specs. Current user-authorized scope includes IMAGE conversion only; no video conversion. exclude old conversion-deferral notes in historical ledger.
+
+Ownership: new automation/__init__.py, models.py, conditions.py, planner.py; test_automation_models.py, test_automation_conditions.py, test_automation_planner.py. No material execution, scheduler, engine, UI or template edits unless controller explicitly transfers. Template interfaces from reviewed Task1 report. Conversion backend still owned by independent Sol; consume ConversionSpec via public interface only after freeze, or use action configuration as declarative validated data without importing active agent code. No stubs presented as implemented execution.
+
+Concrete semantics supplement:
+- Validation rejects empty condition groups, unsupported keys/operators, bool-as-number, NaN/infinity, naive dates and unreasonable/deep imports atomically. No arbitrary Python expressions, regex, formatting or attribute access. Text comparisons casefold; extension normalize dot/lowercase; bounded nesting counts root as level1. Every emitted explanation is Chinese and includes actual value/threshold where useful.
+- Missing facts are tri-state unavailable. An unavailable leaf never makes a none group true: all/any/none propagate unavailable unless other known children conclusively determine true/false; final unknown means unmatched with explanation. This prevents unobserved age being mistaken for an eligible negative condition.
+- Rule semantic revision hashes conditions/actions/scope; excludes name, enabled, list order and display metadata. Rule id remains independent. Enable/reorder/rename do not rerun successfully processed content. Explicit condition/action/scope edits do.
+- New/duplicate/imported rules disabled, import gets fresh IDs and is all-or-nothing. Stored enabled values survive ordinary load/save. Deleting a rule does not erase historical run/operation records. JSON export definitions only.
+- First match returns complete explanation and identifies later rules not evaluated. Rules with zero actions invalid. Preview can inspect disabled selected rule explicitly but never execute by evaluating it.
+- Planner tracks ordered subject. Copy produces new subject; rename is move sibling; subfolder moves into current-parent/relative path; final project_route may expand targets but must be last. image_convert create new subject with known planned extension/preset and unknown content fingerprint until execution. Rules may continue rename/move/copy after conversion, so avoid pretending all future steps share original fingerprint. These are declarative plans, runner captures each new subject fingerprint.
+- Planning reserves target paths across batch inputs, including case-insensitive collision keys. It must reject current/existing destination collision, no-op, output overlapping any selected source, recursive directory containment, state overlap, reparse components and invalid Windows names. Preview cannot create missing destination directories. Formats/tokens validated before any writes.
+- Preview records the full immutable ruleset revision and selected rule semantic revision plus template revision; editing other rules before execution also invalidates first-match/priority assumptions. Snapshot clock captured once for all facts.
+
+Workdir new filehub-rules worktree; shared runtime read-only. No stage/commit/spawn/pip/live operations. Focused tests only, no full suite. Report APIs and exact tests/outputs to docs/reports/rules-020/task2-sol.md, then freeze for Astra review.
+
