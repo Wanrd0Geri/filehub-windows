@@ -6,6 +6,8 @@ import os
 import re
 import stat
 import unicodedata
+from .naming import render_pattern
+from .templates import TemplateLibrary
 
 VIDEO_EXT = {'.mp4', '.mov', '.m4v', '.mkv', '.webm', '.avi'}
 IMAGE_EXT = {'.png', '.jpg', '.jpeg', '.webp', '.heic', '.gif', '.tif', '.tiff', '.bmp', '.avif', '.psd', '.exr'}
@@ -26,6 +28,8 @@ class RouteSpec:
     ep: int | None = None
     sc: int | None = None
     shots: tuple[tuple[int, str], ...] = ()
+    naming_pattern: str = ''
+    template_revision: str = ''
 
 class TargetPaths(list[Path]):
     """List-compatible targets with immutable, user-visible warnings."""
@@ -90,7 +94,7 @@ def clean_note(text):
 def parse_shots(text):
     return tuple((int(n), s.upper()) for n, s in re.findall(r'(\d{1,3})([A-Za-z]?)', text or ''))
 
-def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path) -> RouteSpec:
+def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path, templates=None) -> RouteSpec:
     root = _safe_path(Path(sync_root))
     normalized = {}
     for code,p in projects.items():
@@ -107,38 +111,43 @@ def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path) -> RouteSpec
             if body: break
     if not body: raise RouteError('标签开头不是项目代码或缺少目的地')
     proj=normalized[code]
+    library = templates if templates is not None else TemplateLibrary()
+    template = library.for_project(code)
+    def route(mode, dest, prefix='', note='', ep=None, sc=None, shots=()):
+        return RouteSpec(mode, dest, prefix, note, ep, sc, shots,
+                         template.naming_patterns.get(mode, ''), library.revision)
     def shot(ep,sc,text,note):
-        dest=proj/'3_制作'/f'E{ep:02d}'
+        dest=proj/template.production_dir/f'E{ep:02d}'
         prefix=f'E{ep:02d}'
         if sc is not None: dest/=f'S{sc:02d}'; prefix+=f'S{sc:02d}'
-        return RouteSpec('shot',dest,prefix,clean_note(note),ep,sc,parse_shots(text))
+        return route('shot',dest,prefix,clean_note(note),ep,sc,parse_shots(text))
     m=re.fullmatch(r'(\d{2})(\d{2})(\d{2,3}[A-Za-z]?(?:\+\d{1,3}[A-Za-z]?)*)?[\s\-_]*(.*)',body)
     if m and not re.match(r'\d',m[4]): return shot(int(m[1]),int(m[2]),m[3],m[4])
     m=re.fullmatch(r'[Ee](\d{1,2})(?:[Ss](\d{1,3}))?[\s\-_]*(?:[Cc](\d{1,3}[A-Za-z]?(?:\+\d{1,3}[A-Za-z]?)*))?(.*)',body)
     if m and not re.match(r'\d',m[4]): return shot(int(m[1]),int(m[2]) if m[2] else None,m[3],m[4])
-    make=_safe_path(proj/'3_制作')
+    make=_safe_path(proj/template.production_dir)
     seqs=['PV','正片']
     if make.is_dir(): seqs += [p.name for p in make.iterdir() if p.is_dir() and not re.fullmatch(r'E\d+|[._].*',p.name)]
     for seq in sorted(set(seqs),key=len,reverse=True):
         if body.upper().startswith(seq.upper()):
             rest=body[len(seq):].strip(' -_')
             m=re.match(r'[Cc](\d{1,3})(?!\d)',rest)
-            return RouteSpec('shot',_safe_path(make/seq),seq,clean_note(rest[m.end():] if m else rest),shots=parse_shots(m[1]) if m else ())
-    for cat in ASSET_CATEGORIES:
+            return route('shot',_safe_path(make/seq),seq,clean_note(rest[m.end():] if m else rest),shots=parse_shots(m[1]) if m else ())
+    if body in template.keep_name_routes: return route('keep',proj/template.keep_name_routes[body])
+    for cat in sorted(template.asset_categories, key=len, reverse=True):
         if body.startswith(cat):
             rest=body[len(cat):].strip(' -_')
             if not rest: raise RouteError(f'{cat}后面要跟名字')
             parts=re.split(r'[\s\-_]',rest,maxsplit=1)
             name=safe_name(parts[0])
-            return RouteSpec('asset',_safe_path(proj/'1_设定'/cat/name),name,clean_note(parts[1] if len(parts)>1 else ''))
+            return route('asset',_safe_path(proj/template.asset_root/template.asset_categories[cat]/name),name,clean_note(parts[1] if len(parts)>1 else ''))
     if body.startswith('成片'):
         m=re.search(r'[Ee](\d{1,2})',body)
-        return RouteSpec('final',proj/'4_交付',f'E{int(m[1]):02d}_成片' if m else '成片')
-    if body in GENERIC_KEEP_NAME: return RouteSpec('keep',proj/GENERIC_KEEP_NAME[body])
-    if body=='测试': return RouteSpec('dated',proj/'_测试')
+        return route('final',proj/template.final_dir,f'E{int(m[1]):02d}_成片' if m else '成片', ep=int(m[1]) if m else None)
+    if body=='测试': return route('dated',proj/template.test_dir)
     names={}
-    for cat in ASSET_CATEGORIES:
-        folder=_safe_path(proj/'1_设定'/cat)
+    for cat in template.asset_categories:
+        folder=_safe_path(proj/template.asset_root/template.asset_categories[cat])
         if folder.is_dir():
             for p in folder.iterdir():
                 if p.is_dir() and not p.name.startswith('.'): names[p.name]=cat
@@ -146,7 +155,7 @@ def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path) -> RouteSpec
         for name in sorted(names,key=len,reverse=True):
             if (body.startswith(name) if not middle else len(name)>=2 and name in body):
                 note=body[len(name):] if not middle else body.replace(name,' ',1)
-                return RouteSpec('asset',_safe_path(proj/'1_设定'/names[name]/name),name,clean_note(note))
+                return route('asset',_safe_path(proj/template.asset_root/template.asset_categories[names[name]]/name),name,clean_note(note))
     raise RouteError(f'{code}里没有「{body}」，新资产请写类别和名字')
 
 def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_width: int | None, occupied_names) -> list[Path]:
@@ -180,6 +189,24 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
     if not shots:
         m=re.fullmatch(r'[Cc]?(\d{1,3})([A-Za-z]?)',stem.strip()) or re.search(r'(?:^|_)C(\d{3})([A-Za-z]?)(?:_|$)',stem)
         if m: shots=((int(m[1]),m[2].upper()),)
+    if spec.naming_pattern:
+        # Explicit custom modes can use source inference, but do not require the
+        # legacy team-shot convention or duplicate a merged mother file.
+        shot = shots[0] if shots else None
+        values = {'original': base, 'stem': stem, 'ext': ext, 'prefix': spec.prefix,
+                  'note': spec.note, 'date': source_time.strftime('%y%m%d'),
+                  'date_long': source_time.strftime('%Y%m%d'),
+                  'period': 'AM' if source_time.hour < 12 else 'PM',
+                  'episode': spec.ep, 'scene': spec.sc,
+                  'shot': f'{shot[0]}{shot[1]}' if shot else '', 'resolution': tier}
+        sequence = 1
+        while True:
+            try: name = render_pattern(spec.naming_pattern, {**values, 'sequence': sequence})
+            except ValueError as exc: raise RouteError(str(exc)) from exc
+            if name.casefold() not in occupied: break
+            if '{sequence}' not in spec.naming_pattern: raise RouteError('自定义命名与已有目标冲突，请添加 {sequence} 或修改名称')
+            sequence += 1
+        return TargetPaths([_safe_path(dest/name)])
     team=spec.mode=='shot' and spec.sc is not None and video
     warnings=()
     if team and not shots: raise RouteError('视频要写镜号，例如 E02S08C22，或把文件名改成镜号')

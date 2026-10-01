@@ -1,0 +1,7 @@
+# Task1 Astra review — approved
+
+Reviewed frozen template/naming modules and narrow route/service diff against the current0.2.0 spec. Zero open Critical/Important findings. Built-in mapping and no-pattern naming retain legacy behavior; store is immutable/versioned, validates before atomic replacement, binds same-state process lock and rejects malformed data. Service snapshots disk revision once per preview/execute and rejects stale custom routing before material mutation. Empty legacy PreviewBatch compatibility is restricted to the exact default library.
+
+Reviewed custom keyword longest-prefix/keep exact matching, reserved grammar rejection, Windows components/devices/token whitelist, sequence collision allocation, assigned deletion, optimistic save, lazy missing state and demo separation. Dynamic production-sequence names retain legacy precedence; this is documented, not an invented alternate route behavior. Custom pattern modes deliberately use one output while default merged-shot routing stays unchanged.
+
+Evidence: Sol focused137 passed3.07s (53 new +84 existing route/service). Director independently ran new regression file only: `.venv/Scripts/python.exe -X utf8 -m pytest tests/test_templates.py -q --basetemp=sandbox/astra020-task1-review` →53 passed0.46s,exit0. Owned diff-check exit0. No repeated full suite or external/real-user operations. Interfaces in task1-sol.md are approved for Task2. UI worker/editor integration remains later scope, not claimed complete here.

@@ -10,6 +10,7 @@ from .operations import OperationEngine
 from .rules import discover_projects, parse_tag, build_targets, VIDEO_EXT
 from .media import probe_width
 from .trees import TreeFingerprint, inbox_ancestors, prune_inbox_ancestors
+from .templates import TemplateStore, TemplateLibrary
 
 @dataclass(frozen=True)
 class PreviewItem:
@@ -26,6 +27,7 @@ class PreviewItem:
 class PreviewBatch:
     tag: str
     items: tuple[PreviewItem,...]
+    template_revision: str = ''
 
 @dataclass(frozen=True)
 class ServiceOutcome:
@@ -40,16 +42,22 @@ class FileHubService:
     def __init__(self,config,state_dir,*,platform=None,probe=None,source_time=None):
         config.validate(state_dir)
         self.config=config;self.engine=OperationEngine(state_dir,platform)
+        self.templates=TemplateStore(self.engine.state_dir)
         self.probe=probe or (lambda p:probe_width(p,self.config.ffprobe_path))
         self.source_time=source_time
         with self.engine.locked(),self.engine.journal.connection() as db:
             db.executescript('CREATE TABLE IF NOT EXISTS service_outcomes(batch_id TEXT PRIMARY KEY,data TEXT NOT NULL);'
                              'CREATE TABLE IF NOT EXISTS notifications(key TEXT PRIMARY KEY);')
 
-    def _route(self,tag):
+    def reload_templates(self):
+        """Load current immutable definitions; call from the shared worker."""
+        return self.templates.load()
+
+    def _route(self,tag,templates=None):
         if self.config.sync_root is None:raise ValueError('请先选择同步根目录')
+        if templates is None:templates=self.reload_templates()
         projects=discover_projects(self.config.sync_root)
-        return parse_tag(tag,projects,self.config.sync_root),projects
+        return parse_tag(tag,projects,self.config.sync_root,templates),projects
 
     @staticmethod
     def _occupied(dest):return [p.name for p in dest.iterdir()] if dest.is_dir() else []
@@ -62,7 +70,10 @@ class FileHubService:
 
     def preview(self,paths,tag):
         items=[];reserved={}
-        try:spec,_=self._route(tag);route_error=''
+        revision=''
+        try:
+            library=self.reload_templates();revision=library.revision
+            spec,_=self._route(tag,library);route_error=''
         except (OSError,ValueError) as exc:spec=None;route_error=str(exc)
         for path in paths:
             path=Path(os.path.abspath(path));fp=None;when=None;width=None
@@ -81,7 +92,7 @@ class FileHubService:
                 items.append(PreviewItem(path,when,fp,tuple(targets),targets.warnings,video_width=width))
             except (OSError,ValueError) as exc:
                 error=str(exc);items.append(PreviewItem(path,when,fp,error=error,notify=self._notify(path,fp,tag,error)))
-        return PreviewBatch(tag,tuple(items))
+        return PreviewBatch(tag,tuple(items),revision)
 
     @staticmethod
     def _candidates(project,source,fp,excluded=()):
@@ -107,7 +118,14 @@ class FileHubService:
             result=self.engine.execute([],preview.tag)
             batch_id=result.batch_id
             excluded={(i.fingerprint.device,i.fingerprint.file_id) for i in preview.items if i.fingerprint}
-            try:spec,projects=self._route(preview.tag);route_error=''
+            try:
+                library=self.reload_templates()
+                # Old positional batches remain usable only with the built-in
+                # library; actual previews always bind a nonempty digest.
+                if preview.template_revision != library.revision:
+                    if preview.template_revision or library.revision != TemplateLibrary().revision:
+                        raise ValueError('模板在预览后已变化，请重新预览')
+                spec,projects=self._route(preview.tag,library);route_error=''
             except (OSError,ValueError) as exc:spec=None;projects={};route_error=str(exc)
             seen=set()
             for item in preview.items:
