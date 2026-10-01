@@ -1,0 +1,10 @@
+{
+  "checked_date_local": "2026-10-01",
+  "base_commit": "6d7c4d77f6d746f6926f613442646d196da00e67",
+  "pytest": "276 passed in 21.10s",
+  "pinned_inputs": "verified",
+  "weekly_used_percent_at_start": 17,
+  "usage_scope": "Account-wide weekly snapshot, not per-project cost; concurrent chats also consume the allowance.",
+  "runtime": "Existing Python 3.12.10/PySide6 runtime reused via ignored .venv junction; no packages installed or upgraded.",
+  "boundary": "Only isolated worktree and sandbox modified. Original installation, live registry, watched folders and sync data untouched."
+}
