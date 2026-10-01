@@ -4,9 +4,9 @@ Status: user authorized implementation and GPT-6.1 Sol delegation after Hazel re
 
 ## Outcome and boundaries
 
-A Chinese novice can change future project classification, directories and filenames without recompiling, and build useful combinations of file conditions and ordered actions. Keep the charcoal/warm-yellow UI. Project templates and automatic rules are separate concepts and editors. Empty rules plus the built-in template preserve all 0.1.1 routes, naming, history, demo, tray and conservative background behavior. Migration does not enable rules or background activity. No new dependency is needed.
+A Chinese novice can change future project classification, directories and filenames without recompiling, and build useful combinations of file conditions and ordered actions. Keep the charcoal/warm-yellow UI. Project templates and automatic rules are separate concepts and editors. Empty rules plus the built-in template preserve all 0.1.1 routes, naming, history, demo, tray and conservative background behavior. Migration does not enable rules or background activity. Rules/templates need no new dependency; media dependencies and the full authorized conversion scope are specified in `2026-10-01-filehub-conversion-addendum.md`, which is part of this spec.
 
-This iteration excludes media conversion, OCR, arbitrary scripts, remote upload/sync, permanent deletion, Finder tags and recursive folder traversal. Scope changes require director/root coordination, not silent additions. Work only in the new worktree and owned sandbox. Never run an installer, change live registry, kill/restart user software, or touch real watched/synced folders. Original F:/Hazel Windows is read-only dependency source. No push/merge.
+This iteration includes standalone image/video conversion and conversion rule actions as specified in the linked addendum. It excludes OCR, arbitrary scripts, remote upload/sync, permanent deletion, Finder tags and recursive folder traversal. Scope changes require director/root coordination, not silent additions. Work only in the new worktree and owned sandbox. Never run an installer, change live registry, kill/restart user software, or touch real watched/synced folders. Original F:/Hazel Windows is read-only dependency source. No push/merge.
 
 ## Template contract
 
@@ -43,3 +43,4 @@ Evidence: focused tests per phase, one final full suite, native isolated dark/li
 ## Research evidence window
 
 Official Hazel manual inspected by root before authorization: attribute reference, action reference, rule logic, nested conditions. References: https://www.noodlesoft.com/manual/hazel/attributes-actions/attribute-reference/ ; https://www.noodlesoft.com/manual/hazel/attributes-actions/action-reference/ ; https://www.noodlesoft.com/manual/hazel/work-with-folders-rules/create-edit-rules/understand-the-logic-of-rules/ ; https://www.noodlesoft.com/manual/hazel/advanced-topics/using-nested-conditions/ . These inform ordered actions, first-match, nested groups and repeat suppression; this release is a bounded Windows implementation, not full Hazel parity.
+
