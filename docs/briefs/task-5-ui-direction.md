@@ -18,3 +18,7 @@ Read `reference/filehub-ui-graphite.html` including final overrides beginning `C
 - Advanced global_jobs switch must state both effects beside it: 共享收件箱到期清理 + 同步空间不合规文件名修正（包括已有项目），仅一台电脑开启；默认由 Mac 管理/关闭。Normal names and project routing remain unchanged. No silent ownership takeover.
 
 - IPC claim remains leased/renewed while archive dialog awaits user; acknowledge only explicit cancellation or persisted execution result, never merely on show. Restart after crash during input re-delivers expired claim; cancel does not re-open. One active claimed dialog at a time.
+
+- PhaseB demo: existing phaseA create_demo writes text bytes with .png suffix; replace with a genuinely valid small PNG before final novice delivery (optional valid tiny bundled video later). Demo runtime must clearly identify 演示 and keep service/scheduler/state ownership coherent; no real user assets. In-process demo service swap cannot leave scheduler/IPC using old service.
+
+- PhaseB runtime should hold named Windows mutex Local\FileHub.Windows.v1.ProgramInUse from primary startup through completed graceful quit (including busy-worker completion). Installer and uninstaller will refuse while held with Chinese tray-exit instruction; no forced termination. Marker complements per-state InstanceLease, not a replacement for IPC/state ownership.
