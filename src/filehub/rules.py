@@ -122,7 +122,7 @@ def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path) -> RouteSpec
     for seq in sorted(set(seqs),key=len,reverse=True):
         if body.upper().startswith(seq.upper()):
             rest=body[len(seq):].strip(' -_')
-            m=re.match(r'[Cc](\d{1,3}[A-Za-z]?(?:\+\d{1,3}[A-Za-z]?)*)(?!\d)',rest)
+            m=re.match(r'[Cc](\d{1,3})(?!\d)',rest)
             return RouteSpec('shot',_safe_path(make/seq),seq,clean_note(rest[m.end():] if m else rest),shots=parse_shots(m[1]) if m else ())
     for cat in ASSET_CATEGORIES:
         if body.startswith(cat):
@@ -161,6 +161,9 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
         raise RouteError('视频探测失败：缺少有效画面宽度')
     tier=('480p' if video_width<1200 else '720p' if video_width<1700 else '1080p' if video_width<3000 else '4K') if video else None
     def target(name):
+        if is_dir:
+            _validate_component(name)
+            return _safe_path(dest/name)
         return _safe_path(dest/safe_name(name))
     if is_dir or spec.mode in ('keep','dated'):
         if spec.mode=='dated' and not is_dir: dest/=source_time.strftime('%y%m%d')
@@ -168,7 +171,10 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
         _validate_component(name)
         n=2
         while name.casefold() in occupied:
-            name=safe_name(f'{Path(base).stem} {n}{Path(base).suffix}'); n+=1
+            candidate=f'{Path(base).stem} {n}{Path(base).suffix}'
+            name=candidate if is_dir else safe_name(candidate)
+            _validate_component(name)
+            n+=1
         return TargetPaths([target(name)])
     shots=spec.shots
     if not shots:
@@ -177,8 +183,8 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
     team=spec.mode=='shot' and spec.sc is not None and video
     warnings=()
     if team and not shots: raise RouteError('视频要写镜号，例如 E02S08C22，或把文件名改成镜号')
-    if video and len(shots)>=3: warnings=('三镜及以上仅保留第一镜母文件，请通知制片',)
-    selected=shots if video and len(shots)==2 else shots[:1]
+    if team and len(shots)>=3: warnings=('三镜及以上仅保留第一镜母文件，请通知制片',)
+    selected=shots if team and len(shots)==2 else shots[:1]
     if not selected: selected=(None,)
     targets=[]
     for shot in selected:

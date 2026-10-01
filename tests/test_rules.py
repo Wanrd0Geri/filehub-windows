@@ -54,10 +54,10 @@ def test_merged(project,tag,count,warnings):
 
 def test_sequence_and_note(project):
     root,p=project
-    spec=parse_tag('LYXPVC15A',discover_projects(root),root)
+    spec=parse_tag('LYXPV',discover_projects(root),root)
     assert build_targets(Path('PV_C015A_旧备注_260922-2.PNG'),spec,TIME,None,[])[0].name=='PV_C015A_旧备注_260922-2.png'
     occupied=['OTHER_260930-99.png','PV_260929-9.png','PV_C003_260930-4.png']
-    assert build_targets(Path('x.png'),spec,TIME,None,occupied)[0].name=='PV_C015A_260930-5.png'
+    assert build_targets(Path('x.png'),spec,TIME,None,occupied)[0].name=='PV_260930-5.png'
     old='PV_C015A_旧备注_260922-2.png'
     assert build_targets(Path(old),spec,TIME,None,[old])[0].name=='PV_C015A_旧备注_260922-3.png'
 
@@ -109,7 +109,7 @@ def test_final_ignores_notes(project):
 
 def test_existing_shot_without_note(project):
     root,p=project
-    spec=parse_tag('LYXPVC15A',discover_projects(root),root)
+    spec=parse_tag('LYXPV',discover_projects(root),root)
     assert build_targets(Path('PV_C015A_260922-2.png'),spec,TIME,None,[])[0].name=='PV_C015A_260922-2.png'
 
 def test_windows_reparse_rejected(project,monkeypatch):
@@ -147,3 +147,29 @@ def test_note_override_and_named_date(project):
 def test_project_outside_sync_root(project):
     root,p=project
     with pytest.raises(RouteError): parse_tag('LYXPV',{'LYX':root.parent/'outside'},root)
+
+@pytest.mark.parametrize('tag',['LYX剧本','LYX测试'])
+def test_directory_unicode_unchanged(project,tag):
+    root,p=project
+    source=root/'😀𝟖𝐊素材'; source.mkdir()
+    spec=parse_tag(tag,discover_projects(root),root)
+    assert build_targets(source,spec,TIME,None,[])[0]==spec.dest/source.name
+    assert build_targets(source,spec,TIME,None,[source.name])[0]==spec.dest/(source.name+' 2')
+
+@pytest.mark.parametrize('tag',['LYXE01C3+4','LYXE01C3+4+5'])
+def test_episodic_no_scene_not_team_merged(project,tag):
+    root,p=project
+    result=build_targets(Path('x.mp4'),parse_tag(tag,discover_projects(root),root),TIME,1920,[])
+    assert len(result)==1
+    assert result.warnings==()
+    assert result[0].name=='E01_C003_260930-1_1080p.mp4'
+
+@pytest.mark.parametrize('tag,note',[('LYXPVC3+4','+4'),('LYXPVC3A','A'),('LYX正片C20+30','+30')])
+def test_sequence_single_numeric_shot(project,tag,note):
+    root,p=project
+    spec=parse_tag(tag,discover_projects(root),root)
+    assert len(spec.shots)==1
+    assert spec.shots[0][1]==''
+    assert spec.note==note
+    result=build_targets(Path('x.mp4'),spec,TIME,1920,[])
+    assert len(result)==1 and result.warnings==()

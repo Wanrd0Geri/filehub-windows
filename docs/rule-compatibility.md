@@ -8,7 +8,7 @@
 
 `parse_tag(tag: str, projects: dict[str, Path], sync_root: Path) -> RouteSpec`：最长代码优先；已有资产与制作段落采用只读目录发现。`RouteSpec` 是冻结 dataclass，字段为 `mode, dest, prefix='', note='', ep=None, sc=None, shots=()`。`shots` 是 `(整数镜号, 大写插入字母)` 元组的元组。模式为 `shot|asset|final|keep|dated`。
 
-`build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_width: int | None, occupied_names: iterable[str | Path]) -> list[Path]`：实际返回 list 子类 `TargetPaths`，提供只读提醒内容元组 `.warnings`；三镜及以上视频提醒通知制片，只输出第一镜。两镜视频输出两目标，包括非集场的段落视频；非视频合镜只输出第一镜。服务执行时应在事务锁内用最新目标目录名称重新分配，规则本身不锁、不写文件。`occupied_names` 仅应包含实际目标目录的现有名称（dated 文件为日期子目录）。
+`build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_width: int | None, occupied_names: iterable[str | Path]) -> list[Path]`：实际返回 list 子类 `TargetPaths`，提供只读提醒内容元组 `.warnings`。仅集+场团队视频：三镜及以上提醒通知制片且只输出第一镜，两镜输出两目标。其他路线（包括无场号集视频和非视频）只输出第一镜且不产生合镜提醒，与原脚本 `uses_team_name` 分支一致。服务执行时应在事务锁内用最新目标目录名称重新分配，规则本身不锁、不写文件。`occupied_names` 仅应包含实际目标目录的现有名称（dated 文件为日期子目录）。
 
 传入的 `source_time` 在规划时固定，接受 aware datetime，直接使用其日期和小时，不在本模块换时区或读取时钟/mtime。文件与路径存在性、目录分类和 reparse 检查是只读文件系统操作；不存在的测试源按文件解释。视频生成命名路线 `shot/asset/final` 必须传正整数画面宽度，否则抛错；`keep/dated` 或目录不探测视频、不要求宽度。探测错误由调用者记录；本模块不启动 ffprobe。
 
@@ -16,17 +16,17 @@
 
 ## 继承的行为
 
-- 只有集+场视频使用团队规范；E01C3 和 PV 使用前缀日期序号。PV 可没有镜号。团队版本同镜头跨天递增。
+- 只有集+场视频使用团队规范；E01C3 和 PV 使用前缀日期序号。PV 可没有镜号。PV/正片及动态段落标签继承原单个 C 数字解析：C3A 的 A、C3+4 的 +4 作为备注，不扩展为插入镜号或合镜。无标签镜号时仍可从 C15A 源文件名推断插入镜号。团队版本同镜头跨天递增。
 - 1199/1200/1699/1700/2999/3000 宽度分别对应 480p/720p/720p/1080p/1080p/4K。
 - 普通序号范围是相同目的地、前缀和日期，不是所有文件的总数。已有 DATESEQ 优先保留；否则从源名的有效 YYYYMMDD 或固定源日期取日期。
 - 标签没备注时，已有标准名的备注延续；新备注替换旧备注。成片不追加备注。生成扩展名小写；keep/dated 保留原扩展名大小写。
 - keep 文件仅做 safe_name 清理及 ` 2` 等碰撞后缀。dated 文件保留名，日期目录取源日期；后台 sweep 的到达/当前日期属于另一流程。
-- 所有源目录保留原基名并直接进入目的地，绕过 dated 日期子目录；仍执行 Windows 组件及 reparse 校验和碰撞后缀，不对目录内容命名。
+- 所有源目录保留原基名（包括 emoji/数学字母）并直接进入目的地，绕过 dated 日期子目录；目录及其碰撞后缀不经过文件 safe_name 正规化，仍执行 Windows 组件及 reparse 校验，不对目录内容命名。
 - ASCII 非法符号转全角，仅数学字母数字块 NFKC 正规化；移除原脚本排除的 Cc/Cf/Co/Cs 和其余补充平面字符（包括 emoji），不统一改写全角文字或圈号。
 
 ## 有意修正与 Windows 限制
 
-- PV/正片镜号填入 shots，保留 C003/C020 与插入镜号，避免原脚本解析后丢失镜号。
+- PV/正片单个数字镜号填入 shots，保留 C003/C020，避免原脚本解析后丢失镜号；不扩展标签语法。
 - 标准旧名镜号不再被当作备注重复加入。语义生成名碰撞递增版本或日期序号，不产生 `1080p 2.mp4`。
 - 项目代码大小写重复明确报错。标签中的 `/`、`\\` 等清理成组件内全角字符，不能形成子路径或路径穿越；现有路径中的 `..`、symlink/junction/reparse point 被拒绝。
 - 不执行 150 字符截断。组件超过 255 UTF-16 单元或完整路径达到 32767 单元报错；设备名、末尾点/空格显式报错。实际打包长路径启用及网盘自身限制仍需安装阶段验证。
