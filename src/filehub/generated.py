@@ -224,7 +224,7 @@ def publish_generated(engine, source, target, expected_source, staging, expected
                 # NTFS name tunneling may inherit a recently removed name's
                 # creation time. Accept that one OS rename effect only from the
                 # continuously held owned handle, preserving every other field.
-                bound_output = replace(expected_output, creation_ns=published_fp.creation_ns) if same else expected_output
+                bound_output = replace(expected_output, creation_ns=published_fp.creation_ns)
                 if published_fp != bound_output:
                     raise ValueError('发布后生成文件指纹变化')
                 engine.journal.transition(item.operation_id, 'publishing', '已发布生成图片，身份已绑定', target_fp=published_fp)

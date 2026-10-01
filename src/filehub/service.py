@@ -43,6 +43,10 @@ class FileHubService:
         config.validate(state_dir)
         self.config=config;self.engine=OperationEngine(state_dir,platform)
         self.templates=TemplateStore(self.engine.state_dir)
+        from .automation.models import RuleStore
+        self.rules=RuleStore(self.engine.state_dir)
+        from threading import RLock
+        self._runtime_lock=RLock();self._automation=None;self._conversions=None;self._closing=False
         self.probe=probe or (lambda p:probe_width(p,self.config.ffprobe_path))
         self.source_time=source_time
         with self.engine.locked(),self.engine.journal.connection() as db:
@@ -52,6 +56,33 @@ class FileHubService:
     def reload_templates(self):
         """Load current immutable definitions; call from the shared worker."""
         return self.templates.load()
+
+    @property
+    def automation(self):
+        with self._runtime_lock:
+            if self._automation is None:
+                from .automation.runner import AutomationRunner
+                self._automation=AutomationRunner(self)
+            return self._automation
+
+    @property
+    def conversions(self):
+        with self._runtime_lock:
+            if self._closing:raise ValueError('当前服务已关闭；不能启动旧图片任务')
+            if self._conversions is None:
+                from .automation.executor import ConversionExecutor
+                self._conversions=ConversionExecutor(self)
+            return self._conversions
+
+    def close_conversions(self,callback=None):
+        """UI must rebind/release service only from the settled callback."""
+        with self._runtime_lock:
+            self._closing=True
+            if self._conversions is not None:return self._conversions.close(callback)
+        from threading import Event
+        settled=Event();settled.set()
+        if callback:callback()
+        return settled
 
     def _route(self,tag,templates=None):
         if self.config.sync_root is None:raise ValueError('请先选择同步根目录')
@@ -190,4 +221,7 @@ class FileHubService:
             outcomes.append(ServiceOutcome(**d))
         return replace(result,outcomes=tuple(outcomes))
     def history(self):return [self._with_outcomes(r) for r in self.engine.history()]
-    def undo(self,batch_id):return self._with_outcomes(self.engine.undo(batch_id))
+    def undo(self,batch_id):
+        result=self._with_outcomes(self.engine.undo(batch_id))
+        if self._automation is not None:self._automation.ledger.reconcile()
+        return result

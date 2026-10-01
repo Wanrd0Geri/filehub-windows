@@ -5,6 +5,7 @@ import threading
 import os
 import subprocess
 import sys
+from pathlib import Path
 from dataclasses import replace
 
 import pytest
@@ -582,3 +583,46 @@ def test_migration_failure_rolls_back_old_table_and_indexes(tmp_path, monkeypatc
         assert db.execute("SELECT name FROM sqlite_master WHERE name='retained_index'").fetchone()
         assert not db.execute('PRAGMA foreign_key_check').fetchall()
         assert db.execute("SELECT name FROM sqlite_master WHERE name='operations_convert_migration'").fetchone() is None
+
+def test_cross_extension_return_to_vacated_name_rebinds_only_owned_creation_time(tmp_path):
+    from filehub.generated import generate_owned
+    from filehub.conversion.models import ConversionSpec
+    source=image(tmp_path);before=Fingerprint.capture(source)
+    target=tmp_path/'original.jpg';engine=OperationEngine(tmp_path/'state')
+    first=publish(engine,source,target,generated(engine,source,target),mode='replace')
+    assert first.ok and target.exists() and not source.exists()
+    ticket=generate_owned(engine,target,source,ConversionSpec(output_format='png'))
+    result=engine.publish_generated(target,source,ticket.source_fingerprint,ticket,ticket.output_fingerprint,'return',mode='replace')
+    assert result.ok and source.exists() and not target.exists()
+    actual=Fingerprint.capture(source);record=result.items[-1]
+    assert actual==record.target_fingerprint
+    assert actual==replace(ticket.output_fingerprint,creation_ns=actual.creation_ns)
+    assert actual.creation_ns==before.creation_ns
+    assert engine.undo(result.batch_id).ok and target.exists()
+
+def test_cross_extension_prebind_crash_preserves_all_survivors(tmp_path):
+    source=image(tmp_path);target=tmp_path/'original.jpg';engine=OperationEngine(tmp_path/'state')
+    assert publish(engine,source,target,generated(engine,source,target),mode='replace').ok
+    script=tmp_path/'crash-cross.py'
+    script.write_text('\n'.join([
+        'import os,sys',
+        'from pathlib import Path',
+        'from filehub.operations import OperationEngine',
+        'from filehub.platform.windows import WindowsPlatform',
+        'from filehub.generated import generate_owned',
+        'from filehub.conversion.models import ConversionSpec',
+        'class Crash(WindowsPlatform):',
+        ' def checkpoint(self,stage,item):',
+        "  if stage=='after_generated_rename_before_binding':os._exit(77)",
+        "e=OperationEngine(Path(sys.argv[1]),Crash());source=Path(sys.argv[2]);target=Path(sys.argv[3])",
+        "ticket=generate_owned(e,source,target,ConversionSpec(output_format='png'))",
+        "e.publish_generated(source,target,ticket.source_fingerprint,ticket,ticket.output_fingerprint,'cross crash',mode='replace')",
+    ]),encoding='utf-8')
+    env={**os.environ,'PYTHONPATH':str(Path(__file__).resolve().parents[1]/'src')}
+    child=subprocess.run([sys.executable,str(script),str(engine.state_dir),str(target),str(source)],env=env,capture_output=True,timeout=15)
+    assert child.returncode==77,child.stderr.decode(errors='replace')
+    restarted=OperationEngine(engine.state_dir);restarted.recover()
+    latest=restarted.history()[0].items[-1]
+    assert latest.state=='conflict' and source.exists() and target.exists()
+    assert restarted.journal.generated(latest.operation_id).backup.exists()
+    assert not restarted.undo(latest.batch_id).ok

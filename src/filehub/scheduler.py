@@ -38,8 +38,8 @@ def sanitized_name(path):
 
 
 class Scheduler:
-    def __init__(self,service):
-        self.service=service;self.last_errors=()
+    def __init__(self,service,*,automatic_completion=None):
+        self.service=service;self.last_errors=();self.automatic_completion=automatic_completion
         with service.engine.locked(),service.engine.journal.connection() as db:
             db.execute('CREATE TABLE IF NOT EXISTS observations(path TEXT PRIMARY KEY,scope TEXT NOT NULL,identity TEXT NOT NULL,fingerprint TEXT NOT NULL,first_seen REAL NOT NULL,changed_at REAL NOT NULL)')
 
@@ -61,6 +61,11 @@ class Scheduler:
         if not isinstance(now,datetime) or now.tzinfo is None:raise ValueError('tick 时间必须是带时区的 datetime')
         stamp=now.timestamp();s=self.service;e=s.engine;c=s.config;c.validate(e.state_dir)
         results=[];seen=set();errors=[]
+        rules=s.rules.load()
+        runtime=s.automation if rules.rules else None
+        # Lazy runtime ownership always precedes the engine lock, matching UI
+        # image submission and avoiding runtime-lock/engine-lock inversion.
+        conversions=s.conversions if any(r.enabled and any(a.kind=='image_convert' for a in r.actions) for r in rules.rules) else None
         def observe(path,scope,days):
             key=os.path.normcase(str(path));seen.add(key)
             try:
@@ -73,9 +78,11 @@ class Scheduler:
         with e.locked():
             if c.paused:
                 with e.journal.connection() as db:db.execute('DELETE FROM observations')
+                if runtime:runtime.ledger.reset_observations()
                 self.last_errors=();return []
-            if c.sync_root is None:self.last_errors=('请先选择同步根目录',);return []
-            checked_path(c.sync_root)
+            if c.sync_root is None and not rules.rules:self.last_errors=('请先选择同步根目录',);return []
+            if c.sync_root is not None:checked_path(c.sync_root)
+            if runtime:runtime.ledger.reconcile()
             for root in c.watch_roots:
                 try:paths=sorted(checked_path(root).iterdir())
                 except (OSError,ValueError) as exc:errors.append(str(exc));continue
@@ -86,6 +93,29 @@ class Scheduler:
                         checked_path(path)
                     except (OSError,ValueError) as exc:
                         errors.append(f'{path}：{exc}');continue
+                    if runtime and visible(path):
+                        try:
+                            from .automation.conditions import first_match
+                            fp=source_fingerprint(e,path)
+                            facts=runtime.facts(path,now=now,watch_root=root)
+                            match=first_match(rules,facts,now,watch_root=root,configured_watch_roots=c.watch_roots)
+                            if match.rule is not None:
+                                suppression=runtime.ledger.suppression(path,fp,match.rule)
+                                if suppression:continue
+                                preview=runtime.preview([path],now=now,automatic=True,watch_root=root)
+                                if not preview.plans:
+                                    errors.extend(preview.errors);continue
+                                plan=preview.plans[0];run=runtime.claim(preview,plan)
+                                if run is None:continue
+                                if any(step.kind=='image_convert' for step in plan.steps) and plan.ok:
+                                    try:conversions.submit_rule(preview,automatic=True,claims={0:run},completion=self.automatic_completion)
+                                    except (OSError,ValueError) as exc:runtime.ledger.update(run,'failed',str(exc));errors.append(str(exc))
+                                else:results.extend(runtime.execute(preview,automatic=True,claims={0:run}))
+                                continue
+                        except (OSError,ValueError) as exc:
+                            errors.append(f'{path}：{exc}');continue
+                    if c.sync_root is None:
+                        errors.append('请先选择同步根目录；未匹配规则的文件不执行旧收件箱归档');continue
                     fp=observe(path,'watch',c.sweep_days)
                     if fp is None:continue
                     if path.name.endswith('.baiduyun.uploading.cfg') and not path.is_dir():
@@ -98,7 +128,7 @@ class Scheduler:
                     while candidate.exists():
                         p=Path(name);candidate=dest/(name+f'-{n}' if isinstance(fp,TreeFingerprint) else p.stem+f'-{n}'+p.suffix);n+=1
                     results.append(e.execute([Operation('move',path,candidate,fp)],'后台收件箱归档'))
-            if c.global_jobs:
+            if c.global_jobs and c.sync_root is not None:
                 results.extend(self._sanitize(errors))
                 inbox=checked_path(c.sync_root/'0_收件箱')
                 if inbox.is_dir():
