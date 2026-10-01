@@ -3,10 +3,12 @@ from pathlib import Path
 from datetime import datetime
 from PySide6.QtCore import Qt, QUrl, Signal
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QStackedWidget,QListWidget,QListWidgetItem,QLineEdit,QTextEdit,QFileDialog,QFrame,QComboBox,QSpinBox,QCheckBox,QScrollArea)
+from PySide6.QtWidgets import (QApplication,QMainWindow,QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QStackedWidget,QListWidget,QListWidgetItem,QLineEdit,QTextEdit,QFileDialog,QFrame,QComboBox,QSpinBox,QCheckBox,QScrollArea,QLayout)
 from .coordinator import Coordinator
 from .theme import apply_theme, icon
 from .archive_dialog import ArchiveDialog
+from .tag_history import HistoryController, HistoryChips
+from .status_footer import StatusFooter
 
 class MainWindow(QMainWindow):
     configuration_changed = Signal(object)
@@ -19,6 +21,7 @@ class MainWindow(QMainWindow):
         self.paths=();self.preview=None;self.preview_generation=0;self.batches=[];self.dialogs=[]
         self.known_folder_proposals={}
         self.coordinator=Coordinator(self);self.setWindowTitle('FileHub');self.resize(1000,700);self.setMinimumSize(800,620);self.setAcceptDrops(True)
+        self.tag_history=HistoryController(self.coordinator,store.state_dir,self)
         shell=QWidget();self.setCentralWidget(shell);outer=QHBoxLayout(shell);outer.setContentsMargins(0,0,0,0);outer.setSpacing(0)
         sidebar=QWidget();sidebar.setObjectName('sidebar');sidebar.setFixedWidth(180);nav=QVBoxLayout(sidebar);nav.setContentsMargins(12,22,12,17);nav.setSpacing(5)
         brand_row=QHBoxLayout();brand_row.setSpacing(10);brand_icon=QLabel();brand_icon.setFixedWidth(30);brand_icon.setPixmap(icon('FileHub').pixmap(30,30));brand_row.addWidget(brand_icon);brand=QLabel('FileHub');brand.setObjectName('brand');brand_row.addWidget(brand);nav.addLayout(brand_row);nav.addSpacing(18)
@@ -28,9 +31,10 @@ class MainWindow(QMainWindow):
         nav.addStretch();self.running=QLabel();self.running.setObjectName('muted');nav.addWidget(self.running);nav.addWidget(self.muted('本机 · Windows'))
         outer.addWidget(sidebar);outer.addWidget(self.pages,1)
         self.build_home();self.build_inbox();self.build_history();self.build_settings()
-        self.status=QLabel('');self.status.setWordWrap(True);self.statusBar().addWidget(self.status,1)
+        self.status_footer=StatusFooter(self);self.status=self.status_footer.label
+        self.statusBar().setObjectName('appStatusBar');self.statusBar().setSizeGripEnabled(False);self.statusBar().addWidget(self.status_footer,1)
         self.coordinator.busy.connect(self.busy_changed)
-        self.load_config_controls();self.navigate(0);apply_theme(self,service.config.theme);self.refresh()
+        self.load_config_controls();self.navigate(0);apply_theme(self,service.config.theme);self.refresh();self.tag_history.refresh()
         QApplication.styleHints().colorSchemeChanged.connect(self.system_theme_changed)
 
     def system_theme_changed(self,scheme):
@@ -64,11 +68,14 @@ class MainWindow(QMainWindow):
             card=QFrame();card.setObjectName('card');box=QVBoxLayout(card);box.setContentsMargins(16,14,16,14);title=QLabel(name);self.source_titles.append(title);card_head=QHBoxLayout();mark=QLabel();mark.setPixmap(icon('整理').pixmap(22,22));card_head.addWidget(mark);card_head.addWidget(title);card_head.addStretch();box.addLayout(card_head);status=self.muted('未选择目录 · 已暂停');box.addWidget(status);self.source_cards.append(status);cards.addWidget(card)
         layout.addLayout(cards)
         self.editor=QWidget();editor_layout=QVBoxLayout(self.editor);editor_layout.setContentsMargins(0,0,0,0)
-        row=QHBoxLayout();self.tag=QLineEdit();self.tag.setPlaceholderText('项目代码与目的地，例如 LYX020822');row.addWidget(self.tag,1);self.preview_button=self.button('预览',self.request_preview);row.addWidget(self.preview_button);self.execute_button=self.button('送进项目',self.execute,True);row.addWidget(self.execute_button);editor_layout.addLayout(row)
-        self.preview_details=QTextEdit();self.preview_details.setReadOnly(True);self.preview_details.setPlaceholderText('预览将显示每项的目的地、警告与问题。');self.preview_details.setMaximumHeight(160);editor_layout.addWidget(self.preview_details);layout.addWidget(self.editor);self.editor.hide()
+        row=QHBoxLayout();self.tag=QLineEdit();self.tag.setMinimumHeight(36);self.tag.setPlaceholderText('项目代码与目的地，例如 LYX020822');row.addWidget(self.tag,1);self.preview_button=self.button('预览',self.request_preview);row.addWidget(self.preview_button);self.execute_button=self.button('送进项目',self.execute,True);row.addWidget(self.execute_button);editor_layout.addLayout(row)
+        self.history_chips=HistoryChips(self.tag_history,self.fill_history_tag);editor_layout.addWidget(self.history_chips)
+        self.preview_details=QTextEdit();self.preview_details.setReadOnly(True);self.preview_details.setPlaceholderText('预览将显示每项的目的地、警告与问题。');self.preview_details.setMinimumHeight(110);self.preview_details.setMaximumHeight(160);editor_layout.addWidget(self.preview_details);layout.addWidget(self.editor);self.editor.hide()
         self.tag.textChanged.connect(self.invalidate_preview)
         layout.addWidget(self.muted('最近整理'));self.recent_list=QListWidget();layout.addWidget(self.recent_list);layout.addStretch(1)
         self.pause_button=self.button('继续整理',self.toggle_pause);layout.addWidget(self.pause_button,alignment=Qt.AlignRight)
+        home=layout.parentWidget();layout.setSizeConstraint(QLayout.SetMinimumSize)
+        self.pages.removeWidget(home);self.home_scroll=QScrollArea();self.home_scroll.setWidgetResizable(True);self.home_scroll.setWidget(home);self.pages.addWidget(self.home_scroll)
 
     def build_inbox(self):
         layout=self.page('收件箱','暂时没有归属的文件，在这里留一会儿。')
@@ -147,6 +154,9 @@ class MainWindow(QMainWindow):
     def invalidate_preview(self):
         self.preview_generation+=1;self.preview=None;self.execute_button.setEnabled(False)
 
+    def fill_history_tag(self,tag):
+        self.tag.setText(tag);self.invalidate_preview();self.tag.setFocus()
+
     def preview_text(self,preview):
         rows=[]
         for i in preview.items:
@@ -160,7 +170,12 @@ class MainWindow(QMainWindow):
 
     def request_preview(self):
         paths,tag,generation=self.paths,self.tag.text(),self.preview_generation
-        self.coordinator.submit(lambda:self.service.preview(paths,tag),lambda p:self.show_preview(p) if generation==self.preview_generation else None,self.show_error)
+        service,history_token=self.service,self.tag_history.token
+        def ready(preview):
+            if generation!=self.preview_generation or service is not self.service:return
+            self.show_preview(preview)
+            if any(not item.error for item in preview.items):self.tag_history.remember(tag,history_token)
+        self.coordinator.submit(lambda:service.preview(paths,tag),ready,self.show_error)
 
     def show_preview(self,preview):
         self.preview=preview;self.preview_details.setPlainText(self.preview_text(preview));self.preview_details.setToolTip('\n'.join(str(i.source)+'\n'+'\n'.join(map(str,i.targets)) for i in preview.items));self.execute_button.setEnabled(any(not i.error for i in preview.items))
@@ -285,7 +300,7 @@ class MainWindow(QMainWindow):
         if result:
             self.invalidate_preview()
             for dialog in self.dialogs:dialog.invalidate()
-            self.service,self.store,paths=result;self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
+            self.service,self.store,paths=result;self.tag_history.switch_state(self.store.state_dir);self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
         self.status.setText('演示只使用独立示例目录，可尝试归档与撤销。')
 
     def refresh_inbox(self):

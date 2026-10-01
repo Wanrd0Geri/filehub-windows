@@ -1,4 +1,4 @@
-#define AppVersion "0.1.0"
+#define AppVersion "0.1.1"
 #define AppExe "FileHub.exe"
 #define Owner "FileHub.Windows.v1"
 #ifndef PayloadRoot
@@ -78,6 +78,11 @@ begin
   Result := '"' + ExePath + '" --background';
 end;
 
+function MenuIcon: String;
+begin
+  Result := '"' + ExePath + '",0';
+end;
+
 function OwnedMenu(Key: String): Boolean;
 var Value: String;
 begin
@@ -97,6 +102,8 @@ begin
   Result := False;
   if not RegKeyExists(HKCU, Key) then exit;
   if not OwnedMenu(Key) then begin Result := True; exit; end;
+  if RegQueryStringValue(HKCU, Key, 'Icon', Current) and
+     (Current <> MenuIcon) then begin Result := True; exit; end;
   if RegQueryStringValue(HKCU, Key + '\command', '', Current) then
     Result := not RegQueryStringValue(HKCU, Key, 'FileHubCommand', Expected) or
       (Current <> Expected) or (Current <> SendCommand);
@@ -120,6 +127,8 @@ begin
   if not RegWriteStringValue(HKCU, Key, 'FileHubOwner', '{#Owner}') or
      not RegWriteStringValue(HKCU, Key, '', '送进项目…') or
      not RegWriteStringValue(HKCU, Key, 'MultiSelectModel', 'Player') or
+     not RegWriteStringValue(HKCU, Key, 'FileHubIcon', MenuIcon) or
+     not RegWriteStringValue(HKCU, Key, 'Icon', MenuIcon) or
      not RegWriteStringValue(HKCU, Key, 'FileHubCommand', SendCommand) or
      not RegWriteStringValue(HKCU, Key + '\command', '', SendCommand) then
     RaiseException('无法写入当前用户右键设置。');
@@ -139,6 +148,8 @@ begin
   DeleteMatching(Key, '', '送进项目…');
   DeleteMatching(Key, 'MultiSelectModel', 'Player');
   DeleteMatching(Key, 'FileHubCommand', Expected);
+  DeleteMatching(Key, 'Icon', MenuIcon);
+  DeleteMatching(Key, 'FileHubIcon', MenuIcon);
   DeleteMatching(Key, 'FileHubOwner', '{#Owner}');
   RegDeleteKeyIfEmpty(HKCU, Key);
 end;

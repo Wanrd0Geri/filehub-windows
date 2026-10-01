@@ -1,0 +1,74 @@
+FF..FF                                                                   [100%]
+================================== FAILURES ===================================
+__________ test_menu_icon_registered_and_normal_remove_cleans_it[*] ___________
+
+tmp_path = WindowsPath('F:/Hazel Windows/sandbox/task611-icon-red/test_menu_icon_registered_and_0')
+kind = '*'
+
+    @pytest.mark.parametrize("kind", ["*", "Directory"])
+    def test_menu_icon_registered_and_normal_remove_cleans_it(tmp_path, kind):
+        reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+        install_context_menu(exe,registry=reg)
+        key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+>       assert reg.get(key,'Icon')==f'"{exe}",0'
+E       assert None == '"F:\\Hazel Windows\\sandbox\\task611-icon-red\\test_menu_icon_registered_and_0\\中文 App\\FileHub.exe",0'
+E        +  where None = get('Software\\Classes\\*\\shell\\FileHub.Send', 'Icon')
+E        +    where get = <test_integration.Registry object at 0x0000027A84043DA0>.get
+
+tests\test_integration.py:117: AssertionError
+______ test_menu_icon_registered_and_normal_remove_cleans_it[Directory] _______
+
+tmp_path = WindowsPath('F:/Hazel Windows/sandbox/task611-icon-red/test_menu_icon_registered_and_1')
+kind = 'Directory'
+
+    @pytest.mark.parametrize("kind", ["*", "Directory"])
+    def test_menu_icon_registered_and_normal_remove_cleans_it(tmp_path, kind):
+        reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+        install_context_menu(exe,registry=reg)
+        key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+>       assert reg.get(key,'Icon')==f'"{exe}",0'
+E       assert None == '"F:\\Hazel Windows\\sandbox\\task611-icon-red\\test_menu_icon_registered_and_1\\中文 App\\FileHub.exe",0'
+E        +  where None = get('Software\\Classes\\Directory\\shell\\FileHub.Send', 'Icon')
+E        +    where get = <test_integration.Registry object at 0x0000027A840422A0>.get
+
+tests\test_integration.py:117: AssertionError
+_____________ test_foreign_modified_menu_icon_not_overwritten[*] ______________
+
+tmp_path = WindowsPath('F:/Hazel Windows/sandbox/task611-icon-red/test_foreign_modified_menu_ico2')
+kind = '*'
+
+    @pytest.mark.parametrize("kind", ["*", "Directory"])
+    def test_foreign_modified_menu_icon_not_overwritten(tmp_path, kind):
+        reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+        install_context_menu(exe,registry=reg)
+        key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+        reg.set(key,'Icon','"C:/Foreign App/other.exe",7')
+        before={k:dict(v) for k,v in reg.data.items()}
+>       with pytest.raises(ValueError):install_context_menu(exe,registry=reg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_integration.py:139: Failed
+_________ test_foreign_modified_menu_icon_not_overwritten[Directory] __________
+
+tmp_path = WindowsPath('F:/Hazel Windows/sandbox/task611-icon-red/test_foreign_modified_menu_ico3')
+kind = 'Directory'
+
+    @pytest.mark.parametrize("kind", ["*", "Directory"])
+    def test_foreign_modified_menu_icon_not_overwritten(tmp_path, kind):
+        reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+        install_context_menu(exe,registry=reg)
+        key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+        reg.set(key,'Icon','"C:/Foreign App/other.exe",7')
+        before={k:dict(v) for k,v in reg.data.items()}
+>       with pytest.raises(ValueError):install_context_menu(exe,registry=reg)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests\test_integration.py:139: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_integration.py::test_menu_icon_registered_and_normal_remove_cleans_it[*]
+FAILED tests/test_integration.py::test_menu_icon_registered_and_normal_remove_cleans_it[Directory]
+FAILED tests/test_integration.py::test_foreign_modified_menu_icon_not_overwritten[*]
+FAILED tests/test_integration.py::test_foreign_modified_menu_icon_not_overwritten[Directory]
+4 failed, 2 passed, 11 deselected in 0.15s

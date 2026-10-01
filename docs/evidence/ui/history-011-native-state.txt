@@ -1,0 +1,8 @@
+platform=windows
+state=F:\Hazel Windows\sandbox\task011-history-native\demo\39fd4c7d5eb54418a6b4ecffe7b0c5b7\state
+history-011-dark-1000x700.png: logical=1000x700 DPR=1.5 tags=59 recent=3
+history-011-dark-800x620.png: logical=800x620 DPR=1.5 tags=59 recent=3
+dark footer height=144 scroll maximum=1323 chars=4559
+history-011-light-1000x700.png: logical=1000x700 DPR=1.5 tags=59 recent=3
+history-011-light-800x620.png: logical=800x620 DPR=1.5 tags=59 recent=3
+light footer height=144 scroll maximum=1323 chars=4559

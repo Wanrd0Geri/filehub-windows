@@ -1,0 +1,48 @@
+{
+  "version": "0.1.1",
+  "base_commit": "3f159740e7be97db0402006af39a1e6ce3e3efb2",
+  "artifacts": [
+    {
+      "path": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.1-windows-x64-setup.exe",
+      "bytes": 139814259,
+      "sha256": "bacd74379bc38e02d924f381aad8980f07bd738e68800668cc4b699f68d37f1a"
+    },
+    {
+      "path": "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+      "bytes": 2342150,
+      "sha256": "ff8a4183bbbe44bba023d1d36ae5b77afd6c2491adba6602990169e31cc17963"
+    },
+    {
+      "path": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.0-windows-x64-setup.exe",
+      "bytes": 139798744,
+      "sha256": "0de7a4cf0c246087318a60c9f77c782c1d05d684bc6d6ea22b7cc39efcb422f8"
+    }
+  ],
+  "old_010_installer_preserved": true,
+  "installer_version_info": [
+    {
+      "Comments": "This installation was built with Inno Setup.",
+      "CompanyName": "FileHub",
+      "FileDescription": "FileHub Setup",
+      "FileVersion": "",
+      "LegalCopyright": "",
+      "OriginalFileName": "",
+      "ProductName": "FileHub",
+      "ProductVersion": "0.1.1"
+    }
+  ],
+  "exe_existing_warm_yellow_icon_exact_png_match": true,
+  "embedded_icon_png_sha256": "2c78e1c264eee52b73d05e85510b19c9a6bf01cbcd2b23219e369c2124e89af1",
+  "icon_size": [
+    256,
+    256
+  ],
+  "new_modules_in_PYZ": [
+    "filehub.tag_history",
+    "filehub.ui.tag_history",
+    "filehub.ui.status_footer"
+  ],
+  "portable_selftest_checks": 10,
+  "portable_selftest_exit": 0,
+  "scope": "No install/uninstall, no live registry or user process/state/watch/sync mutation"
+}

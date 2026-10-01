@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "0.1.0",
+  "app_version": "0.1.1",
   "redistribution_status": "prepared",
   "python_version": "3.12.10",
   "ffprobe_version": "8.1.3-filehub1",
@@ -45,7 +45,7 @@
   "font_assets": [],
   "fonts": "Installed Inter/Noto Sans SC, then Windows system fallbacks",
   "file_hashes": {
-    "docs/第三方许可.md": "d363d9481a706054666e015303b4bd44ba1adee583fc926299ad732f0ce51b75",
+    "docs/第三方许可.md": "21322271d2e32036f4722ffaf4761c038d53f344c2c889d99432c2ae2cfc4b18",
     "resources/app.ico": "7720ff6a07ff5ce74188ba626d6bbfd80ed035c24d1303c4db1b23ea82313b3c",
     "resources/selftest/tiny-1920-blue.mp4": "a518c61250175b6f93f6d4fccf1c115152e2c40f0c1e9843b2e1b025fb758056",
     "resources/selftest/tiny-1920-yellow.mp4": "bf1452612e036b7df70ed25f775fa7fbbd8797a86b50df6cbb70d2203131dd08",

@@ -53,5 +53,15 @@ def apply_theme(widget, appearance='dark'):
     QListWidget::item:selected {{background:{top};color:{text};}}
     QCheckBox {{spacing:8px;}}
     QScrollArea {{border:0;}}
+    QStatusBar#appStatusBar {{background:{side};border-top:1px solid {line};padding:0;}}
+    QStatusBar#appStatusBar::item {{border:0;}}
+    QScrollArea#statusFooter,QScrollArea#statusFooter QWidget {{background:{side};border:0;}}
+    QLabel#statusMessage {{background:{side};padding:8px 16px;}}
+    QPushButton#historyClear {{background:transparent;border:0;color:{muted};padding:1px 4px;font-size:11px;}}
+    QWidget#historyChip {{background:{surface};border:1px solid {line};border-radius:6px;}}
+    QPushButton#historyTag {{background:transparent;border:0;color:{gold};padding:5px 8px;}}
+    QPushButton#historyRemove {{background:transparent;border:0;color:{muted};padding:5px 4px;}}
+    QPushButton#historyRemove:hover {{color:{text};}}
+    QLabel#historyError {{color:{gold};font-size:11px;}}
     QToolTip {{background:{surface};color:{text};border:1px solid {line};}}
     ''')

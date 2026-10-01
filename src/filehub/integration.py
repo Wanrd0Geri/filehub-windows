@@ -55,16 +55,19 @@ def executable_path(exe):
 
 def install_context_menu(exe,*,registry=None):
     exe=executable_path(exe);r=registry if registry is not None else HKCURegistry()
+    icon=f'"{exe}",0'
     for key in MENU_KEYS:
         if r.exists(key) and r.get(key,'FileHubOwner')!=OWNER:raise ValueError('右键项已被其他程序占用')
         command=r.get(key+'\\command','')
         if command is not None and r.get(key,'FileHubOwner')!=OWNER:raise ValueError('命令项已有其他所有者')
         if r.get(key,'FileHubOwner')==OWNER and command is not None and command!=r.get(key,'FileHubCommand'):raise ValueError('右键命令被其他程序修改，拒绝覆盖')
+        if r.get(key,'Icon') is not None and r.get(key,'Icon')!=icon:raise ValueError('右键图标被其他程序修改，拒绝覆盖')
     for key in MENU_KEYS:
         r.set(key,'FileHubOwner',OWNER);r.set(key,'','送进项目…')
         command=f'"{exe}" --send "%1"'
         r.set(key,'MultiSelectModel','Player')
         r.set(key,'FileHubCommand',command)
+        r.set(key,'FileHubIcon',icon);r.set(key,'Icon',icon)
         r.set(key+'\\command','',command)
 
 
@@ -72,6 +75,8 @@ def remove_context_menu(*,registry=None):
     r=registry if registry is not None else HKCURegistry()
     for key in MENU_KEYS:
         if r.get(key,'FileHubOwner')!=OWNER:continue
+        if r.get(key,'Icon')==r.get(key,'FileHubIcon'):r.delete_value(key,'Icon')
+        r.delete_value(key,'FileHubIcon')
         if r.get(key+'\\command','')==r.get(key,'FileHubCommand'):r.delete_value(key+'\\command','')
         r.delete_key_if_empty(key+'\\command')
         for name,value in (('','送进项目…'),('MultiSelectModel','Player'),('FileHubOwner',OWNER)):

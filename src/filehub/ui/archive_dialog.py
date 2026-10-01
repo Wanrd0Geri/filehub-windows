@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit
 from .theme import apply_theme
 from PySide6.QtCore import Signal
+from .tag_history import HistoryChips
 
 class ArchiveDialog(QDialog):
     execution_persisted=Signal(object)
@@ -14,6 +15,7 @@ class ArchiveDialog(QDialog):
         layout.addWidget(QLabel(f'已选择 {len(paths)} 项 · 先预览，再归档'))
         layout.addWidget(QLabel('项目代码与目的地'))
         self.tag=QLineEdit();self.tag.setObjectName('tag');self.tag.setPlaceholderText('例如 LYX020822');layout.addWidget(self.tag)
+        self.history_chips=HistoryChips(window.tag_history,self.fill_history_tag);layout.addWidget(self.history_chips)
         self.details=QTextEdit();self.details.setReadOnly(True);self.details.setMinimumHeight(140);layout.addWidget(self.details)
         buttons=QHBoxLayout();self.cancel_button=QPushButton('取消');self.cancel_button.clicked.connect(self.reject);buttons.addWidget(self.cancel_button)
         self.preview_button=QPushButton('预览');buttons.addWidget(self.preview_button)
@@ -31,9 +33,17 @@ class ArchiveDialog(QDialog):
     def invalidate(self):
         self.generation+=1;self.preview=None;self.execute_button.setEnabled(False)
 
+    def fill_history_tag(self,tag):
+        self.tag.setText(tag);self.invalidate();self.tag.setFocus()
+
     def request_preview(self):
         tag,generation=self.tag.text(),self.generation
-        self.window.coordinator.submit(lambda:self.window.service.preview(self.paths,tag),lambda p:self.show_preview(p) if generation==self.generation else None,self.details.setPlainText)
+        service,history_token=self.window.service,self.window.tag_history.token
+        def ready(preview):
+            if generation!=self.generation or service is not self.window.service:return
+            self.show_preview(preview)
+            if any(not item.error for item in preview.items):self.window.tag_history.remember(tag,history_token)
+        self.window.coordinator.submit(lambda:service.preview(self.paths,tag),ready,self.details.setPlainText)
 
     def show_preview(self,preview):
         self.preview=preview;self.details.setPlainText(self.window.preview_text(preview));self.execute_button.setEnabled(not self.window.coordinator.pending and any(not i.error for i in preview.items))

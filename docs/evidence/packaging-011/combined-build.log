@@ -1,0 +1,518 @@
+Pinned runtime and notice input hashes verified
+143 INFO: PyInstaller: 6.19.0, contrib hooks: 2026.8
+143 INFO: Python: 3.12.10
+204 INFO: Platform: Windows-11-10.0.26200-SP0
+204 INFO: Python environment: F:\Hazel Windows\.venv
+206 INFO: Removing temporary files and cleaning cache in C:\Users\Gerry-UltraPC\AppData\Local\pyinstaller
+233 INFO: Module search paths (PYTHONPATH):
+['F:\\Hazel Windows',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\python312.zip',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\DLLs',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312\\Lib',
+ 'C:\\Users\\Gerry-UltraPC\\AppData\\Local\\Programs\\Python\\Python312',
+ 'F:\\Hazel Windows\\.venv',
+ 'F:\\Hazel Windows\\.venv\\Lib\\site-packages',
+ 'F:\\Hazel Windows\\packaging',
+ 'F:\\Hazel Windows\\src']
+577 INFO: Appending 'binaries' from .spec
+577 INFO: Appending 'datas' from .spec
+581 INFO: checking Analysis
+581 INFO: Building Analysis because Analysis-00.toc is non existent
+581 INFO: Looking for Python shared library...
+581 INFO: Using Python shared library: C:\Users\Gerry-UltraPC\AppData\Local\Programs\Python\Python312\python312.dll
+581 INFO: Running Analysis Analysis-00.toc
+581 INFO: Target bytecode optimization level: 0
+581 INFO: Initializing module dependency graph...
+584 INFO: Initializing module graph hook caches...
+593 INFO: Analyzing modules for base_library.zip ...
+1837 INFO: Processing standard module hook 'hook-encodings.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2305 INFO: Processing standard module hook 'hook-heapq.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+2760 INFO: Processing standard module hook 'hook-pickle.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3503 INFO: Caching module dependency graph...
+3520 INFO: Analyzing F:\Hazel Windows\packaging\entrypoint.py
+3539 INFO: Analyzing hidden import 'filehub.__main__'
+3576 INFO: Processing standard module hook 'hook-platform.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3630 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3721 INFO: Processing standard module hook 'hook-xml.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3854 INFO: Processing standard module hook 'hook-_ctypes.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+3899 INFO: Processing standard module hook 'hook-sqlite3.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+4243 INFO: Processing standard module hook 'hook-PySide6.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+4424 INFO: Processing standard module hook 'hook-shiboken6.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+4732 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5969 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+12258 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+13870 INFO: Processing module hooks (post-graph stage)...
+14075 INFO: Performing binary vs. data reclassification (332 entries)
+14100 INFO: Looking for ctypes DLLs
+14119 INFO: Analyzing run-time hooks ...
+14120 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14122 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14124 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+14125 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks'
+14127 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14130 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+14140 INFO: Creating base_library.zip...
+14157 INFO: Looking for dynamic libraries
+14490 INFO: Extra DLL search directories (AddDllDirectory): ['F:\\Hazel Windows\\.venv\\Lib\\site-packages\\shiboken6']
+14490 INFO: Extra DLL search directories (PATH): ['F:\\Hazel Windows\\.venv\\Lib\\site-packages\\PySide6']
+15332 INFO: Warnings written to F:\Hazel Windows\build\pyinstaller\filehub\warn-filehub.txt
+15348 INFO: Graph cross-reference written to F:\Hazel Windows\build\pyinstaller\filehub\xref-filehub.html
+15370 INFO: checking PYZ
+15370 INFO: Building PYZ because PYZ-00.toc is non existent
+15370 INFO: Building PYZ (ZlibArchive) F:\Hazel Windows\build\pyinstaller\filehub\PYZ-00.pyz
+15532 INFO: Building PYZ (ZlibArchive) F:\Hazel Windows\build\pyinstaller\filehub\PYZ-00.pyz completed successfully.
+15538 INFO: checking PKG
+15538 INFO: Building PKG because PKG-00.toc is non existent
+15538 INFO: Building PKG (CArchive) FileHub.pkg
+15556 INFO: Building PKG (CArchive) FileHub.pkg completed successfully.
+15556 INFO: Bootloader F:\Hazel Windows\.venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+15556 INFO: checking EXE
+15556 INFO: Building EXE because EXE-00.toc is non existent
+15556 INFO: Building EXE from EXE-00.toc
+15556 INFO: Copying bootloader EXE to F:\Hazel Windows\build\pyinstaller\filehub\FileHub.exe
+15589 INFO: Copying icon to EXE
+15622 INFO: Copying 0 resources to EXE
+15622 INFO: Embedding manifest in EXE
+15650 INFO: Appending PKG archive to EXE
+15687 INFO: Fixing EXE headers
+15912 INFO: Building EXE from EXE-00.toc completed successfully.
+15915 INFO: checking COLLECT
+15916 INFO: Building COLLECT because COLLECT-00.toc is non existent
+15916 INFO: Removing dir F:\Hazel Windows\dist\FileHub
+15984 INFO: Building COLLECT COLLECT-00.toc
+16396 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+16401 INFO: Build complete! The results are available in: F:\Hazel Windows\dist
+Inno Setup 6 Command-Line Compiler
+Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+https://www.innosetup.com
+
+Compiler engine version: Inno Setup 6.7.3
+Non-commercial use only
+
+Preprocessing
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\ISPPBuiltins.iss
+Parsing [Setup] section, line 9
+Parsing [Setup] section, line 10
+Parsing [Setup] section, line 11
+Parsing [Setup] section, line 12
+Parsing [Setup] section, line 13
+Parsing [Setup] section, line 14
+Parsing [Setup] section, line 15
+Parsing [Setup] section, line 16
+Parsing [Setup] section, line 17
+Parsing [Setup] section, line 18
+Parsing [Setup] section, line 19
+Parsing [Setup] section, line 20
+Parsing [Setup] section, line 21
+Parsing [Setup] section, line 22
+Parsing [Setup] section, line 23
+Parsing [Setup] section, line 24
+Parsing [Setup] section, line 25
+Parsing [Setup] section, line 26
+Parsing [Setup] section, line 27
+Parsing [Setup] section, line 28
+Parsing [Setup] section, line 29
+Parsing [Setup] section, line 30
+Parsing [Setup] section, line 31
+Parsing [Setup] section, line 32
+Reading file (WizardImageFile)
+Reading file (WizardSmallImageFile)
+Preparing Setup program executable
+   Verification successful
+   Updating icons (Setup.e32)
+   Updating version info (Setup.e32)
+Determining language code pages
+Parsing [Languages] section, line 35
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\Languages\ChineseSimplified.isl
+   Messages in script file
+Reading default messages from Default.isl
+Parsing [Languages] section, line 35
+   Reading file: F:\Hazel Windows\sandbox\tools\inno-6.7.3\{app}\Languages\ChineseSimplified.isl
+Parsing [LangOptions], [Messages], and [CustomMessages] sections
+   Messages in script file
+Reading [Code] section
+Parsing [Tasks] section, line 42
+Parsing [Tasks] section, line 43
+Parsing [Tasks] section, line 44
+Parsing [Icons] section, line 50
+Parsing [Icons] section, line 51
+Parsing [Icons] section, line 52
+Parsing [Files] section, line 47
+Compiling [Code] section
+Deleting FileHub-0.1.1-windows-x64-setup.exe from output directory
+Creating setup files
+   Verification successful
+   Updating icons (Setup.exe)
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\FileHub.exe
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\base_library.zip
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\libcrypto-3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\libffi-8.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\libssl-3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\pyexpat.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\python3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\python312.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\select.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\sqlite3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\ucrtbase.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\unicodedata.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\VCRUNTIME140.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\VCRUNTIME140_1.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_bz2.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_ctypes.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_decimal.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_hashlib.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_lzma.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_multiprocessing.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_queue.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_socket.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_sqlite3.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_ssl.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_uuid.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\_wmi.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140_1.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\MSVCP140_2.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\pyside6.abi3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Core.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Gui.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\Qt6Widgets.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtCore.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtGui.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\QtWidgets.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\VCRUNTIME140.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\VCRUNTIME140_1.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qgif.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qico.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qjpeg.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\imageformats\qwbmp.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qdirect2d.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qminimal.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qoffscreen.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\platforms\qwindows.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\plugins\styles\qmodernwindowsstyle.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ar.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_bg.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ca.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_cs.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_da.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_de.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_en.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_es.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fa.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fi.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_fr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_gd.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_he.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_hr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_hu.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_it.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ja.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ka.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ko.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_lg.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_lv.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_nl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_nn.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_pl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_pt_BR.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_ru.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_sk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_sv.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_tr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_uk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_zh_CN.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qtbase_zh_TW.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ar.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_bg.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ca.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_cs.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_da.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_de.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_en.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_es.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fa.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fi.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_fr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_gd.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_gl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_he.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ar.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_bg.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ca.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_cs.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_da.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_de.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_en.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_es.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_fr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_gl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_hr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_hu.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_it.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ja.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ka.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ko.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_nl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_nn.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_pl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_pt_BR.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_ru.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_sv.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_tr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_uk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_zh_CN.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_help_zh_TW.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_hr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_hu.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_it.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ja.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ka.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ko.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lg.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lt.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_lv.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_nl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_nn.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pt_BR.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_pt_PT.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_ru.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sl.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_sv.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_tr.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_uk.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_zh_CN.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\PySide6\translations\qt_zh_TW.qm
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\app.ico
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avcodec-62.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avformat-62.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\avutil-60.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\ffprobe\ffprobe.exe
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny-1920-blue.mp4
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny-1920-yellow.mp4
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\resources\selftest\tiny.mp4
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\MSVCP140.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\Shiboken.pyd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\shiboken6.abi3.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\VCRUNTIME140.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\shiboken6\VCRUNTIME140_1.dll
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\components.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\第三方许可.md
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\filehub.patch
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-GPL-3.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-LGPL-2.1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\LICENSE-LGPL-3.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\UPSTREAM-LICENSE.md
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\ffprobe-build-local.cmd
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\ffprobe-configure.sh
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\patch-ffmpeg.py
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\ffprobe\build-recipe\prepare-ffprobe.ps1
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\inno\ChineseSimplified.isl
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\inno\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\microsoft\Visual-Studio-2022-Community-license.html
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\microsoft\Visual-Studio-2022-redistribution.html
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\pyinstaller\COPYING.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\libmpdec-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-expat-2.7.1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-libffi-3.4.4.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-OpenSSL-3.0.16.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-SQLite-3.49.1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE-zlib-1.3.1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\python\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\attributions.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\demos\colorpaletteclient\icons\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\MARKDOWN-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\MARKED-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\markdowneditor\resources\3rdparty\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\simplebrowser\data\3rdparty\COPYING
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\examples\webenginewidgets\simplebrowser\data\3rdparty\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\Apache-2.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\BSD-3-Clause.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GFDL-1.3-no-invariants-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GPL-2.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\GPL-3.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\LGPL-3.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\LicenseRef-Qt-Commercial.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\LICENSES\Qt-GPL-exception-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\libshiboken\bufferprocs_py37.h
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\libshiboken\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\shibokenmodule\files.dir\shibokensupport\signature\PSF-3.7.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\pyside\sources\shiboken6\shibokenmodule\files.dir\shibokensupport\signature\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\attributions.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\extra-cmake-modules\COPYING-CMAKE-SCRIPTS
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\extra-cmake-modules\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\kwin\COPYING-CMAKE-SCRIPTS
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\cmake\3rdparty\kwin\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\AFL-2.1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Apache-2.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Bitstream-Vera.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\blessing.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-2-Clause.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-3-Clause.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSD-4-Clause.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\BSL-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\CC0-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\FTL.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GFDL-1.3-no-invariants-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-2.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-2.0-or-later.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\GPL-3.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\HPND.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\IJG.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Imlib2.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\IPL-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LGPL-2.1-or-later.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LGPL-3.0-only.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\libpng-2.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Libpng.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-BSD-3-Clause-with-PCRE2-Binary-Like-Packages-Exception.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-ICC-License.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-Lcs-Telegraphics.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-Qt-Commercial.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\LicenseRef-SHA1-Public-Domain.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Linux-syscall-note.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT-Khronos-old.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT-open-group.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MIT.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\MPL-2.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Qt-GPL-exception-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\SPL-1.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Unicode-3.0.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\X11.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Xerox.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\LICENSES\Zlib.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\android\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\android\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\blake2\COPYING
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\blake2\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\D3D12MemoryAllocator\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\D3D12MemoryAllocator\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\double-conversion\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\double-conversion\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\easing\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\easing\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\emoji-segmenter\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\forkfd\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\forkfd\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\BDF-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\PCF-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\freetype\ZLIB-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\gradle\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\gradle\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\harfbuzz-ng\COPYING
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\harfbuzz-ng\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\icc\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\icc\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libjpeg\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpng\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpng\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\PSL-LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\libpsl\src\LICENSE.chromium
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4c\LICENSE.md
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md4c\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\md5\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\LICENCE.md
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\LICENSE-SLJIT
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pcre2\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pixman\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\pixman\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\rfc6234\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\rfc6234\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha1\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\BRG_ENDIAN_LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\CC0_LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sha3\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\siphash\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\sqlite\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\tinycbor\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\tinycbor\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\VulkanMemoryAllocator\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\VulkanMemoryAllocator\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wasm\DEJAVU-LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wasm\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\MIT_LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\appmenu\LGPL-2.1-or-later.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\appmenu\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\color-management\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\fractional-scale\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\fullscreen-shell\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\linux-dmabuf\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\pointer-gestures\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\pointer-warp\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\presentation-time\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\scaler\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\session-management\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\tablet\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v1\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v2\HPND_LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v2\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\text-input\v3\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\viewporter\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wayland\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wl-eglstream\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wlr-data-control\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\wp-primary-selection\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-activation\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-decoration\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-dialog\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-foreign\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-output\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-shell\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-system-bell\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wayland\protocols\xdg-toplevel-icon\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\wintab\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\xcb\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\xcb\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\zlib\LICENSE
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\3rdparty\zlib\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\global\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\kernel\LICENSE.QEVENTDISPATCHER_CF.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\kernel\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\mimetypes\3rdparty\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\corelib\text\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\dbus\LICENSE.LIBDBUS-1.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\dbus\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\opengl\LICENSE.KHRONOS.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\opengl\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\LICENSE.QIMAGETRANSFORM.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\LICENSE.XCONSORTIUM.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\painting\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\rhi\LICENSE.MiniEngine.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\rhi\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\text\LICENSE.AGLFN.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\text\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\vulkan\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\gui\vulkan\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\plugins\platforms\cocoa\LICENSE.COCOA.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\plugins\platforms\cocoa\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testinternal\3rdparty\cmake\Copyright.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testinternal\3rdparty\cmake\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\catch2\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\catch2\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\cycle\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\cycle\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\linux\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\linux\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\valgrind\LICENSE.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\src\testlib\3rdparty\valgrind\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\util\gradientgen\LICENSE.WEBGRADIENTS.txt
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\qt\qtbase\util\gradientgen\qt_attribution.json
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\ffmpeg-source.zip
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\pyside-source.zip
+   Compressing: F:\Hazel Windows\packaging\..\dist\FileHub\_internal\third_party\sources\qtbase-source.zip
+   Compressing Setup program executable
+   Updating version info (Setup.exe)
+   Updating manifest (Setup.exe)
+
+
+Successful compile (24.375 sec). Resulting Setup program filename is:
+F:\Hazel Windows\dist\installer\FileHub-0.1.1-windows-x64-setup.exe

@@ -107,3 +107,34 @@ def test_more_than_fifteen_selected_paths_aggregate(tmp_path):
     for p in paths:q.enqueue([p],now=10)
     batch=q.claim(now=11);assert batch.paths==paths and len(batch.request_ids)==24
     q.ack(batch.token)
+
+
+@pytest.mark.parametrize("kind", ["*", "Directory"])
+def test_menu_icon_registered_and_normal_remove_cleans_it(tmp_path, kind):
+    reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+    install_context_menu(exe,registry=reg)
+    key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+    assert reg.get(key,'Icon')==f'"{exe}",0'
+    remove_context_menu(registry=reg)
+    assert not reg.exists(key)
+
+
+@pytest.mark.parametrize("kind", ["*", "Directory"])
+def test_foreign_modified_menu_icon_survives_remove(tmp_path, kind):
+    reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+    install_context_menu(exe,registry=reg)
+    key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+    reg.set(key,'Icon','"C:/Foreign App/other.exe",7')
+    remove_context_menu(registry=reg)
+    assert reg.get(key,'Icon')=='"C:/Foreign App/other.exe",7'
+
+
+@pytest.mark.parametrize("kind", ["*", "Directory"])
+def test_foreign_modified_menu_icon_not_overwritten(tmp_path, kind):
+    reg=Registry();exe=tmp_path/'中文 App'/'FileHub.exe'
+    install_context_menu(exe,registry=reg)
+    key='Software\\Classes\\'+kind+'\\shell\\FileHub.Send'
+    reg.set(key,'Icon','"C:/Foreign App/other.exe",7')
+    before={k:dict(v) for k,v in reg.data.items()}
+    with pytest.raises(ValueError):install_context_menu(exe,registry=reg)
+    assert reg.data==before

@@ -1,0 +1,29 @@
+{
+  "checked_utc": "2026-10-01T10:17:54.786982+00:00",
+  "artifacts": [
+    {
+      "file": "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+      "bytes": 2342150,
+      "sha256": "ff8a4183bbbe44bba023d1d36ae5b77afd6c2491adba6602990169e31cc17963"
+    },
+    {
+      "file": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.0-windows-x64-setup.exe",
+      "bytes": 139798744,
+      "sha256": "0de7a4cf0c246087318a60c9f77c782c1d05d684bc6d6ea22b7cc39efcb422f8"
+    },
+    {
+      "file": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.1-windows-x64-setup.exe",
+      "bytes": 139814259,
+      "sha256": "bacd74379bc38e02d924f381aad8980f07bd738e68800668cc4b699f68d37f1a"
+    }
+  ],
+  "packaged_code_equals_current_source": {
+    "filehub.tag_history": true,
+    "filehub.ui.tag_history": true,
+    "filehub.ui.status_footer": true,
+    "filehub.ui.main_window": true,
+    "filehub.ui.archive_dialog": true
+  },
+  "suite": "276 passed in 23.18s; docs/evidence/root-011-final-pytest.txt",
+  "boundary": "Read-only artifact audit. No installer run, registry write or user application change."
+}

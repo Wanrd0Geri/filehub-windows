@@ -1,0 +1,57 @@
+{
+  "command": [
+    "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+    "--self-test",
+    "--state-dir",
+    "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3"
+  ],
+  "cwd": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\cwd",
+  "child_path": "C:\\WINDOWS\\System32;C:\\WINDOWS",
+  "exit_code": 0,
+  "stdout_bytes": 2445,
+  "stderr": "",
+  "report": {
+    "schema_version": 1,
+    "ok": true,
+    "checks": {
+      "default_unconfigured_paused": true,
+      "valid_png": true,
+      "png_archive": true,
+      "png_undo": true,
+      "bundled_probe_width_64": true,
+      "paused_no_source_mutation": true,
+      "video_1920_distinct_content": true,
+      "video_1920_archive_naming": true,
+      "video_1920_distinct_sequence": true,
+      "video_1920_undo": true
+    },
+    "fixture_dir": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c",
+    "state_dir": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c\\demo\\4c66e1fba26b41f282b7261497d041e0\\state",
+    "probe": {
+      "path": "F:\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\ffprobe\\ffprobe.exe",
+      "fixture": "F:\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\selftest\\tiny.mp4",
+      "width": 64
+    },
+    "error": "",
+    "videos": [
+      {
+        "source": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c\\demo\\4c66e1fba26b41f282b7261497d041e0\\示例下载\\真实1920-yellow.mp4",
+        "target": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c\\demo\\4c66e1fba26b41f282b7261497d041e0\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_01_20261001AM_1080p.mp4",
+        "target_name": "02_08_22_01_20261001AM_1080p.mp4",
+        "expected_name": "02_08_22_01_20261001AM_1080p.mp4",
+        "sequence": "01",
+        "width": 1920,
+        "batch_id": "e196c1a50d67458b9fff3a880578faa0"
+      },
+      {
+        "source": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c\\demo\\4c66e1fba26b41f282b7261497d041e0\\示例下载\\真实1920-blue.mp4",
+        "target": "F:\\Hazel Windows\\sandbox\\task6-acceptance\\d26ef8d9820b41e2a3e1e93da787377f\\task611-combined-selftest-9ba506e3\\self-test-b2650e9e90ef49ce9562ff563b50080c\\demo\\4c66e1fba26b41f282b7261497d041e0\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_02_20261001AM_1080p.mp4",
+        "target_name": "02_08_22_02_20261001AM_1080p.mp4",
+        "expected_name": "02_08_22_02_20261001AM_1080p.mp4",
+        "sequence": "02",
+        "width": 1920,
+        "batch_id": "88b42bfd7a354c6e8bf64c78afc2ff57"
+      }
+    ]
+  }
+}
