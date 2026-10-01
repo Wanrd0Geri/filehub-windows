@@ -96,6 +96,7 @@ class OperationEngine:
             target_guard.stream.write(block)
             self.platform.checkpoint("copy_chunk", item)
         target_guard.flush()
+        target_guard.copy_metadata_from(source_guard, lambda stage: self.platform.checkpoint(stage, item))
         source_fp = source_guard.fingerprint()
         target_fp = target_guard.fingerprint()
         if not source_fp.same_content(target_fp):
@@ -120,22 +121,29 @@ class OperationEngine:
                 dst.verify(target_fp)
                 dst.rename(item.target)
                 self.platform.checkpoint("after_publish", item)
-                self.journal.transition(item.operation_id, "copied", "复制已验证；移动的源尚未移除", target_fp=target_fp)
-                self.platform.checkpoint("copy_verified", item)
-                if item.kind == "move":
-                    src.verify(item.expected_source)
-                    dst.verify(target_fp)
-                    self.journal.transition(item.operation_id, "removing_source", "准备移除已匹配源")
-                    self.platform.checkpoint("before_source_remove", item)
-                    # Re-check after injected hooks as well as before durable intent.
-                    src.verify(item.expected_source)
-                    dst.verify(target_fp)
-                    src.remove()
-                    # Complete deletion while the verified destination is still
-                    # protected. The outer context's close is idempotent.
-                    src.stream.close()
-                self.platform.checkpoint("source_removed" if item.kind == "move" else "copy_complete", item)
-                self.journal.transition(item.operation_id, "committed", "移动完成" if item.kind == "move" else "复制完成")
+                # A DELETE handle requires DELETE-sharing ADS readers; those
+                # cannot block stream unlink. Reacquire a strong non-DELETE
+                # survivor guard before deleting anything from the source.
+                dst.close()
+                self.platform.checkpoint("before_survivor_guard", item)
+                with self.platform.guard(item.target) as survivor:
+                    survivor.verify(target_fp)
+                    self.journal.transition(item.operation_id, "copied", "复制已验证；移动的源尚未移除", target_fp=target_fp)
+                    self.platform.checkpoint("copy_verified", item)
+                    if item.kind == "move":
+                        src.verify(item.expected_source)
+                        survivor.verify(target_fp)
+                        self.journal.transition(item.operation_id, "removing_source", "准备移除已匹配源")
+                        self.platform.checkpoint("before_source_remove", item)
+                        src.verify(item.expected_source)
+                        survivor.verify(target_fp)
+                        src.remove()
+                        # Close ALL source stream handles while its strong
+                        # survivor is protected; main-handle close alone delays
+                        # deletion when named-stream handles remain open.
+                        src.close()
+                    self.platform.checkpoint("source_removed" if item.kind == "move" else "copy_complete", item)
+                    self.journal.transition(item.operation_id, "committed", "移动完成" if item.kind == "move" else "复制完成")
 
     def _restore_staged(self, item, staging):
         with self.platform.guard(staging, destructive=True) as guard:
@@ -205,7 +213,7 @@ class OperationEngine:
                                 if not survivor.fingerprint().same_content(item.expected_source):
                                     raise ValueError("保留副本：另一份内容变化")
                                 target.remove()
-                                target.stream.close()
+                                target.close()
                                 self.platform.checkpoint("undo_target_removed", item)
                                 self.journal.transition(item.operation_id, "undone", "撤销完成")
                         else:
@@ -224,15 +232,19 @@ class OperationEngine:
                                 restored.verify(undo_fp)
                                 restored.rename(item.source)
                                 self.platform.checkpoint("undo_after_publish", item)
-                                self.journal.transition(item.operation_id, "undo_copied", "原位置已校验，目标尚未移除", undo_fp=undo_fp)
-                                self.platform.checkpoint("undo_copy_verified", item)
-                                restored.verify(undo_fp)
-                                target.verify(item.target_fingerprint)
-                                self.journal.transition(item.operation_id, "undo_removing_target", "准备移除匹配目标")
-                                target.remove()
-                                target.stream.close()
-                                self.platform.checkpoint("undo_target_removed", item)
-                                self.journal.transition(item.operation_id, "undone", "撤销完成")
+                                restored.close()
+                                self.platform.checkpoint("before_undo_survivor_guard", item)
+                                with self.platform.guard(item.source) as survivor:
+                                    survivor.verify(undo_fp)
+                                    self.journal.transition(item.operation_id, "undo_copied", "原位置已校验，目标尚未移除", undo_fp=undo_fp)
+                                    self.platform.checkpoint("undo_copy_verified", item)
+                                    survivor.verify(undo_fp)
+                                    target.verify(item.target_fingerprint)
+                                    self.journal.transition(item.operation_id, "undo_removing_target", "准备移除匹配目标")
+                                    target.remove()
+                                    target.close()
+                                    self.platform.checkpoint("undo_target_removed", item)
+                                    self.journal.transition(item.operation_id, "undone", "撤销完成")
                 except Exception as exc:
                     self.journal.transition(item.operation_id, "conflict", f"撤销停止：{exc}；文件保持现状，请人工核对")
             return self.journal.batch(batch_id)

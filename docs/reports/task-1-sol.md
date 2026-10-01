@@ -68,3 +68,42 @@ Final test receipt source: `F:\Hazel Windows\sandbox\pytest-tmp\test_native_recy
 Read the full staged production diff, reviewed write-ahead ordering and guard lifetimes, and checked scoped staging. Controller-owned brief/plan/ledger changes are excluded from the commit. Safety fixes found during pre-review are included, with regression evidence above.
 
 Native recycle has no reliable programmatic item token and requires manual restore. Folder support belongs to Task 4. Copies preserve contents, not timestamps, ACLs or alternate data streams; moves currently use this copy path and undo creates a fresh file identity. The state directory must be local app state; there is no distributed lock for cloud-sync peers. Conflict/unknown records preserve files and require manual reconciliation; rollback does not automatically delete incomplete staging. Very long original names may prevent a readable recycle staging name and fail safely without truncation. Config migration, UI presentation and future managed-directory overlap checks belong to later tasks.
+
+## Fix round 1 — Windows times and NTFS named-stream preservation
+
+Review base: `e6a729cafb103700643e1617cfbb34f66a3adb22`. This fix **supersedes the preceding timestamps/ADS limitation**. Copy, move and move undo now preserve exact Windows creation and last-write times and all enumerated named `$DATA` streams, including ordinary downloaded-file `Zone.Identifier` and user-defined Chinese stream names. ACL/security descriptors retain target-directory inheritance; full ACL cloning and access-time preservation are not part of this change. EFS-encrypted sources are explicitly refused before any plaintext copy, rather than silently losing encryption semantics. EFS attribute testing is injected; the user's machine was not configured for EFS.
+
+New helper: `src/filehub/platform/metadata.py` wraps `GetFileTime/SetFileTime`, `FindFirstStreamW/FindNextStreamW`, `GetFinalPathNameByHandleW`, and `GetFileInformationByHandleEx(FileStandardInfo)`. It gets stream paths from the actual main-file handle, including after rename. Named streams are copied with exclusive stream creation to the existing unpublished sibling staging file, flushed, individually SHA256 verified, then held read-only. Creation/lastwrite are set after named-stream writer handles close, and exact readback is required. The completed file fingerprint is checked again after closing the publishing handle and taking the survivor guard. Unsupported stream enumeration/type, unreadable/busy streams, unsupported destination streams, failed stream copy or failed/exact-time write all stop before source removal and keep the original.
+
+Updated interfaces:
+
+```python
+StreamFingerprint(name: str, size: int, sha256: str)  # frozen
+Fingerprint(device, file_id, size, mtime_ns, sha256,
+            creation_ns: int = 0,
+            streams: tuple[StreamFingerprint, ...] = ())
+Fingerprint.same_primary_content(other) -> bool  # main size + SHA256 only
+Fingerprint.same_content(other) -> bool  # main + every named-stream name/size/hash
+Fingerprint.from_dict(value) -> Fingerprint  # typed nested journal roundtrip
+Guard.close()  # idempotently closes ALL named streams and main handle
+Guard.copy_metadata_from(source_guard, checkpoint)  # internal transfer interface
+```
+
+`same_primary_content` is the business duplicate check for Task 3, consistent with the original main-file dedup rule. ADS differences do not block business dedup; duplicate removal still uses recycle, retaining its original ADS. `same_content` is the stronger safe-survivor comparison used before deleting a supplemental copy: all original named-stream content must have another verified survivor. Neither content comparator includes file identity or creation/mtime; strict fingerprint equality still includes identity, both times, main hash and the complete stream inventory. Old development journal fingerprints missing new fields decode conservatively with defaults and will not authorize deletion against a new full fingerprint.
+
+Real Windows sharing experiments exposed an important distinction: a persistent stream reader with `FILE_SHARE_DELETE` prevents writes but does not prevent stream `DeleteFile`; denying DELETE sharing is incompatible with the owning main DELETE handle (`WinError 32`). Therefore deletion candidates hold persistent weak ADS readers (deny writes, allow DELETE), whereas survivors hold a non-DELETE main handle and strong ADS readers (deny both writes and DELETE). After atomic publication, the engine closes the publishing guard, obtains the strong survivor guard, and matches the full fingerprint before permitting original removal. During this takeover gap the original deletion candidate still exists; changing the published/restored file causes conflict and preserves it. Undo(move) uses the same takeover. Undo(copy) protects its surviving source with a strong guard throughout.
+
+Delete-pending ADS can remain visible to stream enumeration and readable through the existing weak handle. Checking `FileStandardInfo.DeletePending` before and after each stream hash catches this case and stops source removal. `Guard.close()` closes all ADS and the main file while its strong survivor remains held; closing only the primary stream would defer the actual file deletion and recreate the earlier guard-lifetime risk. Tests confirm the deletion candidate is already absent while attempts to delete the surviving file or its Zone stream still fail. This does not claim one Windows handle can freeze all arbitrary future new stream names: inventory and delete-pending checks detect changes, existing streams are persistently guarded, and the verified complete survivor remains protected through destructive transitions.
+
+New fault hooks: `named_stream_chunk`, `before_metadata_set`, `before_survivor_guard`, `before_undo_survivor_guard`. No public operation/journal state names changed.
+
+TDD evidence:
+
+- `.venv\Scripts\python.exe -X utf8 -m pytest -q tests/test_metadata.py` initially produced **10 failed in 0.60s**, showing altered creation times, lost real ADS, accepted ADS-only stale previews/undo, missing stream fingerprints, and unsafe supplemental-copy deletion. Initial metadata implementation produced **10 passed in 0.66s**.
+- Persistent-stream sharing/EFS additions produced **3 failed, 16 passed in 1.20s**. Real ADS writes were denied, but ADS unlink succeeded and EFS was not refused. A trial no-DELETE reader caused **9 failed, 10 passed in 0.69s** with genuine Windows sharing violations. Strong-survivor takeover, full-handle close, and EFS refusal then produced **19 passed in 1.02s**.
+- A new weak-source stream-unlink regression made the full suite **1 failed, 83 passed in 5.26s**: enumeration still saw a delete-pending stream and the operation incorrectly committed. `FileStandardInfo.DeletePending` checking fixed it; focused regression -> **1 passed in 0.12s**.
+- Final full command `.venv\Scripts\python.exe -X utf8 -m pytest -q` -> **84 passed in 5.26s**, no warnings or remaining failures. This includes all prior safety tests and the native recycle acceptance again.
+
+Additional real NTFS coverage: source creation/mtime preservation for copy and move plus move undo; real Zone.Identifier and Unicode user ADS transfer and restoration; ADS-only edit/add/remove with main times restored; typed journal roundtrip; target ADS-only edit blocks undo/recovery; business main equality differs from safe full-content equality; source/target stream writes denied; strong target ADS unlink denied; undo restored/archived streams guarded; publish-to-strong-guard gap edits preserve the deletion candidate; all stream handles close under a guarded survivor; delete-pending source ADS stops source removal. Unsupported-target filesystem, metadata IO failure, and EFS checks are deterministic injected tests, not real FAT/exFAT or EFS hardware acceptance. All filesystem tests remain under workspace sandbox. Native recycle receipts continue to be recorded in `sandbox/native-recycle-receipts.jsonl`; no user files or unrelated recycle items were changed.
+
+Self-review: read all modified production diff and the new helper, reviewed file-time ordering, named-stream resource closure, source/survivor sharing and the takeover gap, then staged only this fix and report. No UI/rules/controller-document changes are included.

@@ -3,6 +3,9 @@ from pathlib import Path
 import hashlib
 import os
 import stat
+import msvcrt
+
+from .platform.metadata import file_times, final_path, held_streams, stream_names
 
 
 def checked_path(path: Path) -> Path:
@@ -18,12 +21,21 @@ def checked_path(path: Path) -> Path:
     return path
 
 @dataclass(frozen=True)
+class StreamFingerprint:
+    name: str
+    size: int
+    sha256: str
+
+
+@dataclass(frozen=True)
 class Fingerprint:
     device: int
     file_id: int
     size: int
     mtime_ns: int
     sha256: str
+    creation_ns: int = 0
+    streams: tuple[StreamFingerprint, ...] = ()
 
     @classmethod
     def capture(cls, path: Path) -> "Fingerprint":
@@ -33,6 +45,8 @@ class Fingerprint:
         info = path.stat()
         if (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns) != result.identity:
             raise ValueError("文件在读取时被替换或修改")
+        if info.st_birthtime_ns != result.creation_ns:
+            raise ValueError("文件创建时间正在变化")
         return result
 
     @property
@@ -40,22 +54,47 @@ class Fingerprint:
         return self.device, self.file_id, self.size, self.mtime_ns
 
     @classmethod
-    def from_stream(cls, stream) -> "Fingerprint":
+    def from_stream(cls, stream, named_streams=None) -> "Fingerprint":
         before = os.fstat(stream.fileno())
         if not stat.S_ISREG(before.st_mode):
             raise ValueError("暂不支持目录或非普通文件")
+        handle = msvcrt.get_osfhandle(stream.fileno())
+        path = final_path(handle)
+        before_times = file_times(handle)
         stream.seek(0)
         digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        if named_streams is None:
+            with held_streams(path) as guards:
+                streams = tuple(StreamFingerprint(*guards[name].digest()) for name in sorted(guards))
+        else:
+            if stream_names(path) != tuple(sorted(named_streams)):
+                raise ValueError("命名流清单变化，已停止")
+            streams = tuple(StreamFingerprint(*named_streams[name].digest()) for name in sorted(named_streams))
+            if stream_names(path) != tuple(sorted(named_streams)):
+                raise ValueError("命名流清单变化，已停止")
         after = os.fstat(stream.fileno())
         if (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) != (
             after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns
         ):
             raise ValueError("文件正在变化")
         stream.seek(0)
-        return cls(after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, digest)
+        if before_times != file_times(handle):
+            raise ValueError("文件时间正在变化")
+        return cls(after.st_dev, after.st_ino, after.st_size, before_times[1], digest, before_times[0], streams)
 
     def same_content(self, other: "Fingerprint") -> bool:
+        """Full content equality for safe survivors; includes every named stream."""
+        return self.same_primary_content(other) and self.streams == other.streams
+
+    def same_primary_content(self, other: "Fingerprint") -> bool:
+        """Business dedup equality, deliberately ignoring ADS and file times."""
         return self.size == other.size and self.sha256 == other.sha256
+
+    @classmethod
+    def from_dict(cls, value):
+        data = dict(value)
+        data["streams"] = tuple(StreamFingerprint(**stream) for stream in data.get("streams", ()))
+        return cls(**data)
 
     def to_dict(self):
         return asdict(self)

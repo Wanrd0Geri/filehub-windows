@@ -48,7 +48,7 @@ class Journal:
 
     @staticmethod
     def decode(fp):
-        return Fingerprint(**json.loads(fp)) if fp else None
+        return Fingerprint.from_dict(json.loads(fp)) if fp else None
 
     def create_batch(self, label, operations) -> str:
         batch_id = uuid.uuid4().hex

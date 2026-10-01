@@ -11,6 +11,7 @@ import time
 import uuid
 
 from ..models import Fingerprint, checked_path
+from .metadata import NamedStream, held_streams, final_path, set_times, winpath
 
 kernel = ctypes.WinDLL("kernel32", use_last_error=True)
 kernel.CreateFileW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
@@ -22,18 +23,19 @@ kernel.SetFileInformationByHandle.argtypes = [wintypes.HANDLE, ctypes.c_int, cty
 kernel.SetFileInformationByHandle.restype = wintypes.BOOL
 kernel.FlushFileBuffers.argtypes = [wintypes.HANDLE]
 kernel.FlushFileBuffers.restype = wintypes.BOOL
-
-
-def winpath(path):
-    text = str(Path(path).absolute())
-    if text.startswith("\\\\?\\"):
-        return text
-    return "\\\\?\\UNC\\" + text[2:] if text.startswith("\\\\") else "\\\\?\\" + text
+kernel.GetFileAttributesW.argtypes = [wintypes.LPCWSTR]
+kernel.GetFileAttributesW.restype = wintypes.DWORD
 
 
 class Guard:
     def __init__(self, path, *, create=False, destructive=False):
         self.path = checked_path(path)
+        if not create:
+            attributes = kernel.GetFileAttributesW(winpath(self.path))
+            if attributes == 0xffffffff:
+                raise ctypes.WinError(ctypes.get_last_error())
+            if attributes & 0x4000:
+                raise ValueError("不支持 EFS 加密文件的无损复制；源已保留")
         # No write/delete sharing: concurrent writers, renames and deletes fail.
         access = 0x80000000 | (0x40000000 if create else 0) | (0x10000 if destructive else 0)
         handle = kernel.CreateFileW(winpath(self.path), access, 1, None, 1 if create else 3,
@@ -47,15 +49,53 @@ class Guard:
             raise
         self.stream = os.fdopen(fd, "r+b" if create else "rb")
         self.handle = handle
+        self.named_streams = {}
+        self._held_streams = held_streams(final_path(handle), share_delete=destructive)
+        try:
+            self.named_streams = self._held_streams.__enter__()
+        except BaseException:
+            self.stream.close()
+            raise
+        self._closed = False
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        self.stream.close()
+        self.close()
+
+    def close(self):
+        if not self._closed:
+            self._closed = True
+            try:
+                self._held_streams.__exit__(None, None, None)
+            finally:
+                self.stream.close()
 
     def fingerprint(self):
-        return Fingerprint.from_stream(self.stream)
+        return Fingerprint.from_stream(self.stream, self.named_streams)
+
+    def copy_metadata_from(self, source, checkpoint):
+        """Copy all held streams then preserve exact creation/lastwrite times."""
+        for name, src in source.named_streams.items():
+            dst = NamedStream(final_path(self.handle), name, create=True, share_delete=True)
+            try:
+                src.stream.seek(0)
+                while block := src.stream.read(1024 * 1024):
+                    dst.stream.write(block)
+                    checkpoint("named_stream_chunk")
+                dst.flush()
+                if src.digest() != dst.digest():
+                    raise ValueError("命名流复制校验失败")
+            finally:
+                dst.close()
+            # Reopen read-only so writes cannot be deferred past SetFileTime,
+            # and keep this guard through publication and original removal.
+            self.named_streams[name] = NamedStream(final_path(self.handle), name, share_delete=True)
+        source_fp = source.fingerprint()
+        checkpoint("before_metadata_set")
+        set_times(self.handle, source_fp.creation_ns, source_fp.mtime_ns)
+        self.flush()
 
     def verify(self, expected):
         actual = self.fingerprint()
