@@ -14,3 +14,4 @@ Tests: structured field CRUD including nested operators and all action kinds; di
 
 Report exact commands/output and screenshots in docs/reports/rules-020/task4-sol.md; freeze for Astra/root review. No stage/commit/agents/pip/full suite. Work solely newworktree, all test data new owned sandbox.
 `Required replacement UI`: both independent images and rule action expose mode. Replace preview names exact changed extension/same filename and explains backup recovery; no output-folder requirement. History conflict shows backup/swap location. Do not present same-folder save-as as replacement. Keep mode default, replacement explicit selectable; no auto backup cleanup UI.
+Image preview/inspect itself fully decodes; submit it to dedicated conversion executor as well. Do not keep archive UI responsive only for Start while blocking it during batch Preview. Bind callback generation/service and expose pending/cancel state for preview as for run.

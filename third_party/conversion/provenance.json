@@ -1,0 +1,29 @@
+{
+  "scope": "Image conversion only; no FFmpeg encoder or OpenH264 delivery.",
+  "qt_version": "6.11.2",
+  "plugin": {
+    "name": "qwebp.dll",
+    "size": 564536,
+    "sha256": "6b2c53cc4423140c29a6a1eb6dd908016e09d794b5739a05a3a39c8c49a0df8a",
+    "distribution": "PySide6_Essentials==6.11.2",
+    "wheel_record_sha256": "6b2c53cc4423140c29a6a1eb6dd908016e09d794b5739a05a3a39c8c49a0df8a",
+    "wheel_tag": "cp310-abi3-win_amd64",
+    "source_repository": "https://github.com/qt/qtimageformats",
+    "source_tag": "v6.11.2",
+    "license": "LGPL-3.0-only (selected upstream alternative)"
+  },
+  "source_archive": {
+    "name": "qtimageformats-6.11.2.zip",
+    "url": "https://codeload.github.com/qt/qtimageformats/zip/refs/tags/v6.11.2",
+    "sha256": "a0003652945eeafc8bc28cc639f5941350fe27e91236908306d4733b703a23b5"
+  },
+  "libwebp": {
+    "version": "1.6.0",
+    "license": "BSD-3-Clause",
+    "source": "Included verbatim in the corresponding QtImageFormats source archive",
+    "notice": "qtimageformats/src/3rdparty/libwebp/COPYING",
+    "patent_grant": "qtimageformats/src/3rdparty/libwebp/PATENTS"
+  },
+  "local_source_modifications": [],
+  "runtime_network_required": false
+}
