@@ -1,0 +1,33 @@
+{
+  "format": "filehub.rules",
+  "version": 1,
+  "id": "webp-replacement",
+  "name": "显式选择图片转换为 WebP",
+  "bindings": {},
+  "variables": {},
+  "rules": [
+    {
+      "id": "replace-image",
+      "name": "转换并替换原图",
+      "scope": [],
+      "condition": {
+        "field": "kind",
+        "operator": "equals",
+        "value": "image"
+      },
+      "actions": [
+        {
+          "kind": "image_convert",
+          "options": {
+            "output_format": "webp",
+            "mode": "replace",
+            "quality": 90,
+            "lossless": false,
+            "timeout_seconds": 60,
+            "max_pixels": 40000000
+          }
+        }
+      ]
+    }
+  ]
+}

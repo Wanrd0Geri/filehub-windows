@@ -1,0 +1,127 @@
+{
+  "format": "filehub.rules",
+  "version": 1,
+  "id": "personal-archive",
+  "name": "个人项目归档兼容示例",
+  "bindings": {
+    "archive": {
+      "label": "归档根目录"
+    },
+    "input": {
+      "label": "待归档文件夹"
+    }
+  },
+  "variables": {},
+  "rules": [
+    {
+      "id": "two-shots",
+      "name": "显式归档双镜视频",
+      "scope": [
+        {
+          "binding": "input",
+          "relative": ""
+        }
+      ],
+      "condition": {
+        "field": "kind",
+        "operator": "equals",
+        "value": "video"
+      },
+      "actions": [
+        {
+          "kind": "project_route",
+          "options": {
+            "tag": "XYZE02S08C22+23"
+          }
+        }
+      ]
+    }
+  ],
+  "compatibility": {
+    "format": "filehub.archive.v1",
+    "root": {
+      "binding": "archive",
+      "relative": ""
+    },
+    "projects": {
+      "XYZ": {
+        "binding": "archive",
+        "relative": "项目档案/样例项目"
+      }
+    },
+    "templates": [
+      {
+        "id": "team",
+        "name": "完整镜头归档模板",
+        "production_dir": "制作",
+        "asset_root": "资产",
+        "asset_categories": {
+          "角色": "角色",
+          "场景": "场景",
+          "道具": "道具"
+        },
+        "final_dir": "交付",
+        "keep_name_routes": {
+          "剧本": "剧本",
+          "甲方": "来稿",
+          "参考": "参考"
+        },
+        "test_dir": "试验",
+        "naming_patterns": {}
+      },
+      {
+        "id": "preview",
+        "name": "自定义预演命名模板",
+        "production_dir": "制作",
+        "asset_root": "资产",
+        "asset_categories": {
+          "角色": "角色",
+          "场景": "场景",
+          "道具": "道具"
+        },
+        "final_dir": "交付",
+        "keep_name_routes": {
+          "剧本": "剧本",
+          "甲方": "来稿",
+          "参考": "参考"
+        },
+        "test_dir": "试验",
+        "naming_patterns": {
+          "shot": "{prefix}_{shot}_{date_long}{period}_{resolution}_{sequence}{ext}",
+          "asset": "{prefix}_{date}_{sequence}{ext}"
+        }
+      }
+    ],
+    "assignments": {
+      "XYZ": "team",
+      "DORMANT": "preview"
+    },
+    "default_template": "team",
+    "general_test": {
+      "binding": "archive",
+      "relative": "公共测试"
+    },
+    "policies": {
+      "inbox_root": {
+        "binding": "archive",
+        "relative": "收件箱"
+      },
+      "categories": {
+        "image": "图片",
+        "video": "视频",
+        "other": "其他"
+      },
+      "arrival_delay_seconds": 259200,
+      "expiry_delay_seconds": 259200,
+      "disposable_filenames": [
+        ".baiduyun.uploading.cfg"
+      ],
+      "sanitization_roots": [
+        {
+          "binding": "archive",
+          "relative": ""
+        }
+      ]
+    }
+  }
+}

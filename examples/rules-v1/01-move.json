@@ -1,0 +1,43 @@
+{
+  "format": "filehub.rules",
+  "version": 1,
+  "id": "text-delivery",
+  "name": "文本交付",
+  "bindings": {
+    "input": {
+      "label": "来源文件夹"
+    },
+    "output": {
+      "label": "交付文件夹"
+    }
+  },
+  "variables": {},
+  "rules": [
+    {
+      "id": "move-text",
+      "name": "移动文本文件",
+      "scope": [
+        {
+          "binding": "input",
+          "relative": ""
+        }
+      ],
+      "condition": {
+        "field": "extension",
+        "operator": "equals",
+        "value": ".txt"
+      },
+      "actions": [
+        {
+          "kind": "move",
+          "options": {
+            "destination": {
+              "binding": "output",
+              "relative": ""
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

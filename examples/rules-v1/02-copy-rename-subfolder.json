@@ -1,0 +1,58 @@
+{
+  "format": "filehub.rules",
+  "version": 1,
+  "id": "copy-delivery",
+  "name": "保留原件并整理副本",
+  "bindings": {
+    "input": {
+      "label": "来源文件夹"
+    },
+    "output": {
+      "label": "副本文件夹"
+    }
+  },
+  "variables": {
+    "suffix": "交付",
+    "stage": "最终"
+  },
+  "rules": [
+    {
+      "id": "copy-and-name",
+      "name": "复制后重命名并移动到子目录",
+      "scope": [
+        {
+          "binding": "input",
+          "relative": ""
+        }
+      ],
+      "condition": {
+        "field": "name",
+        "operator": "glob",
+        "value": "*"
+      },
+      "actions": [
+        {
+          "kind": "copy",
+          "options": {
+            "destination": {
+              "binding": "output",
+              "relative": ""
+            }
+          }
+        },
+        {
+          "kind": "rename",
+          "options": {
+            "pattern": "{stem}_${suffix}{ext}"
+          }
+        },
+        {
+          "kind": "subfolder",
+          "options": {
+            "path": "${stage}"
+          }
+        }
+      ]
+    }
+  ]
+}

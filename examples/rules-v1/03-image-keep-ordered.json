@@ -1,0 +1,53 @@
+{
+  "format": "filehub.rules",
+  "version": 1,
+  "id": "png-delivery",
+  "name": "JPEG 转 PNG 后命名",
+  "bindings": {
+    "input": {
+      "label": "JPEG 来源"
+    },
+    "output": {
+      "label": "图片交付"
+    }
+  },
+  "variables": {
+    "folder": "PNG"
+  },
+  "rules": [
+    {
+      "id": "convert-and-name",
+      "name": "保留 JPEG 并生成 PNG",
+      "scope": [
+        {
+          "binding": "input",
+          "relative": ""
+        }
+      ],
+      "condition": {
+        "field": "extension",
+        "operator": "glob",
+        "value": ".jp*g"
+      },
+      "actions": [
+        {
+          "kind": "image_convert",
+          "options": {
+            "output_format": "png",
+            "mode": "keep",
+            "destination": {
+              "binding": "output",
+              "relative": "${folder}"
+            }
+          }
+        },
+        {
+          "kind": "rename",
+          "options": {
+            "pattern": "{stem}_done{ext}"
+          }
+        }
+      ]
+    }
+  ]
+}
