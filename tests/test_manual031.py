@@ -260,6 +260,7 @@ def test_quit_after_manual_commit_boundary_retains_durable_ack_without_ui(legacy
 
 def test_partial_restore_reads_actual_catalog_and_allows_explicit_same_window_retry(legacy,monkeypatch):
     app,rt,paths,_=legacy;d=send(app,rt,paths);d.tag.setText('XYZ020822')
+    rt.service.migration_error='owned stale migration notice'
     original=rt.service.catalog.set_compatibility;calls=[]
     def fail_once(*args,**kwargs):
         calls.append(True)
@@ -271,7 +272,7 @@ def test_partial_restore_reads_actual_catalog_and_allows_explicit_same_window_re
     assert disk.packages and not disk.compatibility_permissions
     assert rt.window.automation.catalog_snapshot.revision==disk.revision, 'Partial adoption left controller authority stale'
     assert d.entry[0].revision==disk.revision and d.entry[1] is None
-    assert rt.service.migration_candidate is None
+    assert rt.service.migration_candidate is None and rt.service.migration_error==''
     assert d.tag.text()=='XYZ020822' and d.paths==paths and d.history_chips.tags==('XYZ020821',)
     assert not d.preview_button.isEnabled() and len(calls)==1
     confirm(app,rt,d)

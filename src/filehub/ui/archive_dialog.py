@@ -96,6 +96,7 @@ class ArchiveDialog(QDialog):
                     if not current() or effective+1!=self.window.automation.rule_generation:return
                     self._recovery_token=None;self.entry=entry
                     service.migration_candidate=entry[1]
+                    if entry[0].generation!='initial':service.migration_error=''
                     self.window.automation._rules_saved(entry[0])
                     self._show_recovery();self.details.setPlainText(message+'\n已重新读取项目设置；请确认后重试。')
                 def reload_failed(error):
