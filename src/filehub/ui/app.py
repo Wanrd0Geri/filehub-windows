@@ -212,11 +212,18 @@ class Runtime(QObject):
         if self.quitting and not busy:self._finish_quit()
     def poll(self):
         if self.quitting or self.poll_pending or self.active_claim or self.window.coordinator.pending:return
-        self.poll_pending=True;queue=self.queue;state=self.state_dir;now=self.wall_clock();generation=self.generation
-        self.window.coordinator.submit(lambda:(OpenRequests(state).take(),queue.claim(now=now)),lambda value:self._poll_done(value,queue,generation),self._poll_error)
+        self.poll_pending=True;queue=self.queue;state=self.state_dir;now=self.wall_clock();generation=self.generation;service=self.service
+        def read():
+            show=OpenRequests(state).take();batch=queue.claim(now=now)
+            if batch is None:return show,batch,None,None
+            error=None
+            try:entry=service.manual_archive_entry()
+            except (OSError,ValueError) as exc:entry=None;error=str(exc)
+            return show,batch,entry,error
+        self.window.coordinator.submit(read,lambda value:self._poll_done(value,queue,generation),self._poll_error)
     def _poll_error(self,message):self.poll_pending=False;self.window.show_error(message)
     def _poll_done(self,value,queue,generation):
-        self.poll_pending=False;show,batch=value
+        self.poll_pending=False;show,batch,entry,error=value
         if generation!=self.generation:
             if batch:self.window.coordinator.submit(lambda:queue.release(batch.token),lambda _:None,self.window.show_error,lifecycle=True)
             return
@@ -224,15 +231,25 @@ class Runtime(QObject):
         if batch is None:return
         self.active_claim=batch;self.claim_handled=False;self.claim_queue=queue
         if self.quitting:return
-        self.claim_dialog=self.window.open_file_dialog(batch.paths)
-        self.claim_dialog.execution_persisted.connect(self._claim_executed)
-        self.claim_dialog.finished.connect(self._claim_finished)
+        dialog=(self.window.open_archive_dialog(batch.paths,entry=entry) if entry and entry[2]
+                else self.window.open_file_dialog(batch.paths))
+        if error:self.window.show_error('手动标签归档方案需要恢复：'+error)
+        if dialog is not None:self.bind_claim_dialog(dialog)
+        else:self._claim_finished(1)
     def renew_claim(self):
         if not self.active_claim or self.renew_pending or self.quitting:return
         self.renew_pending=True;queue=self.claim_queue;token=self.active_claim.token;now=self.wall_clock()
         self.window.coordinator.submit(lambda:queue.renew(token,now=now,lease_seconds=30),lambda _:self._renew_done(),self._renew_error)
     def _renew_done(self):self.renew_pending=False
     def _renew_error(self,message):self.renew_pending=False;self.window.show_error('多选请求租约未续期：'+message)
+    def bind_claim_dialog(self,dialog):
+        """Old dialog signals cannot settle a replacement or a later send batch."""
+        self.claim_dialog=dialog;batch=self.active_claim;queue=self.claim_queue;generation=self.generation
+        def current():
+            return self.claim_dialog is dialog and self.active_claim is batch and self.claim_queue is queue and generation==self.generation
+        dialog.execution_persisted.connect(lambda result:self._claim_executed(result) if current() else None)
+        dialog.finished.connect(lambda code:self._claim_finished(code) if current() else None)
+
     def _claim_executed(self,result):self.claim_handled=True
     def _claim_finished(self,code):
         if not self.active_claim:return
@@ -244,7 +261,8 @@ class Runtime(QObject):
             if handled:queue.ack(batch.token)
             else:queue.release(batch.token)
         def done(_):
-            self.active_claim=None;self.claim_handled=False;self.claim_queue=None
+            if self.active_claim is batch and self.claim_queue is queue:
+                self.active_claim=None;self.claim_handled=False;self.claim_queue=None
         self.window.coordinator.submit(finish,done,lambda error:(done(None),self.window.show_error(error)),lifecycle=True)
     def schedule_tick(self):
         if self.quitting or self.tick_pending or self.scheduler is None or self.window.coordinator.pending or not self.window.automation.accepting:return
@@ -351,6 +369,9 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
     fixture=parent/('self-test-'+uuid4().hex);fixture.mkdir()
     report={'schema_version':1,'ok':False,'checks':{},'fixture_dir':str(fixture),'state_dir':None,'probe':{},'error':''}
     try:
+        app=QApplication.instance() or QApplication(sys.argv[:1])
+        if not isinstance(app,QApplication):raise ValueError('自检需要 QApplication；请在独立进程运行。')
+        app.setQuitOnLastWindowClosed(False)
         default=ConfigStore(fixture/'unconfigured-state').load()
         report['checks']['default_unconfigured_paused']=default==Config()
         service,store,paths=create_demo(fixture);report['state_dir']=str(store.state_dir)
@@ -399,6 +420,8 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
         extend_report(fixture,report)
         from filehub.selftest030 import extend_report as extend_external_report
         extend_external_report(fixture,report)
+        from filehub.selftest031 import extend_report as extend_manual_report
+        extend_manual_report(fixture,report)
         report['ok']=all(report['checks'].values())
     except Exception as exc:report['error']=str(exc)
     encoded=json.dumps(report,ensure_ascii=False,indent=2)

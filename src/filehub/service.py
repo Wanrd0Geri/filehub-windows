@@ -73,6 +73,26 @@ class FileHubService:
             return TemplateLibrary({}, {}, None, False)
         return self.archive_context(permission=None,snapshot=snapshot).templates
 
+    def manual_archive_entry(self, snapshot=None):
+        """Read-only entry discovery; inspection never grants archive authority."""
+        snapshot=snapshot or self.catalog.load()
+        candidate=self.migration_candidate if snapshot.generation=='initial' else None
+        profiles=tuple((key,p.name) for key,p in snapshot.packages.items() if p.compatibility is not None)
+        if candidate is not None:
+            profiles=tuple((p.id,p.name) for p in candidate.packages if p.compatibility is not None)
+        return snapshot,candidate,profiles
+
+    def restore_manual_archive(self, key, entry):
+        """Explicit UI confirmation imports disabled definitions, then grants manual only."""
+        snapshot,candidate,profiles=entry
+        if key not in dict(profiles):raise ValueError('请选择手动标签归档方案')
+        if candidate is not None:
+            snapshot=self.catalog.adopt_legacy(candidate,expected_revision=snapshot.revision)
+        permissions=(snapshot.compatibility_permissions if key==snapshot.compatibility_selection else frozenset())|{'manual_archive'}
+        snapshot=self.catalog.set_compatibility(key,frozenset(permissions),expected_revision=snapshot.revision)
+        self.migration_candidate=None
+        return snapshot
+
     def archive_context(self, *, permission='manual_archive', rule_id=None, snapshot=None):
         from .rulefiles.compatibility import resolve_archive_profile
         snapshot=snapshot or self.catalog.load()

@@ -387,9 +387,9 @@ class MainWindow(QMainWindow):
             self.show_error('未进入演示；恢复原状态失败，请安全退出后重新打开。原任务已安全结束：'+message+'；'+error)
         self.coordinator.submit(reopen,ready,failed,lifecycle=True)
 
-    def open_archive_dialog(self,paths):
+    def open_archive_dialog(self,paths,*,entry=None):
         if not self.admit_work():return None
-        dialog=ArchiveDialog(self,paths);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog));dialog.show();dialog.raise_();dialog.activateWindow();return dialog
+        dialog=ArchiveDialog(self,paths,entry=entry);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog) if dialog in self.dialogs else None);dialog.show();dialog.raise_();dialog.activateWindow();return dialog
 
     def open_file_dialog(self,paths):
         if not self.admit_work():return None
@@ -400,7 +400,7 @@ class MainWindow(QMainWindow):
 
     def transfer_archive(self,dialog):
         if (getattr(self,'_archive_transfer',None) is not None or dialog not in self.dialogs
-                or dialog.kind in self.automation.jobs or not self.admit_work()):return
+                or not isinstance(dialog,FileProcessDialog) or dialog.kind in self.automation.jobs or not self.admit_work()):return
         service=self.service;adapter=self.automation;panel=dialog.panel
         runtime=getattr(self,'runtime',None)
         claim=getattr(runtime,'active_claim',None) if runtime and runtime.claim_dialog is dialog else None
@@ -428,9 +428,7 @@ class MainWindow(QMainWindow):
             replacement=self.open_archive_dialog(dialog.panel._sample_paths)
             if replacement is None:return
             if claim is not None:
-                dialog.finished.disconnect(runtime._claim_finished)
-                runtime.claim_dialog=replacement
-                replacement.execution_persisted.connect(runtime._claim_executed);replacement.finished.connect(runtime._claim_finished)
+                runtime.bind_claim_dialog(replacement)
             dialog.transferred=True;dialog.accept()
         def failed(message):
             if finish():self.show_error(message)

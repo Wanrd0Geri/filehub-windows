@@ -96,7 +96,7 @@ def test_busy_quit_retains_marker_and_lease_until_worker_finishes(tmp_path):
 def test_claim_execute_ack_only_after_persisted_result(tmp_path):
     app,rt=runtime(tmp_path);rt.window.start_demo();settle(app,rt)
     p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
-    dialog=rt.claim_dialog;rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog;assert rt.active_claim and rt.queue.claim(now=11) is None
+    dialog=rt.claim_dialog;assert rt.active_claim and rt.queue.claim(now=11) is None
     dialog.tag.setText('DEMO020822');dialog.request_preview();settle(app,rt);assert dialog.preview
     dialog.execute();settle(app,rt)
     assert not rt.active_claim and rt.service.history()[0].ok and not p.exists()
@@ -107,7 +107,7 @@ def test_claim_execute_ack_only_after_persisted_result(tmp_path):
 def test_claim_execute_exception_retains_unacked_request(tmp_path):
     app,rt=runtime(tmp_path);rt.window.start_demo();settle(app,rt)
     p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
-    dialog=rt.claim_dialog;rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog;dialog.tag.setText('DEMO020822');dialog.request_preview();settle(app,rt)
+    dialog=rt.claim_dialog;dialog.tag.setText('DEMO020822');dialog.request_preview();settle(app,rt)
     def fail(preview):raise OSError('before persistent result')
     rt.service.execute=fail;dialog.execute();settle(app,rt)
     assert rt.active_claim and dialog.isVisible() and p.exists() and not rt.service.history()
@@ -320,7 +320,7 @@ def test_background_duplicate_dialog_notifies_existing_copy_and_recycle_status(t
     settle(app,rt);assert not rt.window.isVisible()
     rt.queue.enqueue([source],now=9);rt.poll();settle(app,rt)
     dialog=rt.claim_dialog;assert dialog and dialog.isVisible()
-    rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog
+    assert isinstance(dialog,__import__('filehub.ui.archive_dialog',fromlist=['ArchiveDialog']).ArchiveDialog)
     dialog.tag.setText('XYZ020822');dialog.preview_button.click();settle(app,rt)
     dialog.execute_button.click();settle(app,rt)
     assert not rt.window.isVisible() and not dialog.isVisible()

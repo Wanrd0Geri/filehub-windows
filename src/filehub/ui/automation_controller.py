@@ -106,7 +106,7 @@ class AutomationController(QObject):
             if service is self.window.service and state==self.state_generation:self.window.rules_page.show_error(message)
         self.window.coordinator.submit(work,current,failed)
 
-    def mutate(self,work,*,service=None,state_generation=None):
+    def mutate(self,work,*,service=None,state_generation=None,on_complete=None,on_error=None):
         if ((service is not None and service is not self.window.service)
                 or (state_generation is not None and state_generation!=self.state_generation)):
             self.window.rules_page.show_error('此管理窗口属于已结束的状态，请关闭后重新操作。');return
@@ -118,13 +118,13 @@ class AutomationController(QObject):
         self.window.coordinator.begin_wait()
         service=self.window.service;state=self.state_generation
         def barrier():
-            if self.executor:self.executor.cancel();self.executor.when_idle(lambda:self.management_idle.emit((service,state,work)))
-            else:self.management_idle.emit((service,state,work))
+            if self.executor:self.executor.cancel();self.executor.when_idle(lambda:self.management_idle.emit((service,state,work,on_complete,on_error)))
+            else:self.management_idle.emit((service,state,work,on_complete,on_error))
         # Ordinary work before this FIFO barrier finishes first. Image queue has an independent idle barrier.
         self.window.coordinator.submit(barrier,lambda _:None,self.window.show_error,lifecycle=True)
 
     def _management_settled(self,payload):
-        service,state,work=payload
+        service,state,work,on_complete,on_error=payload
         if service is not self.window.service or state!=self.state_generation or self.window._quit_requested:
             self.window.coordinator.end_wait();return
         def done(snapshot=None,error=None):
@@ -136,6 +136,8 @@ class AutomationController(QObject):
                 self._rules_saved(snapshot);self.window.status.setText('规则文件已更新，请重新预览。')
             if error:self.window.rules_page.show_error(error)
             self.window.coordinator.end_wait()
+            if snapshot is not None and on_complete:on_complete(snapshot)
+            if error and on_error:on_error(error)
         self.window.coordinator.submit(work,lambda value:done(value),lambda error:done(error=error),lifecycle=True)
 
     def _read_package(self,path):
