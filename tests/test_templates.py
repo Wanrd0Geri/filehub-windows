@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_archive
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -123,10 +124,11 @@ def test_default_template_legacy_names(tmp_path, tag, name):
 def test_preview_external_template_edit_rejected_before_mutation(tmp_path):
     root = tmp_path/'sync'; project = root/'1_工作'/'项目'/'260930_LYX_测试'; project.mkdir(parents=True)
     service = FileHubService(Config(sync_root=root), tmp_path/'state', source_time=lambda p: TIME)
+    install_archive(service)
     source = tmp_path/'input.png'; source.write_bytes(b'image')
     preview = service.preview([source], 'LYX角色龙')
     assert preview.template_revision
-    TemplateStore(service.engine.state_dir).save(custom_library())
+    install_archive(service,library=custom_library())
     result = service.execute(preview)
     assert source.read_bytes() == b'image' and not result.items
     assert '重新预览' in result.outcomes[0].error
@@ -199,7 +201,7 @@ def test_custom_tokens_no_legacy_team_requirement(tmp_path):
 def test_preview_reserves_custom_names_and_executes_snapshot(tmp_path):
     root = tmp_path/'sync'; project = root/'1_工作'/'项目'/'260930_LYX_测试'; project.mkdir(parents=True)
     service = FileHubService(Config(sync_root=root), tmp_path/'state', source_time=lambda p: TIME)
-    service.templates.save(custom_library())
+    install_archive(service,library=custom_library())
     assert service._route('LYX怪物龙')[0].dest == project/'资产'/'生物'/'怪物'/'龙'
     a, b = tmp_path/'a.PNG', tmp_path/'b.png'; a.write_bytes(b'one'); b.write_bytes(b'two')
     preview = service.preview([a, b], 'LYX怪物龙')
@@ -212,9 +214,10 @@ def test_preview_reserves_custom_names_and_executes_snapshot(tmp_path):
 def test_legacy_positional_preview_rejected_with_custom_library(tmp_path):
     root = tmp_path/'sync'; project = root/'1_工作'/'项目'/'260930_LYX_测试'; project.mkdir(parents=True)
     service = FileHubService(Config(sync_root=root), tmp_path/'state', source_time=lambda p: TIME)
+    install_archive(service)
     source = tmp_path/'input.png'; source.write_bytes(b'image')
     preview = service.preview([source], 'LYX角色龙')
-    service.templates.save(custom_library())
+    install_archive(service,library=custom_library())
     result = service.execute(PreviewBatch(preview.tag, preview.items))
     assert source.exists() and not result.items and '重新预览' in result.outcomes[0].error
 

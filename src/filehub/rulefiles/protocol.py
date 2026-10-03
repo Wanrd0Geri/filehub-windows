@@ -6,7 +6,7 @@ import re
 from types import MappingProxyType
 
 from ..automation.models import Action, Predicate, ConditionGroup
-from ..naming import NAMING_TOKENS, validate_component, validate_pattern
+from ..naming import validate_component, validate_pattern
 
 MAX_PACKAGE_BYTES = 2_000_000
 ID_PATTERN = r'[A-Za-z0-9_-]{1,128}'
@@ -56,6 +56,8 @@ def expand_variables(value, variables, path):
 
 def _relative(value, variables, path, *, empty=False):
     expanded = expand_variables(value, variables, path)
+    if any(len(text.encode('utf-16-le',errors='surrogatepass'))//2>=32767 for text in (value,expanded)):
+        raise PackageError(path, '相对路径超过 Windows UTF-16 长路径限制')
     if expanded == '' and empty: return expanded
     if '\\' in expanded: raise PackageError(path, '相对路径只接受斜线分隔')
     try:
@@ -148,7 +150,7 @@ def _action(data, bindings, variables, path, compatibility):
     if kind == 'rename':
         if 'pattern' not in options: raise PackageError(path, '缺少命名模板')
         validated['pattern'] = expand_variables(options['pattern'], variables, path+'.options.pattern')
-        try: validate_pattern(validated['pattern'], ORDINARY_TOKENS if compatibility is None else NAMING_TOKENS)
+        try: validate_pattern(validated['pattern'], ORDINARY_TOKENS)
         except (ValueError, TypeError) as exc: raise PackageError(path, exc) from exc
     elif kind == 'subfolder':
         if 'path' not in options: raise PackageError(path, '缺少子目录')

@@ -169,11 +169,9 @@ def first_match(ruleset: RuleSet, facts: FileFacts, now: datetime, *, rule_id=No
         if winner is not None: status, reason = 'not_evaluated', '前面的规则已匹配，本规则未评估'
         elif rule_id is not None and rule.id != rule_id: status, reason = 'not_evaluated', '本次只测试所选规则，本规则未评估'
         elif rule_id is None and not rule.enabled: status, reason = 'disabled', '规则已停用，未评估'
-        elif configured is not None and {str(Path(path)).casefold() for path in rule.scope} - configured:
-            status, reason = 'invalid_scope', '规则引用未配置的观察目录，不能新增观察范围'
         elif rule_id is None and ((configured is not None and root not in configured) or root != str(facts.path.parent).casefold()):
             status, reason = 'out_of_scope', '自动规则仅评估已配置观察目录的顶层项目'
-        elif rule_id is None and rule.scope and root not in {str(Path(path)).casefold() for path in rule.scope}:
+        elif rule.scope and root not in {str(Path(path)).casefold() for path in rule.scope}:
             status, reason = 'out_of_scope', '文件不在此规则的顶层观察目录中'
         else:
             explanation = evaluate(rule.condition, facts, now)

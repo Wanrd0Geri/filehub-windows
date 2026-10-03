@@ -54,3 +54,15 @@ def test_binding_root_overlapping_state_even_with_safe_relative(tmp_path):
     doc = document(); doc['rules'][0]['scope'][0]['relative'] = 'safe'
     result = compile_package(parse(doc), {'input': tmp_path, 'output': tmp_path/'out'}, {}, frozenset(), state_dir=tmp_path/'state')
     assert result.diagnostics and not result.rules
+
+
+def test_bound_path_oserror_is_per_rule_diagnostic(tmp_path,monkeypatch):
+    import filehub.rulefiles.compiler as compiler
+    original=compiler.checked_path
+    def denied(path):
+        if path==tmp_path/'in':raise OSError('owned lstat error')
+        return original(path)
+    monkeypatch.setattr(compiler,'checked_path',denied)
+    result=compile_package(parse(document()),{'input':tmp_path/'in','output':tmp_path/'out'}, {},frozenset(),state_dir=tmp_path/'state')
+    assert not result.rules and result.diagnostics[0].path=='$.rules[0].scope[0]'
+    assert 'lstat error' in result.diagnostics[0].message

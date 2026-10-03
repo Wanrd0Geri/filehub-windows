@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_archive
 from datetime import datetime, timezone
 from pathlib import Path
 import pytest
@@ -13,6 +14,7 @@ def setup(tmp_path):
     project = root / '1_工作' / '项目' / '260930_XYZ_测试'
     project.mkdir(parents=True)
     service = FileHubService(Config(sync_root=root), tmp_path/'state', probe=lambda p:1920, source_time=lambda p:TIME)
+    install_archive(service)
     def source(name='input.mp4', data=b'video'):
         p = tmp_path/name
         p.write_bytes(data)
@@ -63,7 +65,7 @@ def test_changed_and_collision(setup):
     pr=s.preview([a],'XYZ020822');t=pr.items[0].targets[0]
     t.parent.mkdir(parents=True);t.write_bytes(b'occupied')
     r=s.execute(pr)
-    assert r.ok and r.outcomes[0].reallocated
+    assert not r.ok and not r.outcomes[0].reallocated and a.exists()
     assert t.read_bytes()==b'occupied'
 
 def test_invalid_partial_notifications_and_warning(setup):
@@ -94,8 +96,9 @@ def test_config_defaults_atomic_and_overlap(tmp_path):
     root=tmp_path/'sync';root.mkdir()
     cfg=Config(sync_root=root)
     store.save(cfg);assert store.load()==cfg
-    with pytest.raises(ValueError):store.save(Config(sync_root=root,watch_roots=(root/'watch',)))
-    with pytest.raises(ValueError):ConfigStore(root/'state').save(cfg)
+    # Unused old sync paths do not constrain generic config. Migration/profile owns their checks.
+    store.save(Config(sync_root=root,watch_roots=(root/'watch',)))
+    ConfigStore(root/'state').save(cfg)
 
 def test_state_inside_source_rejected(setup):
     s,p,make=setup

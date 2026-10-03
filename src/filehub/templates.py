@@ -77,14 +77,18 @@ _DEFAULT = ProjectTemplate()
 class TemplateLibrary:
     templates: Mapping[str, ProjectTemplate] = field(default_factory=lambda: {'default': _DEFAULT})
     assignments: Mapping[str, str] = field(default_factory=dict)
+    default_template_id: str | None = 'default'
+    inject_defaults: bool = True
     revision: str = field(init=False)
 
     def __post_init__(self):
         templates = _mapping(self.templates, '模板')
-        templates.setdefault('default', _DEFAULT)
+        if self.inject_defaults: templates.setdefault('default', _DEFAULT)
         for key, template in templates.items():
             if not isinstance(template, ProjectTemplate) or key != template.id: raise ValueError('模板 id 不一致')
-        if templates['default'] != _DEFAULT: raise ValueError('默认模板不可修改，请先复制')
+        if self.inject_defaults and templates['default'] != _DEFAULT: raise ValueError('默认模板不可修改，请先复制')
+        if self.default_template_id is not None and self.default_template_id not in templates: raise ValueError('缺少所选默认模板')
+        if templates and self.default_template_id is None: raise ValueError('需要显式默认模板')
         assignments = {}
         for code, identifier in _mapping(self.assignments, '项目分配').items():
             if not isinstance(code, str) or not re.fullmatch(r'[A-Za-z0-9]+', code): raise ValueError('项目代码无效')
@@ -94,15 +98,17 @@ class TemplateLibrary:
             assignments[code] = identifier
         object.__setattr__(self, 'templates', MappingProxyType(templates))
         object.__setattr__(self, 'assignments', MappingProxyType(assignments))
-        digest = json.dumps(self.to_document(), ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+        document = self.to_document()
+        if not self.inject_defaults: document['default_template_id'] = self.default_template_id
+        digest = json.dumps(document, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
         object.__setattr__(self, 'revision', sha256(digest.encode('utf-8')).hexdigest())
 
     def for_project(self, code):
-        return self.templates[self.assignments.get(code.upper(), 'default')]
+        return self.templates[self.assignments.get(code.upper(), self.default_template_id)]
 
     def with_template(self, template):
         templates = dict(self.templates); templates[template.id] = template
-        return TemplateLibrary(templates, self.assignments)
+        return TemplateLibrary(templates, self.assignments, self.default_template_id, self.inject_defaults)
 
     def copy_template(self, identifier, new_id, name):
         if new_id in self.templates: raise ValueError('模板 id 已存在')
@@ -112,13 +118,13 @@ class TemplateLibrary:
         assignments = dict(self.assignments)
         if identifier is None: assignments.pop(code.upper(), None)
         else: assignments[code.upper()] = identifier
-        return TemplateLibrary(self.templates, assignments)
+        return TemplateLibrary(self.templates, assignments, self.default_template_id, self.inject_defaults)
 
     def delete_template(self, identifier):
         if identifier == 'default': raise ValueError('默认模板不可删除')
         if identifier in self.assignments.values(): raise ValueError('已分配的模板不可删除，请先解除分配')
         templates = dict(self.templates); del templates[identifier]
-        return TemplateLibrary(templates, self.assignments)
+        return TemplateLibrary(templates, self.assignments, self.default_template_id, self.inject_defaults)
 
     def to_document(self):
         return {'version': 1, 'templates': [self.templates[k].to_document() for k in sorted(self.templates)],

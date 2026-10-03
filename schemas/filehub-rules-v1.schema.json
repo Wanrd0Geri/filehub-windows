@@ -50,6 +50,9 @@
       },
       "minItems": 0,
       "maxItems": 1000
+    },
+    "compatibility": {
+      "$ref": "#/$defs/archiveProfile"
     }
   },
   "required": [
@@ -65,7 +68,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://filehub.local/schemas/filehub-rules-v1.schema.json",
   "title": "FileHub portable rules v1",
-  "$comment": "Runtime semantics also enforce 2000000 UTF-8 bytes, unique rule IDs, at most 100 condition leaves, Windows component/UTF-16 limits, declared binding/variable references, available naming tokens and expansion placement. Compatibility is intentionally rejected until the complete archive profile validator and closed schema extension land.",
+  "$comment": "Runtime semantics also enforce 2000000 UTF-8 bytes, unique rule/template IDs, at most 100 condition leaves, Windows component/UTF-16 limits, declared binding/variable/template references, case aliases, allowed naming tokens and expansion placement. Compatibility is complete explicit filehub.archive.v1: root/project paths, full templates (including default), dormant assignments, default ID, general test and separate inbox/cleanup policies. Local binding/state/watch containment and permissions are execution authority, never portable grants.",
   "$defs": {
     "identifier": {
       "type": "string",
@@ -79,7 +82,8 @@
           "pattern": "^[A-Za-z0-9_-]{1,128}$"
         },
         "relative": {
-          "type": "string"
+          "type": "string",
+          "maxLength": 32766
         }
       },
       "required": [
@@ -425,6 +429,33 @@
             "options"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "project_route"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "tag": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                }
+              },
+              "required": [
+                "tag"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
         }
       ]
     },
@@ -598,6 +629,274 @@
         "actions"
       ],
       "additionalProperties": false
+    },
+    "projectTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,128}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "production_dir": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "asset_root": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "asset_categories": {
+          "type": "object",
+          "maxProperties": 100,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "final_dir": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "keep_name_routes": {
+          "type": "object",
+          "maxProperties": 100,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "test_dir": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "naming_patterns": {
+          "type": "object",
+          "properties": {
+            "shot": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "asset": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "final": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "production_dir",
+        "asset_root",
+        "asset_categories",
+        "final_dir",
+        "keep_name_routes",
+        "test_dir",
+        "naming_patterns"
+      ],
+      "additionalProperties": false
+    },
+    "archivePolicies": {
+      "type": "object",
+      "properties": {
+        "inbox_root": {
+          "$ref": "#/$defs/pathReference"
+        },
+        "categories": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "video": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "other": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "image",
+            "video",
+            "other"
+          ],
+          "additionalProperties": false
+        },
+        "arrival_delay_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "expiry_delay_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "disposable_filenames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "sanitization_roots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathReference"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "inbox_root",
+        "categories",
+        "arrival_delay_seconds",
+        "expiry_delay_seconds",
+        "disposable_filenames",
+        "sanitization_roots"
+      ],
+      "additionalProperties": false
+    },
+    "archiveProfile": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "const": "filehub.archive.v1"
+        },
+        "root": {
+          "$ref": "#/$defs/pathReference"
+        },
+        "projects": {
+          "type": "object",
+          "maxProperties": 100,
+          "additionalProperties": {
+            "$ref": "#/$defs/pathReference"
+          },
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{1,128}$"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/projectTemplate"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "assignments": {
+          "type": "object",
+          "maxProperties": 100,
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,128}$"
+          },
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{1,128}$"
+          }
+        },
+        "default_template": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,128}$"
+        },
+        "general_test": {
+          "$ref": "#/$defs/pathReference"
+        },
+        "policies": {
+          "$ref": "#/$defs/archivePolicies"
+        }
+      },
+      "required": [
+        "format",
+        "root",
+        "projects",
+        "templates",
+        "assignments",
+        "default_template",
+        "general_test",
+        "policies"
+      ],
+      "additionalProperties": false
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "not": {
+          "required": [
+            "compatibility"
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "rules": {
+            "items": {
+              "properties": {
+                "actions": {
+                  "items": {
+                    "not": {
+                      "properties": {
+                        "kind": {
+                          "const": "project_route"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

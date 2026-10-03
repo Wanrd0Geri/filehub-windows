@@ -7,10 +7,10 @@ import os
 import stat
 from .models import Fingerprint, Operation, checked_path
 from .operations import OperationEngine
-from .rules import discover_projects, parse_tag, build_targets, VIDEO_EXT
+from .rules import build_targets, VIDEO_EXT
 from .media import probe_width
-from .trees import TreeFingerprint, inbox_ancestors, prune_inbox_ancestors
-from .templates import TemplateStore, TemplateLibrary
+from .trees import TreeFingerprint, prune_inbox_ancestors
+from .templates import TemplateLibrary
 
 @dataclass(frozen=True)
 class PreviewItem:
@@ -28,6 +28,7 @@ class PreviewBatch:
     tag: str
     items: tuple[PreviewItem,...]
     template_revision: str = ''
+    catalog_revision: str = ''
 
 @dataclass(frozen=True)
 class ServiceOutcome:
@@ -38,15 +39,27 @@ class ServiceOutcome:
     duplicate: Path | None = None
     reallocated: bool = False
 
+
+class CatalogRuleReader:
+    """Read-only compatibility surface for existing runner/scheduler callers."""
+    def __init__(self,catalog): self.catalog=catalog
+    def load(self): return self.catalog.runtime_snapshot()
+
 class FileHubService:
     def __init__(self,config,state_dir,*,platform=None,probe=None,source_time=None):
         config.validate(state_dir)
         self.config=config;self.engine=OperationEngine(state_dir,platform)
-        self.templates=TemplateStore(self.engine.state_dir)
-        from .automation.models import RuleStore
-        self.rules=RuleStore(self.engine.state_dir)
+        from .rulefiles.catalog import RuleCatalogStore
+        self.catalog=RuleCatalogStore(self.engine.state_dir)
+        self.rules=CatalogRuleReader(self.catalog)
+        self.migration_candidate=None; self.migration_error=''
+        from .rulefiles.migration import inspect_legacy
+        try: self.migration_candidate=inspect_legacy(self.engine.state_dir,config)
+        except (OSError,ValueError,TypeError) as exc: self.migration_error=str(exc)
         from threading import RLock
+        from weakref import WeakValueDictionary
         self._runtime_lock=RLock();self._automation=None;self._conversions=None;self._closing=False
+        self._archive_previews=WeakValueDictionary()
         self.probe=probe or (lambda p:probe_width(p,self.config.ffprobe_path))
         self.source_time=source_time
         with self.engine.locked(),self.engine.journal.connection() as db:
@@ -55,7 +68,29 @@ class FileHubService:
 
     def reload_templates(self):
         """Load current immutable definitions; call from the shared worker."""
-        return self.templates.load()
+        snapshot=self.catalog.load()
+        if snapshot.compatibility_selection is None or not snapshot.compatibility_permissions:
+            return TemplateLibrary({}, {}, None, False)
+        return self.archive_context(permission=None,snapshot=snapshot).templates
+
+    def archive_context(self, *, permission='manual_archive', rule_id=None, snapshot=None):
+        from .rulefiles.compatibility import resolve_archive_profile
+        snapshot=snapshot or self.catalog.load()
+        selected=snapshot.compatibility_selection
+        if selected is None or (permission is not None and permission not in snapshot.compatibility_permissions):
+            raise ValueError('个人归档需要显式选择兼容档案并授予权限')
+        if rule_id is not None and rule_id not in snapshot.runtime_ids[selected].values():
+            raise ValueError('项目规则与所选兼容档案不属于同一个规则文件')
+        context=resolve_archive_profile(snapshot.packages[selected],snapshot.bindings[selected],state_dir=self.engine.state_dir)
+        from .automation.planner import paths_overlap
+        policies=snapshot.compatibility_permissions
+        if policies & {'unmatched_inbox','cleanup'} and any(paths_overlap(context.inbox_root,watch) for watch in self.config.watch_roots):
+            raise ValueError('兼容收件箱不能与观察目录重叠')
+        if 'cleanup' in policies and any(paths_overlap(root,watch) for root in context.sanitization_roots for watch in self.config.watch_roots):
+            raise ValueError('兼容清理范围不能与观察目录重叠')
+        if 'cleanup' in policies and any(paths_overlap(context.inbox_root,project) for project in context.projects.values()):
+            raise ValueError('兼容收件箱过期范围不能与项目目录重叠')
+        return context
 
     @property
     def automation(self):
@@ -85,10 +120,9 @@ class FileHubService:
         return settled
 
     def _route(self,tag,templates=None):
-        if self.config.sync_root is None:raise ValueError('请先选择同步根目录')
-        if templates is None:templates=self.reload_templates()
-        projects=discover_projects(self.config.sync_root)
-        return parse_tag(tag,projects,self.config.sync_root,templates),projects
+        if self._closing:raise ValueError('当前服务已关闭；请重新预览')
+        context=self.archive_context()
+        return context.route(tag),context.projects
 
     @staticmethod
     def _occupied(dest):return [p.name for p in dest.iterdir()] if dest.is_dir() else []
@@ -101,8 +135,9 @@ class FileHubService:
 
     def preview(self,paths,tag):
         items=[];reserved={}
-        revision=''
+        revision='';catalog_revision=''
         try:
+            catalog_revision=self.catalog.load().revision
             library=self.reload_templates();revision=library.revision
             spec,_=self._route(tag,library);route_error=''
         except (OSError,ValueError) as exc:spec=None;route_error=str(exc)
@@ -123,7 +158,9 @@ class FileHubService:
                 items.append(PreviewItem(path,when,fp,tuple(targets),targets.warnings,video_width=width))
             except (OSError,ValueError) as exc:
                 error=str(exc);items.append(PreviewItem(path,when,fp,error=error,notify=self._notify(path,fp,tag,error)))
-        return PreviewBatch(tag,tuple(items),revision)
+        batch=PreviewBatch(tag,tuple(items),revision,catalog_revision)
+        self._archive_previews[id(batch)]=batch
+        return batch
 
     @staticmethod
     def _candidates(project,source,fp,excluded=()):
@@ -150,12 +187,14 @@ class FileHubService:
             batch_id=result.batch_id
             excluded={(i.fingerprint.device,i.fingerprint.file_id) for i in preview.items if i.fingerprint}
             try:
+                if self._archive_previews.get(id(preview)) is not preview:
+                    raise ValueError('归档预览不属于当前服务，请重新预览')
                 library=self.reload_templates()
-                # Old positional batches remain usable only with the built-in
-                # library; actual previews always bind a nonempty digest.
-                if preview.template_revision != library.revision:
-                    if preview.template_revision or library.revision != TemplateLibrary().revision:
-                        raise ValueError('模板在预览后已变化，请重新预览')
+                if not preview.catalog_revision or preview.catalog_revision!=self.catalog.load().revision:
+                    raise ValueError('归档权限或规则文件在预览后已变化，请重新预览')
+                if not preview.template_revision or preview.template_revision != library.revision:
+                    raise ValueError('模板在预览后已变化，请重新预览')
+                context=self.archive_context()
                 spec,projects=self._route(preview.tag,library);route_error=''
             except (OSError,ValueError) as exc:spec=None;projects={};route_error=str(exc)
             seen=set()
@@ -171,7 +210,10 @@ class FileHubService:
                     if identity in seen:raise ValueError('重复选择同一个源文件')
                     seen.add(identity)
                     if self.engine.overlaps(item.source,self.engine.state_dir):raise ValueError('不能操作应用状态目录')
-                    ancestors=inbox_ancestors(item.source,self.config.sync_root)
+                    if not item.targets:raise ValueError('缺少已批准的精确目标')
+                    if any(t.exists() or (t.parent.is_dir() and any(p.name.casefold()==t.name.casefold() for p in t.parent.iterdir())) for t in item.targets):
+                        raise ValueError('预览目标已被占用，请重新预览')
+                    ancestors=context.inbox_ancestors(item.source)
                     project=next((p for p in projects.values() if spec.dest.is_relative_to(p)),None)
                     duplicate=None
                     if project and not isinstance(current,TreeFingerprint):
@@ -193,16 +235,20 @@ class FileHubService:
                         if all(i.ok for i in result.items if i.source==item.source):prune_inbox_ancestors(ancestors,self.engine.platform)
                         outcomes.append(ServiceOutcome(item.source,(duplicate,),item.warnings,duplicate=duplicate))
                         continue
-                    actual=spec.dest/item.source_time.strftime('%y%m%d') if spec.mode=='dated' and not isinstance(current,TreeFingerprint) else spec.dest
-                    occupied=self._occupied(actual)
-                    targets=build_targets(item.source,spec,item.source_time,item.video_width,occupied)
+                    targets=item.targets
+                    if not targets: raise ValueError('缺少已批准的精确目标')
+                    if any(t.exists() or (t.parent.is_dir() and any(p.name.casefold()==t.name.casefold() for p in t.parent.iterdir())) for t in targets):
+                        raise ValueError('预览目标已被占用，请重新预览')
+                    # Validate frozen paths against current route without allocating.
+                    expected=build_targets(item.source,spec,item.source_time,item.video_width,())
+                    if len(expected)!=len(targets) or any(t.parent!=p.parent for t,p in zip(targets,expected)):
+                        raise ValueError('预览目标与当前归档目的地不一致')
                     if any(t==item.source for t in targets):raise ValueError('源与目标相同')
-                    occupied.extend(t.name for t in targets)
                     if len(targets)==2:operations.append(Operation('copy',item.source,targets[1],current))
                     operations.append(Operation('move',item.source,targets[0],current))
                     result=self.engine.execute(operations,preview.tag,batch_id=batch_id)
                     if all(i.ok for i in result.items if i.source==item.source):prune_inbox_ancestors(ancestors,self.engine.platform)
-                    outcomes.append(ServiceOutcome(item.source,tuple(targets),targets.warnings,reallocated=tuple(targets)!=item.targets))
+                    outcomes.append(ServiceOutcome(item.source,tuple(targets),item.warnings))
                 except (OSError,ValueError) as exc:outcomes.append(ServiceOutcome(item.source,error=str(exc),warnings=item.warnings))
             outcomes=[replace(o,error='；'.join(i.message for i in result.items if i.source==o.source and not i.ok))
                       if not o.error else o for o in outcomes]

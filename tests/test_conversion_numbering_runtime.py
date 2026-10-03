@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_rules
 from threading import Event
 
 import pytest
@@ -28,7 +29,7 @@ def rule_preview(service, paths, spec, mode='replace', destination=None):
     options = {'output_format': spec.output_format, 'mode': mode}
     if destination is not None: options['destination'] = str(destination)
     rule = Rule(enabled=True, condition=Predicate('name', 'glob', '*'), actions=(Action('image_convert', options),))
-    service.rules.save(RuleSet((rule,)))
+    install_rules(service,rule)
     return service.conversions.submit_rule_preview(paths, rule.id).future.result(30)
 
 
@@ -107,7 +108,7 @@ def test_numbered_virtual_intermediate_same_format_replace_and_undo(owner):
         Action('image_convert', {'mode': 'replace', 'output_format': 'jpeg', 'quality': 95}),
         Action('image_convert', {'mode': 'replace', 'output_format': 'jpeg', 'quality': 20}),
         Action('image_convert', {'mode': 'replace', 'output_format': 'png'})))
-    service.rules.save(RuleSet((rule,)))
+    install_rules(service,rule)
     preview = service.conversions.submit_rule_preview([source], rule.id).future.result(30)
     assert not preview.errors
     assert [step.target.name for step in preview.plans[0].steps] == ['a-1.jpg', 'a-1.jpg', 'a-1.png']

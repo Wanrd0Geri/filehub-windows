@@ -94,7 +94,7 @@ def clean_note(text):
 def parse_shots(text):
     return tuple((int(n), s.upper()) for n, s in re.findall(r'(\d{1,3})([A-Za-z]?)', text or ''))
 
-def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path, templates=None) -> RouteSpec:
+def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path, templates=None, *, general_test=None) -> RouteSpec:
     root = _safe_path(Path(sync_root))
     normalized = {}
     for code,p in projects.items():
@@ -103,7 +103,7 @@ def parse_tag(tag: str, projects: dict[str, Path], sync_root: Path, templates=No
         normalized[key]=_safe_path(Path(p))
         if not normalized[key].is_relative_to(root):
             raise RouteError('项目目录不在同步根目录内')
-    if tag.strip()=='通用测试': return RouteSpec('dated',root/'2_资料库'/'技术测试')
+    if tag.strip()=='通用测试': return RouteSpec('dated',_safe_path(general_test) if general_test is not None else root/'2_资料库'/'技术测试')
     body=None
     for code in sorted(normalized,key=len,reverse=True):
         if tag.strip().upper().startswith(code):

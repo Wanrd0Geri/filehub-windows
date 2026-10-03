@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_archive, set_archive_permissions
 from dataclasses import replace
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -16,6 +17,7 @@ NOW=datetime.now(timezone.utc)+timedelta(days=40)
 def setup(tmp_path):
     root=tmp_path/'sync';root.mkdir();watch=tmp_path/'watch';watch.mkdir()
     service=FileHubService(Config(sync_root=root,watch_roots=(watch,),paused=False),tmp_path/'state')
+    install_archive(service,permissions=frozenset({'unmatched_inbox'}))
     return service,watch,root
 
 
@@ -74,7 +76,7 @@ def test_global_false_never_expires_or_sanitizes(setup):
 
 
 def test_global_expiry_respects_first_seen_and_ongoing_day_changes(setup):
-    s,w,root=setup;s.config=replace(s.config,global_jobs=True)
+    s,w,root=setup;s.config=replace(s.config,global_jobs=True);set_archive_permissions(s,{'unmatched_inbox','cleanup'})
     day=root/'0_收件箱'/'图片'/'260101';day.mkdir(parents=True);p=day/'a.png';p.write_bytes(b'a')
     bin=w.parent/'fake-bin';bin.mkdir()
     class Fake(WindowsPlatform):
@@ -89,7 +91,7 @@ def test_global_expiry_respects_first_seen_and_ongoing_day_changes(setup):
 
 
 def test_global_sanitizes_invalid_project_names_and_undo(setup):
-    s,w,root=setup;s.config=replace(s.config,global_jobs=True)
+    s,w,root=setup;s.config=replace(s.config,global_jobs=True);set_archive_permissions(s,{'unmatched_inbox','cleanup'})
     bad=root/'1_工作'/'项目'/'260101_XYZ_项目😀';bad.mkdir(parents=True);f=bad/'name😀.txt';f.write_bytes(b'data')
     q=Scheduler(s);r=q.tick(NOW)
     assert r and all(b.ok for b in r)
@@ -103,17 +105,17 @@ def test_drive_root_watch_rejected(tmp_path):
 
 
 def test_junk_recycles_only_after_stable_grace(setup):
-    s,w,_=setup;p=w/'download.baiduyun.uploading.cfg';p.write_bytes(b'junk');bin=w.parent/'bin';bin.mkdir()
+    s,w,_=setup;install_archive(s,permissions=frozenset({'unmatched_inbox','cleanup'}));p=w/'download.baiduyun.uploading.cfg';p.write_bytes(b'junk');bin=w.parent/'bin';bin.mkdir()
     class Fake(WindowsPlatform):
         def recycle(self,path):path.rename(bin/path.name);return RecycleOutcome('recycled')
-    s.engine.platform=Fake();q=Scheduler(s);assert q.tick(NOW)==[]
+    s.engine.platform=Fake();install_archive(s,permissions=frozenset({'unmatched_inbox','cleanup'}));q=Scheduler(s);assert q.tick(NOW)==[]
     r=q.tick(NOW+timedelta(days=3));assert r and r[0].ok and not p.exists() and list(bin.iterdir())
 
 def test_exact_hidden_baidu_residual_has_stable_grace(setup):
     s,w,_=setup;p=w/'.baiduyun.uploading.cfg';p.write_bytes(b'junk');bin=w.parent/'bin';bin.mkdir()
     class Fake(WindowsPlatform):
         def recycle(self,path):path.rename(bin/path.name);return RecycleOutcome('recycled')
-    s.engine.platform=Fake();q=Scheduler(s);assert q.tick(NOW)==[]
+    s.engine.platform=Fake();install_archive(s,permissions=frozenset({'unmatched_inbox','cleanup'}));q=Scheduler(s);assert q.tick(NOW)==[]
     r=q.tick(NOW+timedelta(days=3));assert r and r[0].ok and not p.exists()
 
 def test_locked_writer_is_skipped_until_new_inactive_grace(setup):
@@ -135,7 +137,7 @@ def test_owned_staging_not_swept(setup):
 
 
 def test_nested_bad_directory_names_reverse_without_weakening_identity(setup):
-    s,w,root=setup;s.config=replace(s.config,global_jobs=True)
+    s,w,root=setup;s.config=replace(s.config,global_jobs=True);set_archive_permissions(s,{'unmatched_inbox','cleanup'})
     folder=root/'bad😀'/'child😀';folder.mkdir(parents=True);(folder/'a😀.txt').write_bytes(b'a')
     results=Scheduler(s).tick(NOW);assert len(results)==3 and all(r.ok for r in results)
     for result in reversed(results):assert s.engine.undo(result.batch_id).ok

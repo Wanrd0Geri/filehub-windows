@@ -37,6 +37,7 @@ def compile_package(package: RulePackage, bindings: Mapping[str, Path], runtime_
         if root.exists() and not root.is_dir(): raise ValueError('绑定必须是目录')
         relative = expand_variables(ref.relative, package.variables, path)
         target = checked_path(root.joinpath(*relative.split('/'))) if relative else root
+        if len(str(target).encode('utf-16-le'))//2>=32767: raise ValueError('目标超过 Windows UTF-16 长路径限制')
         # checked_path prohibits all existing reparse ancestors, including missing tails.
         root_key = os.path.normcase(str(root)).casefold(); target_key = os.path.normcase(str(target)).casefold()
         state_key = os.path.normcase(str(state)).casefold()
@@ -49,7 +50,7 @@ def compile_package(package: RulePackage, bindings: Mapping[str, Path], runtime_
         path = f'$.rules[{index}]'; failed = False; scope = []; actions = []
         for number, reference in enumerate(definition.scope):
             try: scope.append(resolve(reference, path+f'.scope[{number}]'))
-            except ValueError as exc: diagnostics.append(Diagnostic(path+f'.scope[{number}]', str(exc))); failed = True
+            except (ValueError,OSError) as exc: diagnostics.append(Diagnostic(path+f'.scope[{number}]', str(exc))); failed = True
         for number, action in enumerate(definition.actions):
             location = path+f'.actions[{number}]'; options = dict(action['options'])
             try:
@@ -57,7 +58,7 @@ def compile_package(package: RulePackage, bindings: Mapping[str, Path], runtime_
                 for key in ('pattern', 'path'):
                     if key in options: options[key] = expand_variables(options[key], package.variables, location+'.options.'+key)
                 actions.append(Action(action['kind'], options))
-            except ValueError as exc: diagnostics.append(Diagnostic(location, str(exc))); failed = True
+            except (ValueError,OSError) as exc: diagnostics.append(Diagnostic(location, str(exc))); failed = True
         if failed: continue
         try:
             identifier = runtime_ids.get(definition.id, runtime_id(package.id, definition.id))

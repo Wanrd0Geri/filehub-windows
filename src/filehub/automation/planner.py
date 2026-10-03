@@ -126,8 +126,8 @@ def plan_rule(rule: Rule, facts: FileFacts, service, occupied=None, *, ruleset_r
             raise ValueError('同一个源被重复选择；替换例外不能覆盖其他输入')
         if any(paths_overlap(original, other) and path_key(original) != path_key(other) for other in reservations.selected_sources):
             raise ValueError('选择的源路径互相包含或重叠')
-        configured = {path_key(path) for path in service.config.watch_roots}
-        if {path_key(path) for path in rule.scope} - configured: raise ValueError('规则引用未配置的观察目录')
+        if rule.scope and path_key(original.parent) not in {path_key(path) for path in rule.scope}:
+            raise ValueError('手动源不在规则的顶层目录范围')
         if not explanation.matched: raise ValueError('样本未满足规则条件；不可用的信息也不会匹配')
         current, fingerprint, version = original, facts.fingerprint, 0
 
@@ -197,10 +197,9 @@ def plan_rule(rule: Rule, facts: FileFacts, service, occupied=None, *, ruleset_r
                     replacement=replacement, detail=detail)
                 warnings.append('图片转换可能不保留元数据；执行前由独立转换工作线程核验输入与格式能力')
             else:
-                if service.config.sync_root is None: raise ValueError('项目路由需要先选择同步根目录')
                 if facts.created is None: raise ValueError('项目路由缺少源创建时间')
-                root = checked_path(service.config.sync_root)
-                spec = parse_tag(options['tag'], discover_projects(root), root, library)
+                context=service.archive_context(rule_id=rule.id)
+                spec = context.route(options['tag'])
                 folder = spec.dest/facts.created.strftime('%y%m%d') if spec.mode == 'dated' and facts.kind != 'folder' else spec.dest
                 names = _names_in(folder, reservations, local)
                 if facts.kind == 'folder':

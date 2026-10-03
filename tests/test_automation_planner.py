@@ -115,8 +115,9 @@ def test_project_route_requires_sync_only_for_project_action(tmp_path):
     _, facts, service = setup(tmp_path)
     basic = plan_rule(make_rule(Action('rename', {'pattern': 'done{ext}'})), facts, service, now=NOW)
     assert not basic.errors
+    service.archive_context=lambda **kwargs: (_ for _ in ()).throw(ValueError('需要显式兼容权限'))
     routed = plan_rule(make_rule(Action('project_route', {'tag': 'LYX参考'})), facts, service, now=NOW)
-    assert routed.errors and '同步' in routed.errors[0]
+    assert routed.errors and '兼容' in routed.errors[0]
 
 
 @pytest.mark.parametrize('custom,folder', [(False, False), (True, False), (True, True)])
@@ -133,6 +134,8 @@ def test_project_route_template_terminal_with_virtual_subject(tmp_path, custom, 
             asset_root='资产', naming_patterns={'asset': '{prefix}_{date}_{sequence}{ext}'})
         library = library.with_template(template).assign('LYX', 'custom')
     service.reload_templates = lambda: library
+    from filehub.rules import parse_tag
+    service.archive_context=lambda **kwargs: SimpleNamespace(route=lambda tag:parse_tag(tag,{'LYX':project},root,library))
     r = make_rule(Action('rename', {'pattern': '新版{ext}'}), Action('project_route', {'tag': 'LYX角色龙'}))
     planned = plan_rule(r, facts, service, now=NOW, templates=library)
     assert not planned.errors
@@ -237,6 +240,8 @@ def test_terminal_project_route_multi_target_copy_does_not_advance_subject(tmp_p
     project = root/'1_工作'/'项目'/'261001_LYX_测试'
     project.mkdir(parents=True)
     service.config.sync_root = root
+    from filehub.rules import parse_tag
+    service.archive_context=lambda **kwargs: SimpleNamespace(route=lambda tag:parse_tag(tag,{'LYX':project},root,TemplateLibrary()))
     plan = plan_rule(make_rule(Action('project_route', {'tag': 'LYXE02S08C22+23'})), facts, service, now=NOW)
     assert not plan.errors
     assert [step.kind for step in plan.steps] == ['copy', 'move']

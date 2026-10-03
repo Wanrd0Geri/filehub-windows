@@ -128,7 +128,7 @@ class RuleCatalogStore:
                     if selection!=key or 'manual_archive' not in permissions: raise ValueError('Enabled project route lacks owning profile permission')
         if selection is not None and permissions:
             from .compatibility import resolve_archive_profile
-            resolve_archive_profile(packages[selection],bindings[selection])
+            resolve_archive_profile(packages[selection],bindings[selection],state_dir=self.state_dir)
         revision=sha256(_json(doc)).hexdigest()
         return CatalogSnapshot(revision,MappingProxyType(packages),CompiledRules(tuple(rules),revision),MappingProxyType(bindings),MappingProxyType(enabled),tuple(packages),selection,frozenset(permissions),MappingProxyType(ids),MappingProxyType(sources),doc['generation'],tuple(diagnostics))
 
@@ -298,14 +298,33 @@ class RuleCatalogStore:
         with self._lock.acquire(): return self._recovery_revision()
 
     def adopt_legacy(self,candidate,*,expected_revision):
-        """Task 3 adapter hook, deliberately unavailable until candidate verification.
-
-        Candidate contract: source_digests mapping of input names to digests,
-        packages tuple[RulePackage], bindings mapping[package ID, mapping],
-        runtime_ids mapping[package ID, mapping[external rule ID, legacy ID]],
-        compatibility selection (or None), warnings tuple. Acceptance must
-        recheck source bytes under engine.lock and store raw originals ONLY
-        in legacy-migration-backups/<UUID>/ with a manifest before _commit.
-        No raw migration input may enter rule-catalog-backups.
-        """
-        raise ValueError('Legacy adoption adapter requires validated migration candidate integration')
+        """Explicit first adoption; raw originals are never catalogue backups."""
+        from .migration import MigrationCandidate, LEGACY_FILES, inspect_legacy, read_legacy_sources
+        from ..config import Config
+        if not isinstance(candidate,MigrationCandidate): raise ValueError('Validated migration candidate required')
+        if not isinstance(candidate.config,Config): raise ValueError('Validated migration configuration required')
+        checked_path(self.state_dir).mkdir(parents=True,exist_ok=True)
+        with self._lock.acquire():
+            doc=self._load_doc()
+            if self._snapshot(doc).revision!=expected_revision: raise ValueError('Catalogue changed; reload required')
+            if self.path.exists() or doc['packages']: raise ValueError('Migration already adopted')
+            raw=read_legacy_sources(self.state_dir)
+            digests={name:sha256(value).hexdigest() if value is not None else None for name,value in raw.items()}
+            if dict(candidate.source_digests)!=digests: raise ValueError('Legacy sources changed; inspect again')
+            current=inspect_legacy(self.state_dir,candidate.config)
+            if current is None or [encode_package(p) for p in current.packages]!=[encode_package(p) for p in candidate.packages] or current.bindings!=candidate.bindings or current.runtime_ids!=candidate.runtime_ids:
+                raise ValueError('Legacy candidate changed; inspect again')
+            doc['packages']=[dict(package=p.to_document(),source=None,
+                bindings={k:str(v) for k,v in current.bindings[p.id].items()},enabled=[],runtime_ids=dict(current.runtime_ids[p.id])) for p in current.packages]
+            self._snapshot(doc)  # Full validation before raw backup or publication.
+            backup_root=checked_path(self.state_dir/'legacy-migration-backups'); backup_root.mkdir(exist_ok=True)
+            backup=checked_path(backup_root/uuid.uuid4().hex); backup.mkdir()
+            for name in LEGACY_FILES:
+                if raw[name] is None: continue
+                self._flush(backup/name,raw[name])
+                if checked_path(backup/name).read_bytes()!=raw[name]: raise ValueError('Legacy raw backup verification failed')
+            manifest=_json({'format':'filehub.legacy-backup','version':1,'source_digests':digests})
+            self._flush(backup/'manifest.json',manifest)
+            if (backup/'manifest.json').read_bytes()!=manifest: raise ValueError('Legacy manifest verification failed')
+            self._fault('after_legacy_backup')
+            return self._commit(doc)

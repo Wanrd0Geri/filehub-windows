@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_archive
 from pathlib import Path
 import pytest
 from filehub.models import Fingerprint, Operation
@@ -99,6 +100,7 @@ def test_directory_service_never_probes_and_undo(tmp_path):
     s=tree(tmp_path);renamed=s.with_name('folder.mp4');s.rename(renamed)
     def probe(p):raise AssertionError('folder must not probe')
     service=FileHubService(Config(sync_root=sync),tmp_path/'state',probe=probe)
+    install_archive(service)
     preview=service.preview([renamed],'XYZ020822')
     assert not preview.items[0].error and preview.items[0].targets[0].name=='folder.mp4'
     r=service.execute(preview);assert r.ok and not renamed.exists()
@@ -148,6 +150,7 @@ def test_manual_archive_prunes_only_empty_inbox_day(tmp_path):
     sync=tmp_path/'sync';project=sync/'1_工作'/'项目'/'260930_XYZ_测试';project.mkdir(parents=True)
     day=sync/'0_收件箱'/'其他'/'260930';sub=day/'sub';sub.mkdir(parents=True);f=sub/'a.txt';f.write_bytes(b'a')
     svc=FileHubService(Config(sync_root=sync),tmp_path/'state')
+    install_archive(svc)
     r=svc.execute(svc.preview([f],'XYZ参考'))
     assert r.ok and not day.exists() and day.parent.exists()
 
@@ -161,6 +164,7 @@ def test_manual_archive_day_sibling_arrival_survives(tmp_path):
         def checkpoint(self,stage,item):
             if stage=='before_source_remove':(day/'new.txt').write_bytes(b'new')
     svc=FileHubService(Config(sync_root=sync),tmp_path/'state',platform=Race())
+    install_archive(svc)
     assert svc.execute(svc.preview([f],'XYZ参考')).ok
     assert (day/'new.txt').read_bytes()==b'new'
 
@@ -190,7 +194,7 @@ def test_directory_ads_rejected_and_empty_day_ads_preserved(tmp_path):
     sync=tmp_path/'sync';project=sync/'1_工作'/'项目'/'260930_XYZ_测试';project.mkdir(parents=True)
     day=sync/'0_收件箱'/'其他'/'260930';day.mkdir(parents=True);p=day/'a.txt';p.write_bytes(b'a')
     Path(str(day)+':UserData').write_bytes(b'keep-dir-metadata')
-    svc=FileHubService(Config(sync_root=sync),tmp_path/'state');assert svc.execute(svc.preview([p],'XYZ参考')).ok
+    svc=FileHubService(Config(sync_root=sync),tmp_path/'state');install_archive(svc);assert svc.execute(svc.preview([p],'XYZ参考')).ok
     assert day.is_dir() and Path(str(day)+':UserData').read_bytes()==b'keep-dir-metadata'
 
 

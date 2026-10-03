@@ -30,7 +30,9 @@ def setup(tmp_path):
 def rule(*actions, extension='.txt', name='规则'):
     return Rule(name=name,enabled=True,condition=Predicate('extension','equals',extension),actions=actions)
 
-def save(s,*rules):s.rules.save(RuleSet(rules))
+from rulefile_fixtures import install_rules
+
+def save(s,*rules):install_rules(s,*rules)
 
 def png(path):
     image=QImage(8,6,QImage.Format.Format_ARGB32);image.fill(QColor('#f04422'));assert image.save(str(path),'PNG')
@@ -102,7 +104,7 @@ def test_standalone_pause_during_encode_continues_explicit_job(setup,monkeypatch
     release.set();assert job.future.result(5)[0].ok and (w/'a.jpg').exists()
     ex.close().wait(5)
 
-@pytest.mark.parametrize('change',['enabled','semantic','templates','watch'])
+@pytest.mark.parametrize('change',['enabled','semantic','catalogue','watch'])
 def test_auto_authority_changes_during_codec_prevent_publish(setup,monkeypatch,change):
     s,w=setup;p=w/'a.png';png(p)
     r=rule(Action('image_convert',{'output_format':'jpeg','mode':'replace'}),extension='.png');save(s,r)
@@ -114,8 +116,9 @@ def test_auto_authority_changes_during_codec_prevent_publish(setup,monkeypatch,c
     with s.engine.locked():
         if change=='enabled':save(s,replace(r,enabled=False))
         elif change=='semantic':save(s,replace(r,actions=(Action('image_convert',{'output_format':'webp','mode':'replace'}),)))
-        elif change=='templates':
-            library=s.reload_templates();s.templates.save(library.copy_template('default','custom','新模板'))
+        elif change=='catalogue':
+            snapshot=s.catalog.load();package=snapshot.packages['legacy-import'];doc=package.to_document();doc['name']='Changed display'
+            s.catalog.replace_package(package.id,json.dumps(doc).encode(),expected_revision=snapshot.revision)
         else:s.config=replace(s.config,watch_roots=())
     release.set();idle(s.conversions)
     assert p.exists() and not (w/'a.jpg').exists()
@@ -174,8 +177,9 @@ def test_theme_only_change_during_automatic_encoding_keeps_authority(setup,monke
     assert not p.exists() and (w/'a.jpg').exists() and s.automation.ledger.history()[0]['status']=='success'
     s.conversions.close().wait(5)
 
-def test_invalid_project_route_without_sync_is_claimed_and_blocks_second_rule(setup):
+def test_invalid_project_route_missing_declared_project_is_claimed_and_blocks_second_rule(setup):
     s,w=setup;p=w/'a.txt';p.write_bytes(b'x')
+    root=w.parent/'explicit-archive';root.mkdir();s.config=replace(s.config,sync_root=root)
     a=rule(Action('project_route',{'tag':'XYZ参考'}));b=rule(Action('rename',{'pattern':'later{ext}'}));save(s,a,b)
     result=Scheduler(s).tick(NOW)
     assert result[0].status=='failed' and p.exists() and not (w/'later.txt').exists()

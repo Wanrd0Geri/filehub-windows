@@ -96,15 +96,15 @@ def test_invalid_scope_cannot_add_unconfigured_watch_root(tmp_path):
     a = Action('rename', {'pattern': 'done{ext}'})
     r = Rule(enabled=True, condition=Predicate('name', 'glob', '*'), actions=(a,), scope=('C:/samples',))
     result = first_match(RuleSet((r,)), facts(), NOW, configured_watch_roots=(tmp_path,))
-    assert result.rule is None and result.evaluations[0].status == 'invalid_scope'
+    assert result.rule is None and result.evaluations[0].status == 'out_of_scope'
 
 
-def test_explicit_selected_disabled_rule_tests_sample_outside_watch_scope(tmp_path):
+def test_explicit_selected_disabled_rule_rejects_sample_outside_scope(tmp_path):
     r = Rule(condition=Predicate('name', 'glob', '*'), actions=(Action('rename', {'pattern': 'done{ext}'}),),
              scope=(str(tmp_path),))
     result = first_match(RuleSet((r,)), facts(), NOW, rule_id=r.id, configured_watch_roots=(tmp_path,))
-    assert result.rule == r and result.explicit_selection
-    assert not result.rule.enabled
+    assert result.rule is None and result.explicit_selection
+    assert result.evaluations[0].status == 'out_of_scope'
 
 
 @pytest.mark.parametrize('created,want', [(NOW-timedelta(seconds=30), 'true'), (NOW+timedelta(seconds=1), 'unavailable')])

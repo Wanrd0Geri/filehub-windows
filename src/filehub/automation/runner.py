@@ -83,7 +83,7 @@ class AutomationRunner:
                 if cancel.is_set():raise ValueError('已取消预览')
                 facts=self.facts(path,now=now,watch_root=watch_root if automatic else None)
                 match=first_match(rules,facts,now,rule_id=rule_id if not automatic else None,
-                    watch_root=watch_root,configured_watch_roots=self.service.config.watch_roots)
+                    watch_root=watch_root if automatic else None,configured_watch_roots=self.service.config.watch_roots if automatic else None)
                 matching.append(match)
                 if match.rule is None:raise ValueError('没有匹配的规则')
                 suppression=self.ledger.suppression(path,facts.fingerprint,match.rule)
@@ -130,6 +130,10 @@ class AutomationRunner:
         rule=next((r for r in rules.rules if r.id==plan.rule_id),None)
         if rule is None or rule.revision!=plan.rule_revision:raise AuthorityChanged('规则语义已变化，请重新预览')
         if s.reload_templates().revision!=preview.template_revision:raise AuthorityChanged('模板已变化，请重新预览')
+        if rule.scope and path_key(plan.original_path.parent) not in {path_key(p) for p in rule.scope}:
+            raise AuthorityChanged('源已不在规则的顶层目录范围')
+        if any(a.kind=='project_route' for a in rule.actions):
+            s.archive_context(rule_id=rule.id)
         if automatic:
             if s.config.paused or not rule.enabled:raise AuthorityChanged('自动规则已暂停或禁用')
             roots={path_key(p) for p in s.config.watch_roots}

@@ -113,7 +113,7 @@ def test_schema_complete_example():
 def test_schema_core_closed_and_references_exist():
     schema = json.loads((Path(__file__).parents[1]/'schemas/filehub-rules-v1.schema.json').read_text(encoding='utf-8'))
     assert schema['$schema'].endswith('/draft/2020-12/schema')
-    assert 'compatibility' not in schema['properties']
+    assert schema['properties']['compatibility']['$ref']=='#/$defs/archiveProfile'
     def visit(node):
         if isinstance(node, dict):
             if node.get('type') == 'object' and 'properties' in node:
@@ -123,3 +123,28 @@ def test_schema_core_closed_and_references_exist():
         elif isinstance(node, list):
             for child in node: visit(child)
     visit(schema)
+
+
+def test_complete_profile_schema_runtime_parity():
+    jsonschema=pytest.importorskip('jsonschema')
+    from test_rulefiles_runtime import profile_document
+    schema=json.loads((Path(__file__).parents[1]/'schemas/filehub-rules-v1.schema.json').read_text(encoding='utf-8'))
+    validator=jsonschema.Draft202012Validator(schema)
+    doc=profile_document();validator.validate(doc);parse(doc)
+    doc['compatibility']['policies']['unexpected']=True
+    with pytest.raises(jsonschema.ValidationError):validator.validate(doc)
+    with pytest.raises(ValueError):parse(doc)
+    doc=profile_document();doc['rules']=[{'id':'route','name':'Route','scope':[],
+        'condition':{'field':'name','operator':'glob','value':'*'},'actions':[{'kind':'project_route','options':{'tag':'通用测试'}}]}]
+    validator.validate(doc);parse(doc)
+    del doc['compatibility']
+    with pytest.raises(jsonschema.ValidationError):validator.validate(doc)
+    with pytest.raises(ValueError):parse(doc)
+    doc=profile_document();doc['compatibility']['templates'][0].pop('production_dir')
+    with pytest.raises(jsonschema.ValidationError):validator.validate(doc)
+    with pytest.raises(ValueError):parse(doc)
+
+
+def test_relative_total_windows_limit_after_expansion():
+    doc=document();doc['rules'][0]['scope'][0]['relative']='/'.join(['x'*250]*132)
+    with pytest.raises(ValueError,match='UTF-16'):parse(doc)

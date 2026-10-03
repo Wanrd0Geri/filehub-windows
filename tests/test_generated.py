@@ -1,3 +1,4 @@
+from rulefile_fixtures import install_rules
 """Owned real-image publication and backed-up replacement, Windows sandbox only."""
 import importlib
 import sqlite3
@@ -97,7 +98,7 @@ def test_rule_preview_same_path_replace_chain_finishes_and_full_inverse_restores
                     condition=Predicate('extension', 'equals', '.jpg'),
                     actions=tuple(Action('image_convert', {'output_format': 'jpeg', 'mode': 'replace', 'quality': q})
                                   for q in (90, 80, 70)[:count]))
-        service.rules.save(RuleSet((rule,)))
+        install_rules(service,rule)
         preview = executor.submit_rule_preview([source], rule.id).future.result(10)
         assert not preview.errors and len(preview.plans) == 1
         assert len(preview.plans[0].steps) == count
