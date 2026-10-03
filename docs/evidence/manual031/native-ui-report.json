@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "platform": "windows",
+  "dpr": 1.5,
+  "screen_dpr": 1.5,
+  "base": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\native-6bf6f080098240d5a52d50d526ff1cc8",
+  "captures": [
+    "01-dark-manual-recovery-long-history.png",
+    "02-explicit-manual-only-confirmation.png",
+    "03-dark-preview-480x640.png",
+    "04-light-preview-480x640.png",
+    "05-light-history-cleared-direct-entry.png"
+  ],
+  "checks": [
+    "Runtime SendQueue legacy direct manual entry",
+    "long history horizontal scroll",
+    "explicit manual-only recovery",
+    "input history and selected paths retained",
+    "ordinary permissions and config preserved",
+    "real preview archive undo",
+    "durable execution acknowledgement",
+    "direct authorized entry",
+    "history single remove and clear",
+    "cancel acknowledgement",
+    "dark light text fit"
+  ]
+}

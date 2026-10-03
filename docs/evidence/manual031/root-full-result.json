@@ -1,0 +1,9 @@
+{
+  "source_sha": "e454a028506d455a7f4f0af359c9173769eedae3",
+  "completed_utc": "2026-10-03T13:11:33.6477777Z",
+  "duration_seconds": 102.9478624,
+  "exit_code": 0,
+  "run_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\root-full-0cdceac123c245d3b1f6ea8817e78048",
+  "junit": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\root-full-0cdceac123c245d3b1f6ea8817e78048\\junit.xml",
+  "log": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\root-full-0cdceac123c245d3b1f6ea8817e78048\\pytest.txt"
+}

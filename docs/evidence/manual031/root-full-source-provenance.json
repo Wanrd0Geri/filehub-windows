@@ -1,0 +1,22 @@
+{
+  "starting_head": "e454a028506d455a7f4f0af359c9173769eedae3",
+  "tested_source_commit": "5f8865bdd486510d53de7daa9c8793f07537cae5",
+  "run_created_utc": "2026-10-03T13:09:50.6570674Z",
+  "changed_files": [
+    {
+      "path": "src/filehub/ui/archive_dialog.py",
+      "written_utc": "2026-10-03T13:08:56.7281163Z",
+      "git_blob": "4f6bc932239fa7cc215a672be10aeb672a2f7d98",
+      "matches_final_commit": true,
+      "written_before_full_run": true
+    },
+    {
+      "path": "tests/test_manual031.py",
+      "written_utc": "2026-10-03T13:08:56.7291687Z",
+      "git_blob": "f166ea6fb6e68a648f43090350a892cc001c8fa0",
+      "matches_final_commit": true,
+      "written_before_full_run": true
+    }
+  ],
+  "explanation": "Both final source edits preceded full-suite launch by 54 seconds; only Git commit creation occurred during the run. No source files changed during the suite."
+}

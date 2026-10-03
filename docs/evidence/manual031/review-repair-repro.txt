@@ -1,0 +1,2 @@
+QUIT {"durable_ok": true, "source_moved": true, "runtime_closed": true, "claim_redelivered": false, "redelivered_paths": []}
+PARTIAL {"first": {"message": "Injected transient grant write failure\n已重新读取项目设置；请确认后重试。", "disk_generation": "4dd25cbe3b62477f9aee486a1ada678b", "ui_generation": "4dd25cbe3b62477f9aee486a1ada678b", "adapter_generation": "4dd25cbe3b62477f9aee486a1ada678b", "preview_enabled": false}, "retry": {"message": "手动标签归档已恢复。请预览目的地后再归档。", "permissions": ["manual_archive"], "preview_enabled": true, "recovery_enabled": true}}

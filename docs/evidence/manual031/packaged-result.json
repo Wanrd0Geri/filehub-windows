@@ -1,0 +1,72 @@
+{
+  "source_sha": "5f8865bdd486510d53de7daa9c8793f07537cae5",
+  "completed_utc": "2026-10-03T13:11:51.6510331Z",
+  "run_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f",
+  "cwd": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\clean-cwd",
+  "report": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test.json",
+  "exe_exit": 0,
+  "checks": 35,
+  "failed": 0,
+  "runtime_frozen": true,
+  "file_version": "0.3.1",
+  "release031": {
+    "work_dir": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test-92c670ae19b741f88d660028a74e64f6\\release031",
+    "runtime_frozen": true,
+    "dispatch_dialog": "ArchiveDialog",
+    "selected_paths": [
+      "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test-92c670ae19b741f88d660028a74e64f6\\release031\\owned-0.png",
+      "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test-92c670ae19b741f88d660028a74e64f6\\release031\\owned-1.png"
+    ],
+    "permissions": [
+      "manual_archive"
+    ],
+    "ordinary_enabled": {
+      "legacy-import": []
+    },
+    "config_unchanged": true,
+    "history_before_preview": [
+      "XYZ020821"
+    ],
+    "durable_ack": true,
+    "archive_targets": [
+      "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test-92c670ae19b741f88d660028a74e64f6\\release031\\sync\\1_工作\\项目\\261001_XYZ_自检\\3_制作\\E02\\S08\\E02S08_C022_261003-1.png",
+      "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test-92c670ae19b741f88d660028a74e64f6\\release031\\sync\\1_工作\\项目\\261001_XYZ_自检\\3_制作\\E02\\S08\\E02S08_C022_261003-2.png"
+    ],
+    "undo_ok": true,
+    "batch_id": "2c030c97b33145f58973a867e3d3f5f9",
+    "restored_files": 2,
+    "history_after_undo": [
+      "XYZ020822",
+      "XYZ020821"
+    ]
+  },
+  "probe": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\ffprobe\\ffprobe.exe",
+  "cleared_environment": [],
+  "child_path": "C:\\WINDOWS\\System32;C:\\WINDOWS",
+  "old_installers": [
+    {
+      "name": "FileHub-0.2.0-windows-x64-setup.exe",
+      "bytes": 143135555,
+      "sha256": "a36ac5a9f21e319d3a35c6aaf31a8a16dcad44254e997688a738659943053735",
+      "verified": true
+    },
+    {
+      "name": "FileHub-0.2.1-windows-x64-setup.exe",
+      "bytes": 143130835,
+      "sha256": "9268a5c324d311476bca00538321166d42b18f45bfb167442c45e70b7b544f07",
+      "verified": true
+    },
+    {
+      "name": "FileHub-0.2.2-windows-x64-setup.exe",
+      "bytes": 143140953,
+      "sha256": "705bf74f3567c73fe152e907d0726a438a1784b0f1ffac58c83886c74b7fc33f",
+      "verified": true
+    },
+    {
+      "name": "FileHub-0.3.0-windows-x64-setup.exe",
+      "bytes": 143214617,
+      "sha256": "df2577db10135fee83ab7a56e8cb69e1b23c32fc364eddd5ed1bf70bfb550edb",
+      "verified": true
+    }
+  ]
+}

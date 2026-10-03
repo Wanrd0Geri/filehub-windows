@@ -1,0 +1,28 @@
+{
+  "source_sha": "5f8865bdd486510d53de7daa9c8793f07537cae5",
+  "build_exit": 0,
+  "build_log": "sandbox/manual031/build-e454a02.log",
+  "build_log_created_utc": "2026-10-03T13:09:31.5343884Z",
+  "last_product_write_utc": "2026-10-03T13:08:56.7281163Z",
+  "provenance": "Build began after final source edits, before commit-only 5f8865b. Log name retains starting HEAD; final source is 5f8865b. Independent binary/source audit pending.",
+  "packaged_checks": 35,
+  "packaged_exit": 0,
+  "packaged_report": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\sandbox\\manual031\\exe-be3091cabe504fc89682e9273745149f\\state-parent\\self-test.json",
+  "artifacts": [
+    {
+      "file": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+      "bytes": 2631564,
+      "sha256": "2feb6270ad118db9d66bd454a93c25e004982202e75c6b746d4cf3d2ba6b88dd"
+    },
+    {
+      "file": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\FileHub-rule-guide-v1.zip",
+      "bytes": 17609,
+      "sha256": "48e556fa89558dab668f184268b16a0767886fffc65309f80617a68729b8fbc2"
+    },
+    {
+      "file": "C:\\Users\\Gerry-UltraPC\\.codex\\worktrees\\filehub-rules\\Hazel Windows\\dist\\installer\\FileHub-0.3.1-windows-x64-setup.exe",
+      "bytes": 143222624,
+      "sha256": "1cfdf7918d7e3cc53cf9eebb64f3bee7d841458f8de655477273c9fb97cac112"
+    }
+  ]
+}
