@@ -399,19 +399,42 @@ class MainWindow(QMainWindow):
         dialog.show();dialog.raise_();dialog.activateWindow();return dialog
 
     def transfer_archive(self,dialog):
-        if dialog.kind in self.automation.jobs:return
-        service=self.service
+        if (getattr(self,'_archive_transfer',None) is not None or dialog not in self.dialogs
+                or dialog.kind in self.automation.jobs or not self.admit_work()):return
+        service=self.service;adapter=self.automation;panel=dialog.panel
+        runtime=getattr(self,'runtime',None)
+        claim=getattr(runtime,'active_claim',None) if runtime and runtime.claim_dialog is dialog else None
+        queue=getattr(runtime,'claim_queue',None) if claim else None
+        request=object();self._archive_transfer=request
+        state,effective,page=adapter.state_generation,adapter.rule_generation,panel.generation
+        panel.set_transfer_pending(True);dialog.compatibility_button.setEnabled(False)
+        def current():
+            return (self._archive_transfer is request and service is self.service
+                and state==adapter.state_generation and effective==adapter.rule_generation
+                and dialog in self.dialogs and adapter.panels.get(dialog.kind) is panel
+                and panel.generation==page and dialog.kind not in adapter.jobs
+                and (claim is None or (runtime.claim_dialog is dialog and runtime.active_claim is claim and runtime.claim_queue is queue)))
+        def finish():
+            valid=current()
+            if self._archive_transfer is request:self._archive_transfer=None
+            if dialog in self.dialogs and adapter.panels.get(dialog.kind) is panel:
+                panel.set_transfer_pending(False);dialog.compatibility_button.setEnabled(True)
+            return valid
+        def canceled(_):
+            if self._archive_transfer is request:self._archive_transfer=None
+        dialog.finished.connect(canceled)
         def ready(_):
-            if service is not self.service:return
+            if not finish():return
             replacement=self.open_archive_dialog(dialog.panel._sample_paths)
             if replacement is None:return
-            runtime=getattr(self,'runtime',None)
-            if runtime and runtime.claim_dialog is dialog:
+            if claim is not None:
                 dialog.finished.disconnect(runtime._claim_finished)
                 runtime.claim_dialog=replacement
                 replacement.execution_persisted.connect(runtime._claim_executed);replacement.finished.connect(runtime._claim_finished)
             dialog.transferred=True;dialog.accept()
-        self.coordinator.submit(lambda:service.archive_context(),ready,self.show_error)
+        def failed(message):
+            if finish():self.show_error(message)
+        self.coordinator.submit(lambda:service.archive_context(),ready,failed)
 
     def closeEvent(self,event):
         if self.runtime_close_callback:

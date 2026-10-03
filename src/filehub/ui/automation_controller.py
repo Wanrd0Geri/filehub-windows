@@ -287,7 +287,8 @@ class AutomationController(QObject):
             self.window.show_run_outcomes(outcomes, service, generation)
 
     def preview_rule(self, request, kind="rules"):
-        if not self.accepting or self.rules_snapshot is None: return
+        if (not self.accepting or self.rules_snapshot is None or kind not in self.panels
+                or getattr(self.panels[kind],'_transfer_pending',False)): return
         if request.generation != self._page(kind).generation: return
         rule = next((rule for rule in self.rules_snapshot.rules if rule.id == request.rule_id), None)
         if (rule is None and request.rule_id is not None) or request.ruleset_revision != self.rules_revision:
@@ -306,6 +307,7 @@ class AutomationController(QObject):
             request.paths, request.spec, mode=request.mode, output_dir=request.output_dir, completion=completion, progress=progress))
 
     def execute(self, kind, token):
+        if kind in self.panels and getattr(self.panels[kind],'_transfer_pending',False):return
         if not self.accepting or not isinstance(token, PreviewToken) or not self._current(kind, token):
             self.panels.get(kind,self.window.rules_page).show_error('预览已失效，请重新预览'); return
         submit = (lambda completion, progress: self.executor.submit_images(token.preview, completion=completion, progress=progress)) if kind == 'images' else (
@@ -361,7 +363,8 @@ class AutomationController(QObject):
     def _finished(self, key, result, error):
         kind, job = key
         if self.jobs.get(kind) is not job: return
-        self.jobs.pop(kind); page = self._page(kind); page.set_busy(False)
+        self.jobs.pop(kind); page = self.panels.get(kind)
+        if page is not None:page.set_busy(False)
         if not self._current(kind, job['binding']):
             binding=job['binding']
             if (job['action']=='execute' and not error and result and binding.service is self.window.service
@@ -369,7 +372,7 @@ class AutomationController(QObject):
                 # Revoking preview authority must not lose a result already committed
                 # by the same owned service. No old preview or progress is installed.
                 self.window.show_run_outcomes(result,binding.service,binding.state_generation)
-                if hasattr(page,'execution_persisted'):page.execution_persisted.emit(result)
+                if page is not None and hasattr(page,'execution_persisted'):page.execution_persisted.emit(result)
             return
         if error:
             page.show_error(error); self.window.show_error(error); return

@@ -12,7 +12,7 @@ class FileProcessWidget(QWidget):
     changed=Signal()
     execution_persisted=Signal(object)
     def __init__(self,parent=None):
-        super().__init__(parent);self._generation=0;self._token=None;self._sample_paths=();self._busy=False;self._can_execute=False;self._ruleset=None
+        super().__init__(parent);self._generation=0;self._token=None;self._sample_paths=();self._busy=False;self._transfer_pending=False;self._can_execute=False;self._ruleset=None
         box=QVBoxLayout(self);box.setContentsMargins(12,12,12,12);box.setSizeConstraint(QLayout.SetMinimumSize)
         self.sample_label=QLabel('选择文件或文件夹；先预览，再明确执行。');self.sample_label.setWordWrap(True);box.addWidget(self.sample_label)
         row=QHBoxLayout();self.sample_button=QPushButton('选择文件');self.folder_sample_button=QPushButton('选择文件夹')
@@ -52,25 +52,28 @@ class FileProcessWidget(QWidget):
     def invalidate_preview(self):self._generation+=1;self._token=None;self._can_execute=False;self.preview_text.clear();self._buttons()
     invalidate=invalidate_preview
     def _preview(self):
+        if self._transfer_pending:return
         try:
             if self._ruleset is None:raise ValueError('请先导入规则文件并绑定所需目录')
             self.previewRequested.emit(RulePreviewRequest(self.selected_id,self._sample_paths,self._ruleset.revision,self.generation))
         except ValueError as exc:self.show_error(str(exc))
     request_preview=_preview
     def _execute(self):
-        if self._token is not None and self._can_execute and not self._busy:self.executeRequested.emit(self._token)
+        if self._token is not None and self._can_execute and not self._busy and not self._transfer_pending:self.executeRequested.emit(self._token)
     execute=_execute
     def set_preview(self,text,token,can_execute):self.preview_text.setPlainText(text);self._token=token;self._can_execute=can_execute;self.error_label.clear();self._buttons()
     def show_error(self,message):
         translations={'Package installed; use replace':'此规则文件已安装，请使用“替换”。','Enabled rule unavailable':'所需目录未绑定或规则不可用，请先核对绑定。','Catalogue changed; reload required':'规则文件已变化，请重新载入并预览。','Active catalogue missing; explicit restore required':'规则目录缺失，请明确选择备份恢复。'}
         self.error_label.setText(translations.get(message,message));self.error_label.setToolTip(message);self.invalidate_preview()
     def set_busy(self,busy,*,cancellable=True):self._busy=busy;self._buttons()
+    def set_transfer_pending(self,pending):self._transfer_pending=pending;self._buttons()
     def set_cancel_pending(self,pending):self.progress_label.setText('正在安全结束当前任务…' if pending else '')
     def _buttons(self):
         if not hasattr(self,'preview_button'):return
-        self.preview_button.setEnabled(not self._busy and bool(self._sample_paths) and self._ruleset is not None)
-        self.execute_button.setEnabled(not self._busy and self._can_execute and self._token is not None);self.cancel_button.setEnabled(self._busy)
-        for control in (self.sample_button,self.folder_sample_button,self.rule_choice):control.setEnabled(not self._busy)
+        available=not self._busy and not self._transfer_pending
+        self.preview_button.setEnabled(available and bool(self._sample_paths) and self._ruleset is not None)
+        self.execute_button.setEnabled(available and self._can_execute and self._token is not None);self.cancel_button.setEnabled(self._busy)
+        for control in (self.sample_button,self.folder_sample_button,self.rule_choice):control.setEnabled(available)
 
 class FileProcessDialog(QDialog):
     execution_persisted=Signal(object)
