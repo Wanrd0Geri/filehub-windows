@@ -38,8 +38,11 @@ class ArchiveDialog(QDialog):
         apply_theme(self,window.service.config.theme)
 
     def _live(self):
-        return (not self.closed and self.service is self.window.service and not self.service._closing
-            and self.binding[1]==self.window.automation.state_generation)
+        return (not self.closed and self._same_state() and not self.service._closing
+            and not self.window._quit_requested and not self.window._close_requested)
+
+    def _same_state(self):
+        return self.service is self.window.service and self.binding[1]==self.window.automation.state_generation
 
     def _closed(self,_):
         self.closed=True;self.invalidate();self._recovery_token=None
@@ -86,7 +89,19 @@ class ArchiveDialog(QDialog):
                 self._recovery_token=None;self.entry=service.manual_archive_entry(snapshot);self._show_recovery()
                 self.details.setPlainText('手动标签归档已恢复。请预览目的地后再归档。')
             def failed(message):
-                if current():self._recovery_token=None;self.details.setPlainText(message);self._show_recovery()
+                if not current():return
+                # Adoption and granting are separate durable catalogue writes.
+                # Read authority after any failure; never assume nothing committed.
+                def reloaded(entry):
+                    if not current() or effective+1!=self.window.automation.rule_generation:return
+                    self._recovery_token=None;self.entry=entry
+                    service.migration_candidate=entry[1]
+                    self.window.automation._rules_saved(entry[0])
+                    self._show_recovery();self.details.setPlainText(message+'\n已重新读取项目设置；请确认后重试。')
+                def reload_failed(error):
+                    if current():
+                        self._recovery_token=None;self.details.setPlainText(message+'\n项目设置未能重新读取：'+error);self._show_recovery()
+                self.window.coordinator.submit(service.manual_archive_entry,reloaded,reload_failed)
             self.window.automation.mutate(work,service=service,state_generation=self.binding[1],on_complete=ready,on_error=failed)
         review.finished.connect(finished);review.open()
 
@@ -127,8 +142,12 @@ class ArchiveDialog(QDialog):
 
     def finished_result(self,result):
         self.executing=False
-        if not self._live():return
-        self.execution_persisted.emit(result);self.window.show_result(result);self.accept()
+        if not self._same_state():return
+        # Retirement forbids new UI work but cannot discard a durable result.
+        # Runtime's bound dialog/claim callbacks own the acknowledge authority.
+        self.execution_persisted.emit(result)
+        if self._live():self.window.show_result(result)
+        if not self.closed:self.accept()
 
     def execution_failed(self,message):
         if not self._live():return

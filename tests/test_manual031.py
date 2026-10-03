@@ -233,3 +233,69 @@ def test_service_change_after_confirmation_waiting_in_barrier_does_not_migrate(l
     assert not old.catalog.path.exists() and not new.catalog.path.exists() and d.preview is None
     assert not d.isVisible() or not d.preview_button.isEnabled()
     old.close_conversions().wait(5)
+
+
+def test_quit_after_manual_commit_boundary_retains_durable_ack_without_ui(legacy,monkeypatch):
+    from filehub.platform.windows import WindowsPlatform
+    app,rt,paths,_=legacy;install_archive(rt.service)
+    rt.window.automation.load();settle(app,rt);d=send(app,rt,paths)
+    d.tag.setText('XYZ020822');d.request_preview();settle(app,rt)
+    entered=Event();release=Event();persisted=[];displayed=[];service=rt.service
+    class Block(WindowsPlatform):
+        def checkpoint(self,stage,item):
+            if stage=='before_publish':entered.set();assert release.wait(5)
+    service.engine.platform=Block()
+    d.execution_persisted.connect(persisted.append)
+    monkeypatch.setattr(rt.window,'show_result',displayed.append)
+    try:
+        d.execute();assert entered.wait(2)
+        rt.request_quit();assert service._closing and not rt.closed
+        release.set();settle(app,rt)
+        assert rt.closed and service.history()[0].ok and all(not p.exists() for p in paths)
+        assert len(persisted)==1, 'Quit swallowed the persisted manual result'
+        assert rt.queue.claim(now=11) is None, 'Committed archive selection was released for replay'
+        assert displayed==[] and not d.isVisible()
+    finally:release.set()
+
+
+def test_partial_restore_reads_actual_catalog_and_allows_explicit_same_window_retry(legacy,monkeypatch):
+    app,rt,paths,_=legacy;d=send(app,rt,paths);d.tag.setText('XYZ020822')
+    original=rt.service.catalog.set_compatibility;calls=[]
+    def fail_once(*args,**kwargs):
+        calls.append(True)
+        if len(calls)==1:raise OSError('owned injected permission failure')
+        return original(*args,**kwargs)
+    monkeypatch.setattr(rt.service.catalog,'set_compatibility',fail_once)
+    confirm(app,rt,d)
+    disk=rt.service.catalog.load()
+    assert disk.packages and not disk.compatibility_permissions
+    assert rt.window.automation.catalog_snapshot.revision==disk.revision, 'Partial adoption left controller authority stale'
+    assert d.entry[0].revision==disk.revision and d.entry[1] is None
+    assert rt.service.migration_candidate is None
+    assert d.tag.text()=='XYZ020822' and d.paths==paths and d.history_chips.tags==('XYZ020821',)
+    assert not d.preview_button.isEnabled() and len(calls)==1
+    confirm(app,rt,d)
+    assert rt.service.catalog.load().compatibility_permissions==frozenset({'manual_archive'}) and len(calls)==2
+    d.request_preview();settle(app,rt);assert d.preview and all(not i.error for i in d.preview.items)
+
+
+@pytest.mark.parametrize('stale',['service','state'])
+def test_durable_manual_callback_from_old_state_cannot_deliver_or_update_ui(legacy,monkeypatch,stale):
+    from filehub.service import FileHubService
+    app,rt,paths,_=legacy;install_archive(rt.service)
+    rt.window.automation.load();settle(app,rt);d=send(app,rt,[paths[0]])
+    d.tag.setText('XYZ020822');d.request_preview();settle(app,rt)
+    result=rt.service.execute(d.preview);assert result.ok
+    persisted=[];displayed=[];d.execution_persisted.connect(persisted.append)
+    monkeypatch.setattr(rt.window,'show_result',displayed.append)
+    old=rt.service
+    if stale=='service':
+        new=FileHubService(Config(),rt.state_dir/'different-state');rt.window.service=new
+    else:rt.window.automation.state_generation+=1
+    try:
+        d.finished_result(result)
+        assert persisted==displayed==[] and not rt.claim_handled and rt.active_claim is not None
+    finally:
+        rt.window.service=old
+        if stale=='state':rt.window.automation.state_generation-=1
+        else:new.close_conversions().wait(5)
