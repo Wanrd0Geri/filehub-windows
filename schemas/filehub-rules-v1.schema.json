@@ -1,0 +1,603 @@
+{
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "filehub.rules"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,128}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S"
+    },
+    "bindings": {
+      "type": "object",
+      "maxProperties": 100,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{1,128}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/binding"
+      }
+    },
+    "variables": {
+      "type": "object",
+      "maxProperties": 100,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{1,128}$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256,
+        "pattern": "^[^\\\\/:*?\"<>|${}\\x00-\\x1f]+$"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    }
+  },
+  "required": [
+    "format",
+    "version",
+    "id",
+    "name",
+    "bindings",
+    "variables",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://filehub.local/schemas/filehub-rules-v1.schema.json",
+  "title": "FileHub portable rules v1",
+  "$comment": "Runtime semantics also enforce 2000000 UTF-8 bytes, unique rule IDs, at most 100 condition leaves, Windows component/UTF-16 limits, declared binding/variable references, available naming tokens and expansion placement. Compatibility is intentionally rejected until the complete archive profile validator and closed schema extension land.",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,128}$"
+    },
+    "pathReference": {
+      "type": "object",
+      "properties": {
+        "binding": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,128}$"
+        },
+        "relative": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding",
+        "relative"
+      ],
+      "additionalProperties": false
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "predicate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "enum": [
+                "kind"
+              ]
+            },
+            "operator": {
+              "enum": [
+                "equals"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096,
+              "pattern": "^(?:[Ff][Ii][Ll][Ee]|[Ff][Oo][Ll][Dd][Ee][Rr]|[Ii][Mm][Aa][Gg][Ee]|[Vv][Ii][Dd][Ee][Oo]|[Aa][Uu][Dd][Ii][Oo]|[Dd][Oo][Cc][Uu][Mm][Ee][Nn][Tt]|[Oo][Tt][Hh][Ee][Rr])$"
+            }
+          },
+          "required": [
+            "field",
+            "operator",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "enum": [
+                "extension",
+                "name"
+              ]
+            },
+            "operator": {
+              "enum": [
+                "equals",
+                "contains",
+                "starts_with",
+                "ends_with",
+                "glob"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "field",
+            "operator",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "enum": [
+                "size_bytes",
+                "first_seen_age_seconds",
+                "stable_age_seconds"
+              ]
+            },
+            "operator": {
+              "enum": [
+                "eq",
+                "lt",
+                "le",
+                "gt",
+                "ge"
+              ]
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            }
+          },
+          "required": [
+            "field",
+            "operator",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "enum": [
+                "created",
+                "modified"
+              ]
+            },
+            "operator": {
+              "enum": [
+                "eq",
+                "lt",
+                "le",
+                "gt",
+                "ge"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "field",
+            "operator",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "action": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "rename"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "pattern": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                }
+              },
+              "required": [
+                "pattern"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "move"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "destination": {
+                  "$ref": "#/$defs/pathReference"
+                }
+              },
+              "required": [
+                "destination"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "copy"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "destination": {
+                  "$ref": "#/$defs/pathReference"
+                }
+              },
+              "required": [
+                "destination"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "subfolder"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "image_convert"
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "output_format": {
+                  "enum": [
+                    "jpeg",
+                    "png",
+                    "webp"
+                  ]
+                },
+                "mode": {
+                  "enum": [
+                    "keep",
+                    "replace"
+                  ]
+                },
+                "destination": {
+                  "$ref": "#/$defs/pathReference"
+                },
+                "quality": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "background": {
+                  "type": "string",
+                  "pattern": "^#[0-9A-Fa-f]{6}$"
+                },
+                "lossless": {
+                  "type": "boolean"
+                },
+                "timeout_seconds": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 3600
+                },
+                "max_pixels": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 40000000
+                },
+                "kind": {
+                  "const": "image"
+                }
+              },
+              "required": [
+                "output_format"
+              ],
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "mode": {
+                        "const": "replace"
+                      }
+                    },
+                    "required": [
+                      "mode"
+                    ]
+                  },
+                  "then": {
+                    "not": {
+                      "required": [
+                        "destination"
+                      ]
+                    }
+                  },
+                  "else": {
+                    "required": [
+                      "destination"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "options"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "condition4": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/predicate"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "all",
+                "any",
+                "none"
+              ]
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/predicate"
+              },
+              "minItems": 1,
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "mode",
+            "children"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "condition3": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/predicate"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "all",
+                "any",
+                "none"
+              ]
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition4"
+              },
+              "minItems": 1,
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "mode",
+            "children"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "condition2": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/predicate"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "all",
+                "any",
+                "none"
+              ]
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition3"
+              },
+              "minItems": 1,
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "mode",
+            "children"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "condition1": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/predicate"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "all",
+                "any",
+                "none"
+              ]
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition2"
+              },
+              "minItems": 1,
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "mode",
+            "children"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,128}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathReference"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "condition": {
+          "$ref": "#/$defs/condition1"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "scope",
+        "condition",
+        "actions"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
