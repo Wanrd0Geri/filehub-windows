@@ -34,7 +34,7 @@ try {
     & $taskPython -B -X utf8 (Join-Path $PSScriptRoot 'create-rule-guide.py') --output dist/FileHub-rule-guide-v1.zip
     if ($LASTEXITCODE) { throw 'Rule guide bundle failed' }
     $taskFiles = @(Get-Item dist/FileHub/FileHub.exe,dist/FileHub-rule-guide-v1.zip)
-    if (!$PortableOnly) { $taskFiles += Get-Item dist/installer/FileHub-0.3.0-windows-x64-setup.exe }
+    if (!$PortableOnly) { $taskFiles += Get-Item dist/installer/FileHub-0.3.1-windows-x64-setup.exe }
     $taskFiles | ForEach-Object {
         [pscustomobject]@{ file = $_.FullName; bytes = $_.Length; sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLower() }
     } | ConvertTo-Json | Set-Content dist/artifacts.json -Encoding utf8

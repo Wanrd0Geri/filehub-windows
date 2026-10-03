@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def test_version_inventory_and_help_are_complete_and_explicit():
     inventory=json.loads((ROOT/'packaging/runtime-inventory.json').read_text(encoding='utf-8'))
-    assert inventory['version']==tomllib.loads((ROOT/'pyproject.toml').read_text())['project']['version']=='0.3.0'
+    assert inventory['version']==tomllib.loads((ROOT/'pyproject.toml').read_text())['project']['version']=='0.3.1'
     actual=set()
     for path in (ROOT/'src/filehub').rglob('*.py'):
         parts=list(path.relative_to(ROOT/'src').with_suffix('').parts)
@@ -19,7 +19,7 @@ def test_version_inventory_and_help_are_complete_and_explicit():
     assert len(required)==len(inventory['required_modules'])
     assert excluded=={'filehub.ui.templates_page','filehub.ui.condition_editor','filehub.rulefiles.__main__'}
     assert {'filehub.rulefiles.compatibility','filehub.rulefiles.migration','filehub.selftest020',
-            'filehub.selftest030','filehub.ui.action_editor'} <= required
+            'filehub.selftest030','filehub.selftest031','filehub.ui.action_editor'} <= required
     assert len(inventory['help'])==7
     assert {item['destination'] for item in inventory['help']} == {
         'help/AI规则编写指南.md','help/filehub-rules-v1.schema.json',
@@ -40,5 +40,5 @@ def test_spec_consumes_inventory_and_build_scopes_new_artifacts():
     assert "for item in inventory['help']" in spec
     build=(ROOT/'packaging/build.ps1').read_text(encoding='utf-8')
     assert 'Get-ChildItem dist/installer/*.exe' not in build
-    assert 'FileHub-0.3.0-windows-x64-setup.exe' in build
+    assert 'FileHub-0.3.1-windows-x64-setup.exe' in build
     assert 'create-rule-guide.py' in build and 'PYTHONDONTWRITEBYTECODE' in build

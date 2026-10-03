@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "0.3.0",
+  "app_version": "0.3.1",
   "redistribution_status": "prepared",
   "python_version": "3.12.10",
   "ffprobe_version": "8.1.3-filehub1",
@@ -54,7 +54,7 @@
   "fonts": "Installed Inter/Noto Sans SC, then Windows system fallbacks",
   "file_hashes": {
     "docs/第三方许可.md": "b42be678f044e663040bd2982ebcb81cc16316594f3b7c0853cd131de324bb01",
-    "packaging/version-info.txt": "adce729eeaaf9d69dfac6253df9328833387282e6717d6ffc18ca3be17fa2ecc",
+    "packaging/version-info.txt": "769196ed954c782d3807b7cc56385e63d4415e73b54ddf2980ab98db1f9b5756",
     "resources/app.ico": "7720ff6a07ff5ce74188ba626d6bbfd80ed035c24d1303c4db1b23ea82313b3c",
     "resources/selftest/tiny-1920-blue.mp4": "a518c61250175b6f93f6d4fccf1c115152e2c40f0c1e9843b2e1b025fb758056",
     "resources/selftest/tiny-1920-yellow.mp4": "bf1452612e036b7df70ed25f775fa7fbbd8797a86b50df6cbb70d2203131dd08",
@@ -345,5 +345,5 @@
       "sha256": "af0bdba17f06fe037f0194069adaa31a8fe45f1a11381501896aea1fae37bd5d"
     }
   },
-  "evidence_scope": "0.3.0 pinned inputs only; actual packaged acceptance pending. Historical installation evidence is separate; no live install/uninstall performed for this release."
+  "evidence_scope": "0.3.1 pinned inputs only; actual packaged acceptance pending. Historical installation evidence is separate; no live install/uninstall performed for this release."
 }

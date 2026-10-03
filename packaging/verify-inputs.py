@@ -15,13 +15,13 @@ manifest = json.loads((root / "third_party/components.json").read_text(encoding=
 version = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 installer = (root / "packaging/installer.iss").read_text(encoding="utf-8")
 version_info = (root / "packaging/version-info.txt").read_text(encoding="utf-8")
-if version != "0.3.0" or manifest["app_version"] != version or f'#define AppVersion "{version}"' not in installer:
+if version != "0.3.1" or manifest["app_version"] != version or f'#define AppVersion "{version}"' not in installer:
     raise SystemExit("App/installer/input manifest version mismatch")
 for key in ("FileVersion", "ProductVersion"):
     if f"StringStruct('{key}', '{version}')" not in version_info:
         raise SystemExit("EXE string version mismatch")
 for key in ("filevers", "prodvers"):
-    if not re.search(rf"{key}=\(0,\s*3,\s*0,\s*0\)", version_info):
+    if not re.search(rf"{key}=\(0,\s*3,\s*1,\s*0\)", version_info):
         raise SystemExit("EXE fixed version mismatch")
 if manifest["redistribution_status"] != "prepared":
     raise SystemExit("Redistribution input preparation is incomplete")
@@ -107,4 +107,4 @@ expected_webp = {"qt6gui.dll", "qt6core.dll", "vcruntime140.dll", "kernel32.dll"
                  *[f"api-ms-win-crt-{name}-l1-1-0.dll" for name in ("string", "heap", "math", "utility", "runtime")]}
 if set(imports(plugin)) != expected_webp:
     raise SystemExit("Unreviewed qwebp native dependency")
-print("0.3.0 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified")
+print("0.3.1 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified")

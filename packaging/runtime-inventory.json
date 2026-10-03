@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "required_modules": [
     "filehub",
     "filehub.__main__",
@@ -36,6 +36,7 @@
     "filehub.scheduler",
     "filehub.selftest020",
     "filehub.selftest030",
+    "filehub.selftest031",
     "filehub.service",
     "filehub.tag_history",
     "filehub.templates",
