@@ -41,7 +41,19 @@ def create_demo(base_dir):
     config=Config(sync_root=sync,watch_roots=(watch,),paused=True,global_jobs=False)
     store=ConfigStore(base/'state');store.save(config)
     (store.state_dir/'demo.marker').write_text('FileHub isolated demo',encoding='utf-8')
-    return runtime_service(config,store.state_dir),store,(source,)
+    service=runtime_service(config,store.state_dir)
+    # Explicit isolated engineering entry only; never called by ordinary startup.
+    from filehub.rulefiles.migration import legacy_package
+    from filehub.rulefiles.protocol import encode_package
+    from filehub.automation.models import RuleSet
+    from filehub.templates import TemplateLibrary
+    from filehub.rules import discover_projects
+    package,bindings,_=legacy_package(RuleSet(),config,TemplateLibrary(),discover_projects(sync))
+    snapshot=service.catalog.import_package(encode_package(package),expected_revision=service.catalog.load().revision)
+    snapshot=service.catalog.bind(package.id,bindings,expected_revision=snapshot.revision)
+    service.catalog.set_compatibility(package.id,frozenset({'manual_archive'}),expected_revision=snapshot.revision)
+    service.migration_candidate=None
+    return service,store,(source,)
 
 
 class ProgramUseMutex:
@@ -145,6 +157,7 @@ class Runtime(QObject):
         self.window=MainWindow(self.service,self.store,demo_callback=self._demo_worker,
             integration_callback=integration.apply if integration and not self.demo else None,
             integration_status_callback=integration.status if integration and not self.demo else None)
+        self.window.runtime=self
         self.window.runtime_close_callback=self.close_to_tray
         self.window.known_folder_proposals=bundle.proposals
         self.window.is_demo=self.demo;self.window.load_config_controls()
@@ -169,7 +182,7 @@ class Runtime(QObject):
         self.window.coordinator.submit(lambda:Scheduler(service,automatic_completion=self.window.automation.completion_hook(service,generation)),self._scheduler_ready,self.window.show_error)
         self.window.refresh_integration()
         self.config_changed(self.service.config)
-        if bundle.demo_paths:self.window.set_paths(bundle.demo_paths);self.window.tag.setText('DEMO020822')
+        if bundle.demo_paths:self.window.set_paths(bundle.demo_paths)
         if auto_timers:self.poll_timer.start();self.lease_timer.start();self.tick_timer.start()
         if not background:self.window.show()
         elif self.service.config.sync_root is None:
@@ -196,7 +209,6 @@ class Runtime(QObject):
         self.tray.setToolTip(('FileHub · 演示 · ' if self.demo else 'FileHub · ')+('自动整理已暂停' if config.paused else '自动整理运行中'))
     def busy_changed(self,busy):
         self.pause_action.setEnabled(not busy and not self.quitting and self.window.capture_work_authority() is not None)
-        self.window.demo_button.setEnabled(not busy and not self.active_claim and not self.quitting and self.window.automation.accepting)
         if self.quitting and not busy:self._finish_quit()
     def poll(self):
         if self.quitting or self.poll_pending or self.active_claim or self.window.coordinator.pending:return
@@ -212,11 +224,9 @@ class Runtime(QObject):
         if batch is None:return
         self.active_claim=batch;self.claim_handled=False;self.claim_queue=queue
         if self.quitting:return
-        self.claim_dialog=self.window.open_archive_dialog(batch.paths)
+        self.claim_dialog=self.window.open_file_dialog(batch.paths)
         self.claim_dialog.execution_persisted.connect(self._claim_executed)
         self.claim_dialog.finished.connect(self._claim_finished)
-        self.window.demo_button.setEnabled(False)
-        if self.demo:self.claim_dialog.tag.setText('DEMO020822')
     def renew_claim(self):
         if not self.active_claim or self.renew_pending or self.quitting:return
         self.renew_pending=True;queue=self.claim_queue;token=self.active_claim.token;now=self.wall_clock()
@@ -235,7 +245,6 @@ class Runtime(QObject):
             else:queue.release(batch.token)
         def done(_):
             self.active_claim=None;self.claim_handled=False;self.claim_queue=None
-            self.window.demo_button.setEnabled(not self.window.coordinator.pending and not self.quitting)
         self.window.coordinator.submit(finish,done,lambda error:(done(None),self.window.show_error(error)),lifecycle=True)
     def schedule_tick(self):
         if self.quitting or self.tick_pending or self.scheduler is None or self.window.coordinator.pending or not self.window.automation.accepting:return

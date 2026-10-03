@@ -13,7 +13,7 @@ def _paths(value):
 
 @dataclass(frozen=True)
 class RulePreviewRequest:
-    rule_id: str
+    rule_id: str | None
     paths: tuple[str, ...]
     ruleset_revision: str
     generation: int

@@ -8,6 +8,7 @@ import os
 import re
 import tempfile
 import uuid
+from datetime import datetime
 
 from ..models import checked_path
 from ..platform.windows import process_lock
@@ -67,6 +68,9 @@ class PackageDelta:
 class BackupInfo:
     id: str
     revision: str
+    created: str = ''
+    package_names: tuple = ()
+    summary: str = ''
 
 def compare_packages(old,new):
     if old.id!=new.id: raise ValueError('Package IDs must match')
@@ -267,7 +271,12 @@ class RuleCatalogStore:
         result=[]
         for path in sorted(self.backup_dir.glob('*.json')):
             if not re.fullmatch('[0-9a-f]{32}',path.stem): continue
-            try: doc,_=self._read(path); result.append(BackupInfo(path.stem,self._snapshot(doc).revision))
+            try:
+                doc,_=self._read(path);snapshot=self._snapshot(doc)
+                created=datetime.fromtimestamp(path.stat().st_mtime).astimezone().strftime('%Y-%m-%d %H:%M:%S')
+                names=tuple(p.name for p in snapshot.packages.values())
+                summary='\n'.join(p.name+' · '+str(len(p.rules))+' 条规则\n'+ '\n'.join(r.name for r in p.rules) for p in snapshot.packages.values())
+                result.append(BackupInfo(path.stem,snapshot.revision,created,names,summary))
             except (ValueError,OSError): continue
         return tuple(result)
 

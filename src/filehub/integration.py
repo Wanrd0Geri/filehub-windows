@@ -63,7 +63,7 @@ def install_context_menu(exe,*,registry=None):
         if r.get(key,'FileHubOwner')==OWNER and command is not None and command!=r.get(key,'FileHubCommand'):raise ValueError('右键命令被其他程序修改，拒绝覆盖')
         if r.get(key,'Icon') is not None and r.get(key,'Icon')!=icon:raise ValueError('右键图标被其他程序修改，拒绝覆盖')
     for key in MENU_KEYS:
-        r.set(key,'FileHubOwner',OWNER);r.set(key,'','送进项目…')
+        r.set(key,'FileHubOwner',OWNER);r.set(key,'','用 FileHub 处理…')
         command=f'"{exe}" --send "%1"'
         r.set(key,'MultiSelectModel','Player')
         r.set(key,'FileHubCommand',command)
@@ -79,7 +79,7 @@ def remove_context_menu(*,registry=None):
         r.delete_value(key,'FileHubIcon')
         if r.get(key+'\\command','')==r.get(key,'FileHubCommand'):r.delete_value(key+'\\command','')
         r.delete_key_if_empty(key+'\\command')
-        for name,value in (('','送进项目…'),('MultiSelectModel','Player'),('FileHubOwner',OWNER)):
+        for name,value in (('','送进项目…'),('','用 FileHub 处理…'),('MultiSelectModel','Player'),('FileHubOwner',OWNER)):
             if r.get(key,name)==value:r.delete_value(key,name)
         r.delete_value(key,'FileHubCommand')
         r.delete_key_if_empty(key)

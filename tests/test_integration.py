@@ -59,7 +59,7 @@ def test_registry_roundtrip_owned_keys_only(tmp_path):
     install_context_menu(exe,registry=reg)
     commands=[v[''] for k,v in reg.data.items() if k.endswith('\\command')]
     assert len(commands)==2 and all(cmd==f'"{exe}" --send "%1"' for cmd in commands)
-    assert any(v.get('')=='送进项目…' for v in reg.data.values())
+    assert any(v.get('')=='用 FileHub 处理…' for v in reg.data.values())
     set_autostart(exe,True,registry=reg);set_autostart(exe,False,registry=reg)
     remove_context_menu(registry=reg)
     assert reg.data=={'Software\\Microsoft\\Windows\\CurrentVersion\\Run':{'Other':'other.exe'}}

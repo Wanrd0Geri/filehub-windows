@@ -32,7 +32,7 @@ def window(app, tmp_path):
     service = FileHubService(Config(), tmp_path/'state')
     w = MainWindow(service, ConfigStore(tmp_path/'state'))
     settle(app, lambda: not w.coordinator.pending)
-    w.navigate(5); w.show(); settle(app)
+    w.navigate(2); w.show(); settle(app)
     yield w
     w.automation.retire(lambda: None)
     settle(app, lambda: w.automation.settled and not w.coordinator.pending)
@@ -60,7 +60,7 @@ def test_image_drop_appends_once_without_preview_or_archive_routing(app, window,
     p = window.conversion_page
     first = tmp_path/'one.JPEG'; second = tmp_path/'two.png'; third = tmp_path/'three.webp'
     for path in (first, second, third): path.write_bytes(b'not decoded by drop')
-    archive = tmp_path/'archive.txt'; window.set_paths([archive]); window.navigate(5)
+    archive = tmp_path/'archive.txt'; window.set_paths([archive]); window.navigate(2)
     p.set_paths([first]); p.fields.destination.setText(str(tmp_path/'output'))
     p.set_preview([], object()); generation = p.generation
     changes = []; previews = []; executions = []

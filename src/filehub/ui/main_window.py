@@ -10,7 +10,7 @@ from .archive_dialog import ArchiveDialog
 from .tag_history import HistoryController, HistoryChips
 from .status_footer import StatusFooter
 from .rules_page import RulesPage
-from .templates_page import TemplatesPage
+from .file_process_dialog import FileProcessWidget, FileProcessDialog
 from .conversion_page import ConversionPage
 from .automation_controller import AutomationController
 
@@ -34,14 +34,13 @@ class MainWindow(QMainWindow):
         sidebar=QWidget();sidebar.setObjectName('sidebar');sidebar.setFixedWidth(180);nav=QVBoxLayout(sidebar);nav.setContentsMargins(12,22,12,17);nav.setSpacing(5)
         brand_row=QHBoxLayout();brand_row.setSpacing(10);brand_icon=QLabel();brand_icon.setFixedWidth(30);brand_icon.setPixmap(icon('FileHub').pixmap(30,30));brand_row.addWidget(brand_icon);brand=QLabel('FileHub');brand.setObjectName('brand');brand_row.addWidget(brand);nav.addLayout(brand_row);nav.addSpacing(18)
         self.pages=QStackedWidget();self.nav_buttons=[]
-        for n,name in enumerate(('整理','收件箱','记录','设置','自动规则','图片转换')):
+        for n,name in enumerate(('文件处理','规则文件','图片转换','记录','设置')):
             button=QPushButton(icon(name),name);button.setObjectName('nav');button.setCheckable(True);button.clicked.connect(lambda checked=False,i=n:self.navigate(i));nav.addWidget(button);self.nav_buttons.append(button)
         nav.addStretch();self.running=QLabel();self.running.setObjectName('muted');nav.addWidget(self.running);nav.addWidget(self.muted('本机 · Windows'))
         outer.addWidget(sidebar);outer.addWidget(self.pages,1)
-        self.build_home();self.build_inbox();self.build_history();self.build_settings()
-        self.rules_tabs=QTabWidget();self.rules_page=RulesPage();self.templates_page=TemplatesPage()
-        self.rules_tabs.addTab(self.rules_page,'自动规则');self.rules_tabs.addTab(self.templates_page,'项目模板')
-        self.pages.addWidget(self.rules_tabs);self.conversion_page=ConversionPage(can_accept_paths=lambda:self.capture_work_authority() is not None);self.pages.addWidget(self.conversion_page)
+        self.build_home();self.rules_page=RulesPage();self.rules_scroll=QScrollArea();self.rules_scroll.setWidgetResizable(True);self.rules_scroll.setWidget(self.rules_page);self.pages.addWidget(self.rules_scroll)
+        self.conversion_page=ConversionPage(can_accept_paths=lambda:self.capture_work_authority() is not None);self.pages.addWidget(self.conversion_page)
+        self.build_history();self.build_settings()
         self.status_footer=StatusFooter(self);self.status=self.status_footer.label
         self.statusBar().setObjectName('appStatusBar');self.statusBar().setSizeGripEnabled(False);self.statusBar().addWidget(self.status_footer,1)
         self.coordinator.busy.connect(self.busy_changed)
@@ -87,30 +86,23 @@ class MainWindow(QMainWindow):
         return b
 
     def build_home(self):
-        layout=self.page('文件，各归其位。','留下需要的，其余交给 FileHub。')
-        self.first_run=QLabel('欢迎使用 FileHub\n自动规则：先在设置中选择观察文件夹，保存并启用规则，再继续自动整理。\n自动检查约每 10 分钟；首次启动保持暂停。送进项目另外需要同步空间。\n未匹配规则的旧收件箱整理才等待设定天数（默认 3 天）。');self.first_run.setObjectName('firstRun');self.first_run.setWordWrap(True);layout.addWidget(self.first_run)
-        self.demo_notice=self.muted('演示 · 当前文件和同步空间均为独立示例。普通启动会返回原设置。');self.demo_notice.hide();layout.addWidget(self.demo_notice)
-        row=QHBoxLayout();row.addWidget(self.button('选择文件',self.choose_files));row.addWidget(self.button('选择文件夹',self.choose_source_folder));self.first_sync_button=self.button('选择同步空间',self.first_choose_sync);row.addWidget(self.first_sync_button);row.addStretch();self.demo_button=self.button('演示',self.start_demo);row.addWidget(self.demo_button);layout.addLayout(row)
-        self.selection=QLabel('将文件拖到这里，或选择多个文件。');self.selection.setWordWrap(True);layout.addWidget(self.selection)
-        self.source_cards=[];self.source_titles=[];cards=QHBoxLayout()
-        for name in ('桌面','下载'):
-            card=QFrame();card.setObjectName('card');box=QVBoxLayout(card);box.setContentsMargins(16,14,16,14);title=QLabel(name);self.source_titles.append(title);card_head=QHBoxLayout();mark=QLabel();mark.setPixmap(icon('整理').pixmap(22,22));card_head.addWidget(mark);card_head.addWidget(title);card_head.addStretch();box.addLayout(card_head);status=self.muted('未选择目录 · 已暂停');box.addWidget(status);self.source_cards.append(status);cards.addWidget(card)
-        layout.addLayout(cards)
-        self.editor=QWidget();editor_layout=QVBoxLayout(self.editor);editor_layout.setContentsMargins(0,0,0,0)
-        row=QHBoxLayout();self.tag=QLineEdit();self.tag.setMinimumHeight(36);self.tag.setPlaceholderText('项目代码与目的地，例如 LYX020822');row.addWidget(self.tag,1);self.preview_button=self.button('预览',self.request_preview);row.addWidget(self.preview_button);self.execute_button=self.button('送进项目',self.execute,True);row.addWidget(self.execute_button);editor_layout.addLayout(row)
-        self.history_chips=HistoryChips(self.tag_history,self.fill_history_tag);editor_layout.addWidget(self.history_chips)
-        self.preview_details=QTextEdit();self.preview_details.setReadOnly(True);self.preview_details.setPlaceholderText('预览将显示每项的目的地、警告与问题。');self.preview_details.setMinimumHeight(110);self.preview_details.setMaximumHeight(160);editor_layout.addWidget(self.preview_details);layout.addWidget(self.editor);self.editor.hide()
-        self.tag.textChanged.connect(self.invalidate_preview)
-        layout.addWidget(self.muted('最近整理'));self.recent_list=QListWidget();layout.addWidget(self.recent_list);layout.addStretch(1)
+        layout=self.page('文件处理','选择文件，核对预览，再明确执行。')
+        self.first_run=QLabel('导入外部规则文件并绑定所需目录，即可手动预览。自动处理还需启用规则、配置观察目录并取消暂停。');self.first_run.setWordWrap(True);self.first_run.setObjectName('firstRun');layout.addWidget(self.first_run)
+        row=QHBoxLayout();row.addWidget(self.button('管理规则文件',lambda:self.navigate(1)));self.archive_button=self.button('个人项目归档…',self.choose_archive);self.archive_button.hide();row.addWidget(self.archive_button);row.addStretch();layout.addLayout(row)
+        self.home_panel=FileProcessWidget();layout.addWidget(self.home_panel,1)
+        self.recent_list=QListWidget();self.recent_list.setMaximumHeight(90);layout.addWidget(self.recent_list)
         self.pause_button=self.button('继续整理',self.toggle_pause);layout.addWidget(self.pause_button,alignment=Qt.AlignRight)
         home=layout.parentWidget();layout.setSizeConstraint(QLayout.SetMinimumSize)
         self.pages.removeWidget(home);self.home_scroll=QScrollArea();self.home_scroll.setWidgetResizable(True);self.home_scroll.setWidget(home);self.pages.addWidget(self.home_scroll)
 
-    def build_inbox(self):
-        layout=self.page('收件箱','暂时没有归属的文件，在这里留一会儿。')
-        self.inbox_list=QListWidget();self.inbox_list.setSelectionMode(QListWidget.ExtendedSelection);layout.addWidget(self.inbox_list)
-        row=QHBoxLayout();row.addWidget(self.button('刷新',self.refresh_inbox));row.addWidget(self.button('送进项目',self.archive_inbox));row.addWidget(self.button('打开所选位置',self.open_inbox));layout.addLayout(row)
-        layout.addWidget(self.muted('共享到期清理默认由 Mac 管理，Windows 已关闭。'))
+    def choose_archive(self):
+        if not self.admit_work():return
+        service=self.service
+        def ready(_):
+            if service is not self.service:return
+            paths,_=QFileDialog.getOpenFileNames(self,'个人项目归档')
+            if paths:self.open_archive_dialog(paths)
+        self.coordinator.submit(lambda:service.archive_context(),ready,self.show_error)
 
     def build_history(self):
         layout=self.page('整理记录','每次归档都有迹可循。撤销会保护修改后的文件。')
@@ -119,45 +111,26 @@ class MainWindow(QMainWindow):
         row=QHBoxLayout();row.addWidget(self.button('刷新',self.refresh));row.addStretch();row.addWidget(self.button('打开回收站',lambda:QDesktopServices.openUrl(QUrl('shell:RecycleBinFolder'))));self.undo_button=self.button('撤销所选批次',self.undo);row.addWidget(self.undo_button);layout.addLayout(row)
 
     def build_settings(self):
-        layout=self.page('设置','按你的习惯，安静地运行。')
-        self.sync_path=QLineEdit();self.sync_path.setReadOnly(True);row=QHBoxLayout();row.addWidget(self.sync_path,1);row.addWidget(self.button('选择同步空间',self.choose_sync));layout.addWidget(QLabel('同步空间'));layout.addLayout(row)
-        layout.addWidget(QLabel('自动整理目录 · 明确选择后才生效'));self.watch_list=QListWidget();self.watch_list.setMinimumHeight(92);self.watch_list.setMaximumHeight(130);layout.addWidget(self.watch_list)
+        layout=self.page('设置','观察目录需要明确选择；导入或绑定规则不会添加目录。')
+        layout.addWidget(QLabel('观察目录 · 只处理最外层'))
+        self.watch_list=QListWidget();layout.addWidget(self.watch_list,1)
         row=QHBoxLayout();row.addWidget(self.button('添加目录',lambda:self.choose_watch()));row.addWidget(self.button('桌面…',lambda:self.choose_watch('desktop')));row.addWidget(self.button('下载…',lambda:self.choose_watch('downloads')));row.addWidget(self.button('移除所选',lambda:self.watch_list.takeItem(self.watch_list.currentRow())));layout.addLayout(row)
-        row=QHBoxLayout();row.addWidget(QLabel('未匹配规则的收件箱等待'));self.sweep_days=QSpinBox();self.sweep_days.setButtonSymbols(QSpinBox.NoButtons);self.sweep_days.setRange(1,365);self.sweep_days.setSuffix(' 天');row.addWidget(self.sweep_days);row.addStretch();row.addWidget(QLabel('外观'));self.appearance=QComboBox();self.appearance.addItems(['深色','浅色','跟随系统']);row.addWidget(self.appearance);layout.addLayout(row)
-        layout.addWidget(self.muted('自动检查约每 10 分钟；立即检查会执行启用的规则。普通规则使用各自条件，无需同步空间。'))
-        self.paused=QCheckBox('暂停自动整理（仍可手动归档）');layout.addWidget(self.paused)
-        self.global_jobs=QCheckBox('由这台电脑管理共享任务（高级）');layout.addWidget(self.global_jobs)
-        layout.addWidget(self.muted('共享收件箱到期清理 + 同步空间不合规文件名修正（包括已有项目）。\n仅一台电脑开启；默认由 Mac 管理 / 关闭。普通文件名和项目路由不变。'))
-        row=QHBoxLayout();row.addWidget(QLabel('共享收件箱保留'));self.inbox_days=QSpinBox();self.inbox_days.setButtonSymbols(QSpinBox.NoButtons);self.inbox_days.setRange(1,365);self.inbox_days.setSuffix(' 天');row.addWidget(self.inbox_days);row.addStretch();layout.addLayout(row)
-        self.autostart=QCheckBox('登录后自动运行');self.context_menu=QCheckBox('文件右键菜单：送进项目');layout.addWidget(self.autostart);layout.addWidget(self.context_menu)
+        self.paused=QCheckBox('暂停自动处理（仍可手动预览和执行）');layout.addWidget(self.paused)
+        row=QHBoxLayout();row.addWidget(QLabel('外观'));self.appearance=QComboBox();self.appearance.addItems(['深色','浅色','跟随系统']);row.addWidget(self.appearance);row.addStretch();layout.addLayout(row)
+        layout.addWidget(self.muted('个人归档与清理需在规则文件页选择完整兼容定义并单独授权。'))
+        self.autostart=QCheckBox('登录后自动运行');self.context_menu=QCheckBox('文件右键菜单：用 FileHub 处理…');layout.addWidget(self.autostart);layout.addWidget(self.context_menu)
         self.autostart.setEnabled(self.integration_callback is not None);self.context_menu.setEnabled(self.integration_callback is not None)
-        layout.addStretch();self.save_button=self.button('保存设置',self.save_settings,True);layout.addWidget(self.save_button,alignment=Qt.AlignRight)
-        settings=layout.parentWidget();settings.setMinimumHeight(680)
-        self.pages.removeWidget(settings);scroll=QScrollArea();scroll.setWidgetResizable(True);scroll.setWidget(settings);self.pages.addWidget(scroll)
+        self.save_button=self.button('保存设置',self.save_settings,True);layout.addWidget(self.save_button,alignment=Qt.AlignRight)
 
     def navigate(self,index):
         self.pages.setCurrentIndex(index)
         for n,b in enumerate(self.nav_buttons):b.setChecked(index==n)
-        if index==1:self.refresh_inbox()
+
 
     def load_config_controls(self):
-        c=self.service.config;self.sync_path.setText(str(c.sync_root or ''));self.watch_list.clear();self.watch_list.addItems([str(p) for p in c.watch_roots]);self.sweep_days.setValue(c.sweep_days);self.inbox_days.setValue(c.inbox_days);self.appearance.setCurrentIndex(['dark','light','system'].index(c.theme));self.paused.setChecked(c.paused);self.global_jobs.setChecked(c.global_jobs)
-        self.first_run.setVisible(not c.watch_roots or c.sync_root is None);self.running.setText('自动整理已暂停' if c.paused else '自动整理运行中');self.pause_button.setText('继续整理' if c.paused else '暂停整理')
-        self.first_sync_button.setVisible(c.sync_root is None)
-        self.setWindowTitle('FileHub · 演示' if self.is_demo else 'FileHub')
-        self.demo_notice.setVisible(self.is_demo)
-        if self.is_demo:self.running.setText('演示 · '+self.running.text())
-        for n,label in enumerate(self.source_cards):
-            text=str(c.watch_roots[n]) if n<len(c.watch_roots) else '未选择目录'
-            self.source_titles[n].setText(c.watch_roots[n].name if n<len(c.watch_roots) else ('桌面','下载')[n])
-            label.setText(('已选择目录' if n<len(c.watch_roots) else text)+' · '+('已暂停' if c.paused else '约每 10 分钟检查规则'));label.setToolTip(text)
-
-    def choose_sync(self):
-        path=QFileDialog.getExistingDirectory(self,'选择同步空间')
-        if path:self.sync_path.setText(path)
-
-    def first_choose_sync(self):
-        self.navigate(3);self.choose_sync()
+        c=self.service.config;self.watch_list.clear();self.watch_list.addItems([str(p) for p in c.watch_roots]);self.appearance.setCurrentIndex(['dark','light','system'].index(c.theme));self.paused.setChecked(c.paused)
+        self.running.setText('自动处理已暂停' if c.paused else '自动处理运行中');self.pause_button.setText('继续处理' if c.paused else '暂停处理')
+        self.setWindowTitle('FileHub · 工程演示' if self.is_demo else 'FileHub')
 
     def choose_watch(self,role='downloads'):
         path=QFileDialog.getExistingDirectory(self,'选择自动整理目录',str(self.known_folder_proposals.get(role,'')))
@@ -172,8 +145,7 @@ class MainWindow(QMainWindow):
         if path:self.set_paths([path])
 
     def set_paths(self,paths):
-        self.paths=tuple(dict.fromkeys(Path(p) for p in paths));self.selection.setText(f'已选择 {len(self.paths)} 项 · '+ '、'.join(p.name for p in self.paths) if self.paths else '将文件拖到这里，或选择多个文件。');self.selection.setToolTip('\n'.join(map(str,self.paths)));self.invalidate_preview()
-        self.editor.setVisible(bool(self.paths))
+        self.paths=tuple(dict.fromkeys(Path(p) for p in paths));self.home_panel.set_sample_paths(self.paths)
 
     def dragEnterEvent(self,event):
         if self.pages.currentWidget() is self.conversion_page:
@@ -191,10 +163,8 @@ class MainWindow(QMainWindow):
         super().dragMoveEvent(event)
 
     def invalidate_preview(self):
-        self.preview_generation+=1;self.preview=None;self.execute_button.setEnabled(False)
-
-    def fill_history_tag(self,tag):
-        self.tag.setText(tag);self.invalidate_preview();self.tag.setFocus()
+        self.preview_generation+=1;self.preview=None
+        if hasattr(self,'home_panel'):self.home_panel.invalidate_preview()
 
     def preview_text(self,preview):
         rows=[]
@@ -207,26 +177,8 @@ class MainWindow(QMainWindow):
             rows.append('来源：'+i.source.name+'\n'+('\n'.join(destinations) or '无可执行目的地')+('\n问题：'+i.error if i.error else '')+('\n提示：'+'；'.join(i.warnings) if i.warnings else ''))
         return '\n\n'.join(rows)
 
-    def request_preview(self):
-        if not self.admit_work():return
-        paths,tag,generation=self.paths,self.tag.text(),self.preview_generation
-        service,history_token=self.service,self.tag_history.token
-        def ready(preview):
-            if generation!=self.preview_generation or service is not self.service:return
-            self.show_preview(preview)
-            if any(not item.error for item in preview.items):self.tag_history.remember(tag,history_token)
-        self.coordinator.submit(lambda:service.preview(paths,tag),ready,
-            lambda message:self.show_error(message) if generation==self.preview_generation and service is self.service else None)
-
-    def show_preview(self,preview):
-        self.preview=preview;self.preview_details.setPlainText(self.preview_text(preview));self.preview_details.setToolTip('\n'.join(str(i.source)+'\n'+'\n'.join(map(str,i.targets)) for i in preview.items));self.execute_button.setEnabled(any(not i.error for i in preview.items))
-
-    def execute(self):
-        if not self.admit_work():return
-        preview=self.preview
-        if preview:
-            service=self.service;generation=self.automation.state_generation;self.invalidate_preview()
-            self.coordinator.submit(lambda:service.execute(preview),lambda result:self.show_result(result) if service is self.service and generation==self.automation.state_generation else None,self.show_error)
+    def request_preview(self):self.home_panel._preview()
+    def execute(self):self.home_panel._execute()
 
     def show_result(self,result):
         summary={'success':'已完成，可在记录中撤销。','partial':'部分完成，请查看记录中的问题。','failed':'未完成，请查看记录。'}[result.status]
@@ -281,12 +233,8 @@ class MainWindow(QMainWindow):
         return lines
 
     def busy_changed(self,busy):
-        self.preview_button.setEnabled(not busy);self.save_button.setEnabled(not busy);self.undo_button.setEnabled(not busy)
-        adapter=getattr(self,'automation',None)
-        admitted=self.capture_work_authority() is not None
-        self.pause_button.setEnabled(not busy and admitted)
-        self.demo_button.setEnabled(not busy and not self.dialogs and admitted)
-        self.execute_button.setEnabled(not busy and self.preview is not None and any(not i.error for i in self.preview.items))
+        self.save_button.setEnabled(not busy);self.undo_button.setEnabled(not busy)
+        self.pause_button.setEnabled(not busy and self.capture_work_authority() is not None)
 
     def refresh(self):
         service=self.service;generation=self.automation.state_generation
@@ -302,6 +250,7 @@ class MainWindow(QMainWindow):
 
     def show_history(self,batches):
         self.batches=batches;self.history_list.clear();self.recent_list.clear()
+        self.recent_list.setVisible(bool(batches))
         for n,b in enumerate(batches):
             states={'success':'完成','partial':'部分完成','failed':'需要查看'}
             try:local=datetime.fromisoformat(b.created.replace('Z','+00:00')).astimezone().strftime('%m月%d日 %H:%M')
@@ -316,7 +265,7 @@ class MainWindow(QMainWindow):
                     except (ValueError,TypeError):destination=str(target.parent)
                     text=f'{target.name}'+(f' +其余 {len(roots)-1} 项' if len(roots)>1 else '')+f' · {local}\n{destination}'
                 item=QListWidgetItem(text);item.setToolTip(b.label+'\n'+b.created);self.recent_list.addItem(item)
-        if not batches:self.recent_list.addItem('暂无整理记录 · 选择文件开始，或试试演示')
+        if not batches:self.recent_list.addItem('暂无处理记录 · 选择文件并预览开始')
         self.recent_list.setFixedHeight(max(1,min(3,len(batches)))*70+10)
 
     def show_history_details(self,index):
@@ -353,7 +302,7 @@ class MainWindow(QMainWindow):
             self.show_error('正在读取 Windows 集成设置，请稍候。');return
         self.invalidate_preview()
         for dialog in self.dialogs:dialog.invalidate()
-        config=replace(self.service.config,sync_root=Path(self.sync_path.text()) if self.sync_path.text() else None,watch_roots=tuple(Path(self.watch_list.item(i).text()) for i in range(self.watch_list.count())),paused=self.paused.isChecked(),global_jobs=self.global_jobs.isChecked(),sweep_days=self.sweep_days.value(),inbox_days=self.inbox_days.value(),theme=['dark','light','system'][self.appearance.currentIndex()])
+        config=replace(self.service.config,watch_roots=tuple(Path(self.watch_list.item(i).text()) for i in range(self.watch_list.count())),paused=self.paused.isChecked(),theme=['dark','light','system'][self.appearance.currentIndex()])
         integration=(self.autostart.isChecked(),self.context_menu.isChecked());integration_callback=self.integration_callback
         service,store,generation=self.service,self.store,self.automation.state_generation
         self.automation.config_requested(service.config,config)
@@ -404,7 +353,7 @@ class MainWindow(QMainWindow):
         if self.coordinator.pending or self.dialogs:
             self.show_error('请先完成当前操作或关闭归档窗口，再进入演示。');return
         if self.demo_callback:
-            self.demo_button.setEnabled(False);self.status.setText('正在取消图片任务；安全完成当前替换后进入演示。')
+            self.status.setText('正在取消图片任务；安全完成当前替换后进入演示。')
             self.coordinator.begin_wait()
             def settled():
                 if not self._quit_requested:
@@ -419,7 +368,7 @@ class MainWindow(QMainWindow):
         if result:
             self.invalidate_preview()
             for dialog in self.dialogs:dialog.invalidate()
-            self.service,self.store,paths=result;self.automation.rebind();self.tag_history.switch_state(self.store.state_dir);self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.tag.setText('DEMO020822');self.refresh();self.demo_activated.emit()
+            self.service,self.store,paths=result;self.automation.rebind();self.tag_history.switch_state(self.store.state_dir);self.is_demo=True;self.load_config_controls();self.set_paths(paths);self.refresh();self.demo_activated.emit()
         self.status.setText('演示只使用独立示例目录，可尝试归档与撤销。')
 
     def demo_failed(self,message):
@@ -432,47 +381,37 @@ class MainWindow(QMainWindow):
             return FileHubService(old.config,old.engine.state_dir,platform=old.engine.platform,probe=old.probe,source_time=old.source_time)
         def ready(service):
             self.service=service;self.automation.rebind();self.load_config_controls();self.refresh()
-            self.service_rebound.emit(service);self.demo_button.setEnabled(True)
+            self.service_rebound.emit(service)
             self.show_error('未进入演示，原状态已恢复：'+message)
         def failed(error):
-            self.demo_button.setEnabled(False)
             self.show_error('未进入演示；恢复原状态失败，请安全退出后重新打开。原任务已安全结束：'+message+'；'+error)
         self.coordinator.submit(reopen,ready,failed,lifecycle=True)
-
-    def refresh_inbox(self):
-        def scan():
-            if self.inbox_provider:return self.inbox_provider()
-            root=self.service.config.sync_root
-            if root is None:return []
-            from filehub.models import checked_path
-            inbox=checked_path(root/'0_收件箱');paths=[]
-            if not inbox.is_dir():return paths
-            for category in inbox.iterdir():
-                checked_path(category)
-                if not category.is_dir():continue
-                for day in category.iterdir():
-                    checked_path(day)
-                    if not day.is_dir():continue
-                    for path in day.iterdir():checked_path(path);paths.append(path)
-            return paths
-        self.coordinator.submit(scan,self.show_inbox,self.show_error)
-
-    def show_inbox(self,paths):
-        self.inbox_list.clear()
-        for path in paths:
-            path=Path(path);item=QListWidgetItem(f'{path.name}\n{path.parent.parent.name} / {path.parent.name}');item.setData(Qt.UserRole,str(path));item.setToolTip(str(path));self.inbox_list.addItem(item)
-
-    def archive_inbox(self):
-        paths=[Path(i.data(Qt.UserRole)) for i in self.inbox_list.selectedItems()]
-        if paths:self.open_archive_dialog(paths)
-
-    def open_inbox(self):
-        items=self.inbox_list.selectedItems()
-        if items:QDesktopServices.openUrl(QUrl.fromLocalFile(str(Path(items[0].data(Qt.UserRole)).parent)))
 
     def open_archive_dialog(self,paths):
         if not self.admit_work():return None
         dialog=ArchiveDialog(self,paths);self.dialogs.append(dialog);dialog.finished.connect(lambda _:self.dialogs.remove(dialog));dialog.show();dialog.raise_();dialog.activateWindow();return dialog
+
+    def open_file_dialog(self,paths):
+        if not self.admit_work():return None
+        dialog=FileProcessDialog(self,paths);self.dialogs.append(dialog)
+        dialog.finished.connect(lambda _:self.dialogs.remove(dialog) if dialog in self.dialogs else None)
+        dialog.transferRequested.connect(self.transfer_archive)
+        dialog.show();dialog.raise_();dialog.activateWindow();return dialog
+
+    def transfer_archive(self,dialog):
+        if dialog.kind in self.automation.jobs:return
+        service=self.service
+        def ready(_):
+            if service is not self.service:return
+            replacement=self.open_archive_dialog(dialog.panel._sample_paths)
+            if replacement is None:return
+            runtime=getattr(self,'runtime',None)
+            if runtime and runtime.claim_dialog is dialog:
+                dialog.finished.disconnect(runtime._claim_finished)
+                runtime.claim_dialog=replacement
+                replacement.execution_persisted.connect(runtime._claim_executed);replacement.finished.connect(runtime._claim_finished)
+            dialog.transferred=True;dialog.accept()
+        self.coordinator.submit(lambda:service.archive_context(),ready,self.show_error)
 
     def closeEvent(self,event):
         if self.runtime_close_callback:

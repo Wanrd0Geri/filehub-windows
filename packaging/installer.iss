@@ -1,4 +1,4 @@
-#define AppVersion "0.2.2"
+﻿#define AppVersion "0.2.2"
 #define AppExe "FileHub.exe"
 #define Owner "FileHub.Windows.v1"
 #ifndef PayloadRoot
@@ -44,7 +44,7 @@ UninstallAppRunningError=请先从托盘退出 FileHub，等待正在进行的�
 
 [Tasks]
 Name: "desktopicon"; Description: "创建桌面快捷方式"; Flags: unchecked
-Name: "contextmenu"; Description: "添加当前用户右键“送进项目…”（Windows 11 位于显示更多选项）"; Flags: unchecked
+Name: "contextmenu"; Description: "添加当前用户右键“用 FileHub 处理…”（Windows 11 位于显示更多选项）"; Flags: unchecked
 Name: "autostart"; Description: "登录后在托盘运行（未配置或暂停时不会整理）"; Flags: unchecked
 
 [Files]
@@ -52,7 +52,6 @@ Source: "{#PayloadRoot}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdir
 
 [Icons]
 Name: "{group}\FileHub"; Filename: "{app}\{#AppExe}"
-Name: "{group}\FileHub 演示（隔离示例）"; Filename: "{app}\{#AppExe}"; Parameters: "--demo"
 Name: "{autodesktop}\FileHub"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
 
 ; No [Run]: installing/upgrading never starts normal state implicitly.
@@ -129,7 +128,7 @@ procedure RegisterMenu(Key: String);
 begin
   if MenuConflict(Key) then RaiseException('右键项所有权发生变化，已停止注册。');
   if not RegWriteStringValue(HKCU, Key, 'FileHubOwner', '{#Owner}') or
-     not RegWriteStringValue(HKCU, Key, '', '送进项目…') or
+     not RegWriteStringValue(HKCU, Key, '', '用 FileHub 处理…') or
      not RegWriteStringValue(HKCU, Key, 'MultiSelectModel', 'Player') or
      not RegWriteStringValue(HKCU, Key, 'FileHubIcon', MenuIcon) or
      not RegWriteStringValue(HKCU, Key, 'Icon', MenuIcon) or
@@ -150,6 +149,7 @@ begin
   DeleteMatching(Key + '\command', '', Expected);
   RegDeleteKeyIfEmpty(HKCU, Key + '\command');
   DeleteMatching(Key, '', '送进项目…');
+  DeleteMatching(Key, '', '用 FileHub 处理…');
   DeleteMatching(Key, 'MultiSelectModel', 'Player');
   DeleteMatching(Key, 'FileHubCommand', Expected);
   DeleteMatching(Key, 'Icon', MenuIcon);

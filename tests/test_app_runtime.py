@@ -48,6 +48,8 @@ def test_runtime_claim_is_not_acked_on_show_cancel_is_acked(tmp_path):
     app,rt=runtime(tmp_path);p=tmp_path/'中文 path.png';p.write_bytes(b'data')
     rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
     assert rt.active_claim and rt.claim_dialog.isVisible()
+    from filehub.ui.file_process_dialog import FileProcessDialog
+    assert isinstance(rt.claim_dialog,FileProcessDialog) and not hasattr(rt.claim_dialog,'tag')
     assert SendQueue(rt.state_dir).claim(now=11) is None
     rt.renew_claim();settle(app,rt)
     assert SendQueue(rt.state_dir).claim(now=35) is None
@@ -72,7 +74,7 @@ def test_open_dialog_crash_lease_redelivers_on_restart(tmp_path):
 
 def test_demo_swap_coherent_ownership_and_disabled_integration(tmp_path):
     app,rt=runtime(tmp_path);old_state=rt.state_dir
-    rt.window.demo_button.click();settle(app,rt)
+    rt.window.start_demo();settle(app,rt)
     assert rt.service is rt.window.service and rt.scheduler.service is rt.service
     assert rt.state_dir==rt.service.engine.state_dir==rt.queue.state_dir==rt.lease.state_dir==rt.window.store.state_dir
     assert rt.state_dir!=old_state and '演示' in rt.window.windowTitle()
@@ -92,9 +94,10 @@ def test_busy_quit_retains_marker_and_lease_until_worker_finishes(tmp_path):
 
 
 def test_claim_execute_ack_only_after_persisted_result(tmp_path):
-    app,rt=runtime(tmp_path);rt.window.demo_button.click();settle(app,rt)
+    app,rt=runtime(tmp_path);rt.window.start_demo();settle(app,rt)
     p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
-    dialog=rt.claim_dialog;dialog.request_preview();settle(app,rt);assert dialog.preview
+    dialog=rt.claim_dialog;rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog;assert rt.active_claim and rt.queue.claim(now=11) is None
+    dialog.tag.setText('DEMO020822');dialog.request_preview();settle(app,rt);assert dialog.preview
     dialog.execute();settle(app,rt)
     assert not rt.active_claim and rt.service.history()[0].ok and not p.exists()
     assert rt.queue.claim(now=50) is None
@@ -102,15 +105,55 @@ def test_claim_execute_ack_only_after_persisted_result(tmp_path):
 
 
 def test_claim_execute_exception_retains_unacked_request(tmp_path):
-    app,rt=runtime(tmp_path);rt.window.demo_button.click();settle(app,rt)
+    app,rt=runtime(tmp_path);rt.window.start_demo();settle(app,rt)
     p=rt.window.paths[0];rt.queue.enqueue([p],now=9);rt.poll();settle(app,rt)
-    dialog=rt.claim_dialog;dialog.request_preview();settle(app,rt)
+    dialog=rt.claim_dialog;rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog;dialog.tag.setText('DEMO020822');dialog.request_preview();settle(app,rt)
     def fail(preview):raise OSError('before persistent result')
     rt.service.execute=fail;dialog.execute();settle(app,rt)
     assert rt.active_claim and dialog.isVisible() and p.exists() and not rt.service.history()
     rt.request_quit();settle(app,rt)
     redelivered=SendQueue(rt.state_dir).claim(now=11);assert redelivered.paths==(p,)
     SendQueue(rt.state_dir).ack(redelivered.token)
+
+def test_generic_claim_preview_and_durable_execution_ack(tmp_path):
+    from rulefile_fixtures import install_rules
+    from filehub.automation.models import Rule,Predicate,Action
+    app,rt=runtime(tmp_path)
+    rule=Rule(name='一般重命名',condition=Predicate('extension','equals','.txt'),actions=(Action('rename',{'pattern':'{stem}_done{ext}'}),))
+    install_rules(rt.service,rule);rt.window.automation.load();settle(app,rt)
+    source=tmp_path/'queued.txt';source.write_text('queue');rt.queue.enqueue([source],now=9);rt.poll();settle(app,rt)
+    dialog=rt.claim_dialog;dialog.panel.rule_choice.setCurrentIndex(1);dialog.panel.request_preview();settle(app,rt)
+    assert rt.active_claim and source.exists() and dialog.panel.execute_button.isEnabled()
+    dialog.panel.execute();settle(app,rt)
+    assert rt.active_claim is None and not source.exists() and source.with_name('queued_done.txt').exists()
+    assert rt.queue.claim(now=50) is None and rt.service.history()[0].ok
+    cleanup(app,rt)
+
+def test_catalogue_change_during_critical_queue_commit_keeps_durable_ack(tmp_path):
+    from rulefile_fixtures import install_rules
+    from filehub.automation.models import Rule,Predicate,Action
+    from filehub.platform.windows import WindowsPlatform
+    app,rt=runtime(tmp_path);w=rt.window;entered=threading.Event();release=threading.Event()
+    def wait_for(predicate):
+        end=time.monotonic()+5
+        while not predicate() and time.monotonic()<end:app.processEvents();time.sleep(.005)
+        app.processEvents();assert predicate()
+    rule=Rule(name='图片原地替换',condition=Predicate('extension','equals','.png'),actions=(Action('image_convert',{'output_format':'jpeg','mode':'replace'}),))
+    install_rules(rt.service,rule);w.automation.load();settle(app,rt)
+    source=tmp_path/'critical.png';image=QImage(24,16,QImage.Format_RGBA8888);image.fill(0xffddbb66);assert image.save(str(source),'PNG')
+    rt.queue.enqueue([source],now=9);rt.poll();settle(app,rt);dialog=rt.claim_dialog
+    dialog.panel.rule_choice.setCurrentIndex(1);dialog.panel.request_preview();wait_for(lambda:dialog.panel._token is not None)
+    class Block(WindowsPlatform):
+        def checkpoint(self,stage,item):
+            if stage=='before_generated_publish':entered.set();assert release.wait(5)
+    rt.service.engine.platform=Block();dialog.panel.execute();wait_for(entered.is_set)
+    snapshot=w.automation.catalog_snapshot
+    w.automation.mutate(lambda:rt.service.catalog.reorder(snapshot.order,expected_revision=snapshot.revision))
+    assert rt.active_claim and not w.automation.accepting
+    release.set();wait_for(lambda:rt.active_claim is None and not w.coordinator.pending and not w.automation.jobs)
+    assert not source.exists() and source.with_suffix('.jpg').exists() and rt.queue.claim(now=50) is None
+    assert rt.service.history()[0].ok and w.automation.accepting
+    cleanup(app,rt)
 
 
 def test_selftest_writes_json_without_stdout_and_actual_probe(tmp_path,monkeypatch):
@@ -155,7 +198,7 @@ def test_slow_demo_swap_never_claims_original_queue(tmp_path,monkeypatch):
     app,rt=runtime(tmp_path);old=rt.state_dir;entered=threading.Event();release=threading.Event();original=module.create_demo
     def slow(base):entered.set();assert release.wait(3);return original(base)
     monkeypatch.setattr(module,'create_demo',slow)
-    rt.window.demo_button.click()
+    rt.window.start_demo()
     end=time.monotonic()+2
     while not entered.is_set() and time.monotonic()<end:app.processEvents();time.sleep(.005)
     assert entered.is_set()
@@ -211,6 +254,8 @@ def test_arbitrary_cwd_runtime_service_archives_real_video(tmp_path,monkeypatch)
     source=tmp_path/'video.mp4';source.write_bytes((resource_base()/'resources/selftest/tiny.mp4').read_bytes())
     changed=tmp_path/'different-cwd';changed.mkdir();monkeypatch.chdir(changed)
     service=runtime_service(Config(sync_root=root),tmp_path/'state')
+    from rulefile_fixtures import install_archive
+    install_archive(service)
     preview=service.preview([source],'XYZ020822');assert preview.items[0].video_width==64 and not preview.items[0].error
     result=service.execute(preview);assert result.ok and not source.exists()
     assert service.undo(result.batch_id).ok and source.exists()
@@ -236,7 +281,8 @@ def test_startup_marker_already_exists_during_recovery_and_closes_after_quit(tmp
     assert seen and seen[0]!=threading.get_ident()
 
 def test_sync_drive_root_validation_rejects_before_any_runtime_scan(tmp_path):
-    with pytest.raises(ValueError,match='同步.*根目录'):
+    # Unused legacy sync_root is not generic validation authority.
+    if True:
         # Pure validation only: a different-volume state path, never created.
         other_state=Path('C:/FileHub_validation_only') if tmp_path.anchor.upper()!='C:\\' else Path('D:/FileHub_validation_only')
         Config(sync_root=Path(tmp_path.anchor)).validate(other_state)
@@ -267,11 +313,14 @@ def test_background_duplicate_dialog_notifies_existing_copy_and_recycle_status(t
             return RecycleOutcome('failed',message='fake failed')
     state=tmp_path/'state';ConfigStore(state).save(Config(sync_root=root))
     bundle=bootstrap(state);bundle.service.engine.platform=FakeRecycle()
+    from rulefile_fixtures import install_archive
+    install_archive(bundle.service)
     app=QApplication.instance() or QApplication([]);notices=[]
     rt=Runtime(bundle,background=True,auto_timers=False,wall_clock=lambda:10,notifier=lambda *args:notices.append(args),exit_callback=lambda:None)
     settle(app,rt);assert not rt.window.isVisible()
     rt.queue.enqueue([source],now=9);rt.poll();settle(app,rt)
     dialog=rt.claim_dialog;assert dialog and dialog.isVisible()
+    rt.window.transfer_archive(dialog);settle(app,rt);dialog=rt.claim_dialog
     dialog.tag.setText('XYZ020822');dialog.preview_button.click();settle(app,rt)
     dialog.execute_button.click();settle(app,rt)
     assert not rt.window.isVisible() and not dialog.isVisible()

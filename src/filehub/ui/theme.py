@@ -10,12 +10,17 @@ def icon(kind,color='#d8bd65'):
     pixmap = QPixmap(24,24); pixmap.fill(Qt.transparent)
     p=QPainter(pixmap); p.setRenderHint(QPainter.Antialiasing)
     p.setPen(QPen(QColor(color),1.5))
-    if kind in ('整理','FileHub'):
+    if kind in ('整理','文件处理','FileHub'):
         p.drawRoundedRect(3,7,18,14,2,2); p.drawLine(3,7,3,4);p.drawLine(3,4,10,4);p.drawLine(10,4,13,7)
     elif kind=='收件箱':
         p.drawRect(3,5,18,16);p.drawLine(3,14,9,14);p.drawLine(9,14,9,17);p.drawLine(9,17,15,17);p.drawLine(15,17,15,14);p.drawLine(15,14,21,14)
     elif kind=='记录':
         p.drawEllipse(4,4,16,16);p.drawLine(12,7,12,12);p.drawLine(12,12,17,14)
+    elif kind=='规则文件':
+        p.drawRoundedRect(5,3,14,18,2,2)
+        for y in (8,12,16):p.drawLine(8,y,16,y)
+    elif kind=='图片转换':
+        p.drawRoundedRect(3,4,18,16,2,2);p.drawEllipse(6,7,3,3);p.drawLine(4,18,10,12);p.drawLine(10,12,14,16);p.drawLine(14,16,18,10);p.drawLine(18,10,20,13)
     else:
         for y,x in ((6,8),(12,16),(18,10)):
             p.drawLine(3,y,21,y);p.drawEllipse(x-2,y-2,4,4)
@@ -30,7 +35,7 @@ def apply_theme(widget, appearance='dark'):
     font=QFont();font.setFamilies(['Inter','Noto Sans SC','Segoe UI','Microsoft YaHei UI']);font.setPixelSize(13);widget.setFont(font)
     QApplication.instance().setFont(font)
     if hasattr(widget,'nav_buttons'):
-        for button,name in zip(widget.nav_buttons,('整理','收件箱','记录','设置')):button.setIcon(icon(name,gold))
+        for button in widget.nav_buttons:button.setIcon(icon(button.text(),gold))
     widget.setStyleSheet(f'''
     QWidget {{ background:{bg}; color:{text}; font-family:"Inter","Noto Sans SC","Microsoft YaHei UI"; font-size:13px; }}
     QLabel,QCheckBox {{background:transparent;}}

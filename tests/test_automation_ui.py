@@ -12,6 +12,7 @@ from filehub.service import FileHubService
 from filehub.ui.main_window import MainWindow
 from filehub.automation.models import Rule, RuleSet, Predicate, Action, MAX_DOCUMENT_BYTES
 from filehub.conversion.models import ConversionSpec
+from rulefile_fixtures import install_rules
 
 
 def wait(app, predicate):
@@ -38,7 +39,7 @@ def ui(tmp_path):
     sync=tmp_path/'同步';(sync/'1_工作/项目/261001_XYZ_测试').mkdir(parents=True)
     service=FileHubService(Config(watch_roots=(watch,),sync_root=sync),tmp_path/'state')
     rule=Rule(name='素材重命名',condition=Predicate('name','contains','素材'),actions=(Action('rename',{'pattern':'{stem}_已整理{ext}'}),))
-    service.rules.save(RuleSet((rule,)))
+    install_rules(service,rule)
     window=MainWindow(service,ConfigStore(tmp_path/'state'));settle(app,window)
     yield app,window,service,watch
     window.automation.retire(lambda:None)
@@ -58,9 +59,8 @@ def test_new_navigation_and_worker_loaded_forms(tmp_path):
     service = FileHubService(Config(), tmp_path/'state')
     window = MainWindow(service, ConfigStore(tmp_path/'state'))
     wait(app, lambda: not window.coordinator.pending)
-    assert [button.text() for button in window.nav_buttons] == ['整理', '收件箱', '记录', '设置', '自动规则', '图片转换']
-    assert window.rules_tabs.widget(0) is window.rules_page
-    assert window.rules_tabs.widget(1) is window.templates_page
+    assert [button.text() for button in window.nav_buttons] == ['文件处理', '规则文件', '图片转换', '记录', '设置']
+    assert not hasattr(window,'templates_page') and not hasattr(window.rules_page,'condition_editor')
     assert window.automation.executor is service._conversions
     assert window.automation.rules_revision == service.rules.load().revision
     window.automation.retire(lambda: None)
@@ -68,60 +68,12 @@ def test_new_navigation_and_worker_loaded_forms(tmp_path):
     window.coordinator.close()
 
 
-def test_rule_store_ack_crud_preview_does_not_execute_then_explicit_execute(ui):
-    app,w,s,watch=ui;p=watch/'素材.txt';p.write_text('keep',encoding='utf-8')
-    page=w.rules_page;page.name_edit.setText('长中文规则名称与明确动作')
-    assert page.dirty
-    page.save_button.click();settle(app,w)
-    assert not page.dirty and s.rules.load().rules[0].name=='长中文规则名称与明确动作'
-    page.set_sample_paths([p]);page.preview_button.click();settle(app,w)
-    assert p.exists() and not (watch/'素材_已整理.txt').exists() and page.execute_button.isEnabled()
-    assert '重命名' in page.preview_text.toPlainText()
-    page.execute_button.click();settle(app,w)
-    assert not p.exists() and (watch/'素材_已整理.txt').exists() and w.history_list.count()==1
-    assert not page.execute_button.isEnabled()
-    page.duplicate_rule();assert not page.value().rules[-1].enabled
-    page.save_button.click();settle(app,w)
-    page.move_rule(-1);page.delete_rule();page.save_button.click();settle(app,w)
-    assert len(s.rules.load().rules)==1
 
 
-def test_save_failure_and_external_revision_keep_dirty_draft(ui,monkeypatch):
-    app,w,s,_=ui;page=w.rules_page
-    original=s.rules.save
-    def fail(*args,**kwargs):raise OSError('保存磁盘已满')
-    monkeypatch.setattr(s.rules,'save',fail)
-    page.name_edit.setText('保留这个草稿');page.save_button.click();settle(app,w)
-    assert page.dirty and page.name_edit.text()=='保留这个草稿' and '磁盘' in page.error_label.text()
-    monkeypatch.setattr(s.rules,'save',original)
-    external=replace(s.rules.load().rules[0],name='外部版本');s.rules.save(RuleSet((external,)))
-    page.save_button.click();settle(app,w)
-    assert page.dirty and page.name_edit.text()=='保留这个草稿' and '变化' in page.error_label.text()
-    assert s.rules.load().rules[0].name=='外部版本'
 
 
-def test_import_export_bounded_duplicate_keys_and_disabled_ids(ui,tmp_path):
-    app,w,s,_=ui;original=s.rules.load().rules[0]
-    incoming=tmp_path/'导入.json';incoming.write_text(json.dumps(RuleSet((replace(original,enabled=True),)).to_document()),encoding='utf-8')
-    w.automation.import_rules(str(incoming));settle(app,w)
-    imported=s.rules.load().rules[-1];assert not imported.enabled and imported.id!=original.id
-    exported=tmp_path/'导出.json';w.automation.export_rules(str(exported));settle(app,w)
-    assert len(json.loads(exported.read_text(encoding='utf-8'))['rules'])==2
-    incoming.write_text('{"schema_version":1,"schema_version":1,"rules":[]}',encoding='utf-8')
-    w.automation.import_rules(str(incoming));settle(app,w)
-    assert '重复' in w.rules_page.error_label.text() and len(s.rules.load().rules)==2
-    incoming.write_bytes(b' '*(MAX_DOCUMENT_BYTES+1));w.automation.import_rules(str(incoming));settle(app,w)
-    assert '2 MB' in w.rules_page.error_label.text() and len(s.rules.load().rules)==2
 
 
-def test_template_store_ack_and_dirty_failure(ui,monkeypatch):
-    app,w,s,_=ui;page=w.templates_page;page.copy_template('角色项目模板');page.name_edit.setText('明确保存模板')
-    page.save_button.click();settle(app,w)
-    assert not page.dirty and page.selected_id in s.reload_templates().templates
-    revision=w.automation.template_revision
-    monkeypatch.setattr(s.templates,'save',lambda *a,**k:(_ for _ in ()).throw(OSError('模板无法写入')))
-    page.name_edit.setText('不能丢弃');page.save_button.click();settle(app,w)
-    assert page.dirty and page.name_edit.text()=='不能丢弃' and w.automation.template_revision==revision
 
 
 def test_real_image_replace_final_progress_history_backup_and_undo(ui):
@@ -145,9 +97,9 @@ def test_image_preview_decode_is_independent_archive_and_direct_cancel(ui,monkey
     monkeypatch.setattr(module,'inspect',slow)
     page=w.conversion_page;page.set_paths([p]);page.fields.set_value(ConversionSpec(),mode='replace');page._preview()
     wait(app,entered.is_set)
-    w.set_paths([archive]);w.tag.setText('XYZ020822');w.request_preview()
+    w.set_paths([archive]);w.home_panel.rule_choice.setCurrentIndex(1);w.request_preview()
     wait(app,lambda:not w.coordinator.pending)
-    assert w.preview is not None and w.execute_button.isEnabled() and threads[0]!=get_ident()
+    assert w.home_panel._token is not None and w.home_panel.execute_button.isEnabled() and threads[0]!=get_ident()
     w.execute();wait(app,lambda:not w.coordinator.pending)
     assert not archive.exists() and page._busy
     page.cancel_button.click();assert w.automation.jobs['images']['cancel'].is_set() and page.cancel_pending
@@ -174,7 +126,7 @@ def test_encoding_cancel_pending_ordinary_archive_stays_responsive(ui,monkeypatc
     def slow(*args,**kwargs):entered.set();assert release.wait(5);return original(*args,**kwargs)
     monkeypatch.setattr(module,'generate_owned',slow)
     page=w.conversion_page;page.execute_button.click();wait(app,entered.is_set)
-    assert w.preview_button.isEnabled()
+    assert w.home_panel.sample_button.isEnabled()
     page.cancel_button.click();assert page.cancel_pending and w.automation.jobs['images']['cancel'].is_set()
     release.set();settle(app,w)
     assert p.exists() and not (watch/'编码.jpg').exists() and '取消' in page.results.item(0,3).text()
@@ -210,9 +162,9 @@ def test_progress_item_index_and_committing_never_final_success(ui):
 def test_manual_check_executes_enabled_generic_rule_without_sync(ui):
     app,w,s,watch=ui;p=watch/'素材.txt';p.write_text('generic')
     enabled=replace(s.rules.load().rules[0],enabled=True)
-    s.rules.save(RuleSet((enabled,)))
+    install_rules(s,enabled)
     with s.engine.locked():s.config=replace(s.config,paused=False,sync_root=None)
-    w.rules_page.check_button.click();settle(app,w)
+    w.manual_check();settle(app,w)
     assert not p.exists() and (watch/'素材_已整理.txt').exists() and w.history_list.count()==1
 
 
@@ -220,13 +172,13 @@ def test_image_rule_preview_worker_cancel_and_progress_subject(ui,monkeypatch):
     import filehub.automation.runner as module
     app,w,s,watch=ui;p=watch/'素材.png';png(p)
     rule=replace(s.rules.load().rules[0],actions=(Action('image_convert',{'output_format':'jpeg','mode':'replace'}),Action('rename',{'pattern':'{stem}_交付{ext}'})))
-    w.automation.save_rules(RuleSet((rule,)));settle(app,w)
+    install_rules(s,rule);w.automation.load();settle(app,w)
     entered,release=Event(),Event();original=module.inspect;threads=[]
     def slow(*args):threads.append(get_ident());entered.set();assert release.wait(5);return original(*args)
     monkeypatch.setattr(module,'inspect',slow)
     page=w.rules_page;page.set_sample_paths([p]);page.preview_button.click();wait(app,entered.is_set)
-    assert w.preview_button.isEnabled() and threads[0]!=get_ident()
-    page.cancel_button.click();assert page._cancel_pending and w.automation.jobs['rules']['cancel'].is_set()
+    assert w.home_panel.sample_button.isEnabled() and threads[0]!=get_ident()
+    page.cancel_button.click();assert bool(page.progress_label.text()) and w.automation.jobs['rules']['cancel'].is_set()
     release.set();settle(app,w);assert p.exists() and not page.execute_button.isEnabled()
     monkeypatch.setattr(module,'inspect',original)
     page.preview_button.click();settle(app,w)
@@ -307,7 +259,7 @@ def test_runtime_automatic_image_completion_and_failure_notices(tmp_path,monkeyp
     app=QApplication.instance() or QApplication([]);watch=tmp_path/'watch';watch.mkdir()
     cfg=Config(watch_roots=(watch,),paused=False);ConfigStore(tmp_path/'state').save(cfg)
     bundle=bootstrap(tmp_path/'state');rule=Rule(name='自动图片替换',enabled=True,condition=Predicate('extension','equals','.png'),actions=(Action('image_convert',{'output_format':'jpeg','mode':'replace'}),))
-    bundle.service.rules.save(RuleSet((rule,)));notices=[]
+    install_rules(bundle.service,rule);notices=[]
     class Marker:
         handle=True
         def close(self):self.handle=None
@@ -327,22 +279,8 @@ def test_runtime_automatic_image_completion_and_failure_notices(tmp_path,monkeyp
     rt.request_quit();wait(app,lambda:rt.closed)
 
 
-def test_save_ack_does_not_discard_later_programmatic_draft(ui,monkeypatch):
-    app,w,s,_=ui;entered,release=Event(),Event();original=s.rules.save
-    def delayed(*a,**k):entered.set();assert release.wait(5);return original(*a,**k)
-    monkeypatch.setattr(s.rules,'save',delayed)
-    page=w.rules_page;page.name_edit.setText('保存这个版本');page.save_button.click();wait(app,entered.is_set)
-    page.name_edit.setText('后来的草稿');release.set();settle(app,w)
-    assert page.dirty and page.name_edit.text()=='后来的草稿' and s.rules.load().rules[0].name=='保存这个版本'
-    assert w.automation.rules_revision==s.rules.load().revision
 
 
-def test_native_small_templates_columns_and_empty_feedback_space(ui):
-    app,w,_,watch=ui;w.resize(800,620);w.navigate(4);w.rules_tabs.setCurrentIndex(1);w.show();app.processEvents()
-    table=w.templates_page.categories.table
-    assert table.columnWidth(0)+table.columnWidth(1)<=table.viewport().width()+2
-    assert w.templates_page.editor.width()<w.rules_tabs.width()
-    assert not w.rules_page.error_label.isVisible() and not w.rules_page.dirty_label.isVisible() and not w.rules_page.progress_label.isVisible()
 
 
 def test_rule_preview_exact_backend_nested_nonmatch_and_unavailable_reasons(ui):
@@ -350,7 +288,7 @@ def test_rule_preview_exact_backend_nested_nonmatch_and_unavailable_reasons(ui):
     app,w,s,watch=ui;p=watch/'素材.txt';p.write_text('sample')
     rule=replace(s.rules.load().rules[0],condition=ConditionGroup('all',(
         Predicate('name','contains','不匹配'),Predicate('first_seen_age_seconds','ge',3600))))
-    w.automation.save_rules(RuleSet((rule,)));settle(app,w)
+    install_rules(s,rule);w.automation.load();settle(app,w)
     page=w.rules_page;page.set_sample_paths([p]);page.preview_button.click();settle(app,w)
     text=page.preview_text.toPlainText()
     assert '全部条件：不满足' in text and '实际为 素材.txt' in text and '不匹配' in text
@@ -365,7 +303,7 @@ def test_demo_failure_reconstructs_settled_same_state_and_remains_usable(ui,fail
         return None
     w.demo_callback=demo;generation=w.automation.state_generation;w.start_demo();settle(app,w)
     assert w.service is not s and w.service.engine.state_dir==s.engine.state_dir and s._closing
-    assert w.automation.accepting and w.automation.state_generation==generation+1 and w.demo_button.isEnabled()
+    assert w.automation.accepting and w.automation.state_generation==generation+1
     assert '未进入演示' in w.status.text() and '原状态已恢复' in w.status.text() and not w.is_demo
     w.rules_page.set_sample_paths([p]);w.rules_page.preview_button.click();settle(app,w)
     w.rules_page.execute_button.click();settle(app,w)
@@ -414,17 +352,10 @@ def test_demo_reopen_failure_has_explicit_restart_state(ui):
     w.demo_callback=lambda:None
     w.service_reopen_callback=lambda old:(_ for _ in ()).throw(OSError('无法重新打开状态'))
     w.start_demo();settle(app,w)
-    assert not w.automation.accepting and w.automation.settled and not w.demo_button.isEnabled()
+    assert not w.automation.accepting and w.automation.settled
     assert '请安全退出后重新打开' in w.status.text() and '原任务已安全结束' in w.status.text()
 
 
-def test_rule_save_busy_does_not_offer_job_cancel(ui,monkeypatch):
-    app,w,s,_=ui;entered,release=Event(),Event();original=s.rules.save
-    def delayed(*a,**k):entered.set();assert release.wait(5);return original(*a,**k)
-    monkeypatch.setattr(s.rules,'save',delayed)
-    w.rules_page.name_edit.setText('规则保存');w.rules_page.save_button.click();wait(app,entered.is_set)
-    assert not w.rules_page.cancel_button.isEnabled()
-    release.set();settle(app,w)
 
 
 @pytest.fixture
@@ -453,7 +384,7 @@ def test_transition_rejects_direct_home_tray_settings_and_archive_mutations(life
     import filehub.ui.app as module
     app,rt=lifecycle_rt;w=rt.window;old=rt.service;oldstore=w.store;lease=rt.lease
     source=tmp_path/'留在原位置.txt';source.write_text('old authority')
-    w.set_paths([source]);w.tag.setText('XYZ020822');w.request_preview();settle(app,w)
+    w.set_paths([source]);w.request_preview();settle(app,w)
     entered,release=Event(),Event();original=module.create_demo;writes=[];archives=[]
     save=oldstore.save;execute=old.execute
     def delayed(base):entered.set();assert release.wait(5);return original(base)
@@ -501,7 +432,7 @@ def test_stale_tick_error_settles_own_token_and_next_check_runs(lifecycle_rt,mon
         return []
     monkeypatch.setattr(rt.scheduler,'tick',tick)
     rt.schedule_tick();wait(app,entered.is_set)
-    try:w.rules_page.new_rule()
+    try:w.automation.rules_edited()
     finally:release.set()
     settle(app,w)
     assert not rt.tick_pending and '过期检查错误' not in w.status.text()
