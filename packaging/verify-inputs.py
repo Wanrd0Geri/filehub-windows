@@ -15,16 +15,36 @@ manifest = json.loads((root / "third_party/components.json").read_text(encoding=
 version = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 installer = (root / "packaging/installer.iss").read_text(encoding="utf-8")
 version_info = (root / "packaging/version-info.txt").read_text(encoding="utf-8")
-if version != "0.2.2" or manifest["app_version"] != version or f'#define AppVersion "{version}"' not in installer:
+if version != "0.3.0" or manifest["app_version"] != version or f'#define AppVersion "{version}"' not in installer:
     raise SystemExit("App/installer/input manifest version mismatch")
 for key in ("FileVersion", "ProductVersion"):
     if f"StringStruct('{key}', '{version}')" not in version_info:
         raise SystemExit("EXE string version mismatch")
 for key in ("filevers", "prodvers"):
-    if not re.search(rf"{key}=\(0,\s*2,\s*2,\s*0\)", version_info):
+    if not re.search(rf"{key}=\(0,\s*3,\s*0,\s*0\)", version_info):
         raise SystemExit("EXE fixed version mismatch")
 if manifest["redistribution_status"] != "prepared":
     raise SystemExit("Redistribution input preparation is incomplete")
+inventory = json.loads((root / 'packaging/runtime-inventory.json').read_text(encoding='utf-8'))
+if inventory['version'] != version:
+    raise SystemExit('Runtime inventory version mismatch')
+actual_modules = set()
+for path in (root / 'src/filehub').rglob('*.py'):
+    parts = list(path.relative_to(root / 'src').with_suffix('').parts)
+    if parts[-1] == '__init__': parts.pop()
+    actual_modules.add('.'.join(parts))
+required, excluded = set(inventory['required_modules']), set(inventory['excluded_modules'])
+if (required & excluded or required | excluded != actual_modules
+        or len(required) != len(inventory['required_modules'])
+        or excluded != {'filehub.ui.templates_page', 'filehub.ui.condition_editor', 'filehub.rulefiles.__main__'}):
+    raise SystemExit('Runtime required/excluded module inventory mismatch')
+for item in inventory['help']:
+    if not (root / item['source']).is_file() or not item['destination'].startswith('help/'):
+        raise SystemExit('Missing static Help input')
+from filehub.rulefiles.protocol import parse_package
+for item in inventory['help']:
+    if item['destination'].startswith('help/examples/'):
+        parse_package((root / item['source']).read_bytes())
 if ".".join(map(str, sys.version_info[:3])) != manifest["python_version"]:
     raise SystemExit("Pinned Python runtime version mismatch")
 for relative, expected in manifest["file_hashes"].items():
@@ -87,4 +107,4 @@ expected_webp = {"qt6gui.dll", "qt6core.dll", "vcruntime140.dll", "kernel32.dll"
                  *[f"api-ms-win-crt-{name}-l1-1-0.dll" for name in ("string", "heap", "math", "utility", "runtime")]}
 if set(imports(plugin)) != expected_webp:
     raise SystemExit("Unreviewed qwebp native dependency")
-print("0.2.2 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified")
+print("0.3.0 metadata, pinned runtime/source/notice hashes, wheel RECORD and native imports verified")

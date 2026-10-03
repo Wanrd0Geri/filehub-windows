@@ -370,6 +370,8 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
         # independently of the 64px probe smoke check and ordinary user state.
         project=service.config.sync_root/'1_工作'/'项目'/'261001_LYX_验收项目'
         project.mkdir()
+        from filehub.selftest020 import install_fixture
+        install_fixture(service)  # Explicitly replace the complete owned project snapshot.
         report['videos']=[];video_results=[];originals=[]
         for color,sequence in (('yellow','01'),('blue','02')):
             source=paths[0].with_name('真实1920-'+color+'.mp4')
@@ -395,6 +397,8 @@ def self_test(state_parent,*,asset_root=None,probe_binary=None):
             for item,content in zip(report['videos'],originals))
         from filehub.selftest020 import extend_report
         extend_report(fixture,report)
+        from filehub.selftest030 import extend_report as extend_external_report
+        extend_external_report(fixture,report)
         report['ok']=all(report['checks'].values())
     except Exception as exc:report['error']=str(exc)
     encoded=json.dumps(report,ensure_ascii=False,indent=2)

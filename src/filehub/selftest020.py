@@ -16,6 +16,29 @@ from .models import Fingerprint
 from .scheduler import Scheduler
 from .service import FileHubService
 from .templates import TemplateLibrary
+from .rulefiles.migration import legacy_package
+from .rulefiles.protocol import encode_package
+from .rules import discover_projects
+
+
+def install_fixture(owner, rules=(), *, library=None, activate=True):
+    """Explicit owned acceptance definitions via the ordinary catalogue APIs."""
+    package, bindings, _ = legacy_package(RuleSet(tuple(rules)), owner.config,
+        library or TemplateLibrary(), discover_projects(owner.config.sync_root) if owner.config.sync_root else {})
+    snapshot = owner.catalog.load()
+    if package.id in snapshot.packages:
+        snapshot = owner.catalog.replace_package(package.id, encode_package(package), expected_revision=snapshot.revision)
+    else:
+        snapshot = owner.catalog.import_package(encode_package(package), expected_revision=snapshot.revision)
+    snapshot = owner.catalog.bind(package.id, bindings, expected_revision=snapshot.revision)
+    if package.compatibility:
+        snapshot = owner.catalog.set_compatibility(package.id, frozenset({'manual_archive'}), expected_revision=snapshot.revision)
+    if activate:
+        for rule in rules:
+            if rule.enabled:
+                snapshot = owner.catalog.set_enabled(package.id, rule.id, True, expected_revision=snapshot.revision)
+    owner.migration_candidate = None
+    return snapshot
 
 
 def extend_report(fixture, report):
@@ -190,7 +213,7 @@ def extend_report(fixture, report):
         destination = work / 'generic' / 'copied'
         rule = Rule(name='无同步根普通规则', enabled=True, condition=Predicate('extension', 'equals', '.txt'),
                     actions=(Action('copy', {'destination': str(destination)}),))
-        generic.rules.save(RuleSet((rule,)))
+        install_fixture(generic, (rule,))
         now = datetime.now(timezone.utc)
         outcomes = Scheduler(generic).tick(now)
         require(generic.config.sync_root is None and generic.config.sweep_days == 3 and len(outcomes) == 1 and outcomes[0].ok,
@@ -211,8 +234,8 @@ def extend_report(fixture, report):
                     actions=(Action('copy', {'destination': str(copied)}),
                              Action('image_convert', {'output_format': 'webp', 'mode': 'replace', 'lossless': True}),
                              Action('move', {'destination': str(moved)})))
-        chain.rules.save(RuleSet((rule,)))
-        preview = chain.conversions.submit_rule_preview([chain_source], rule.id).future.result(30)
+        installed = install_fixture(chain, (rule,))
+        preview = chain.conversions.submit_rule_preview([chain_source], installed.runtime_ids['legacy-import'][rule.id]).future.result(30)
         outcomes = chain.conversions.submit_rule(preview).future.result(30)
         require(len(outcomes) == 1 and outcomes[0].ok, 'ordered image rule: ' + str(outcomes))
         native(moved / 'input.webp', 'webp', (12, 8))
@@ -231,14 +254,14 @@ def extend_report(fixture, report):
         imported = service('import', Config(watch_roots=(imported_watch,), paused=False))
         definition = Rule(name='导入应关闭', enabled=True, condition=Predicate('extension', 'equals', '.txt'),
                           actions=(Action('rename', {'pattern': 'changed{ext}'}),))
-        saved = imported.rules.import_document(RuleSet((definition,)).to_document())
+        saved = install_fixture(imported, (definition,), activate=False)
         reopened = service('import', imported.config)
         persisted = reopened.rules.load().rules
         require(len(persisted) == 1 and not persisted[0].enabled and persisted[0].id != definition.id,
                 'import must allocate fresh disabled persisted rule')
         require(Scheduler(reopened).tick(now) == [] and imported_source.read_bytes() == b'disabled imported rule'
                 and not (imported_watch / 'changed.txt').exists(), 'disabled import mutated source')
-        details['imported_rule'] = {'original_id': definition.id, 'imported_id': saved.rules[0].id,
+        details['imported_rule'] = {'original_id': definition.id, 'imported_id': saved.runtime_ids['legacy-import'][definition.id],
                                     'persisted_enabled': persisted[0].enabled, 'source_unchanged': True}
         checks['imported_rule_disabled_persisted'] = True
 
@@ -248,9 +271,9 @@ def extend_report(fixture, report):
         library = TemplateLibrary()
         custom = replace(library.templates['default'], id='acceptance', name='验收模板',
                          keep_name_routes={'参考': '验收/参考'})
-        saved = template.templates.save(library.with_template(custom).assign('TST', custom.id))
+        saved = install_fixture(template, library=library.with_template(custom).assign('TST', custom.id))
         reopened = service('template', template.config)
-        require(reopened.reload_templates().revision == saved.revision, 'template assignment persistence')
+        require(reopened.catalog.load().revision == saved.revision, 'template assignment persistence')
         source = image(work / 'template' / 'source.png')
         before = Fingerprint.capture(source)
         preview = reopened.preview([source], 'TST参考')

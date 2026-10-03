@@ -1,7 +1,9 @@
 # Explicit onedir manifest. Nothing under reference/tests/sandbox is swept in.
 from pathlib import Path
+import json
 
 root = Path(SPECPATH).parent
+inventory = json.loads((root / 'packaging/runtime-inventory.json').read_text(encoding='utf-8'))
 probe = root / "third_party" / "ffprobe" / "bin"
 if not (probe / "ffprobe.exe").is_file():
     raise SystemExit("Run packaging/prepare-ffprobe.ps1 first")
@@ -13,6 +15,8 @@ datas += [(str(root / "docs" / "第三方许可.md"), "third_party"),
 datas += [(str(root / "resources/selftest/tiny.mp4"), "resources/selftest")]
 datas += [(str(root / "resources/selftest" / name), "resources/selftest")
           for name in ("tiny-1920-yellow.mp4", "tiny-1920-blue.mp4")]
+datas += [(str(root / item['source']), str(Path(item['destination']).parent)) for item in inventory['help']]
+datas += [(str(root / 'packaging/runtime-inventory.json'), 'resources')]
 datas += [(str(root / "sandbox/vendor-downloads" / name), "third_party/sources")
           for name in ("ffmpeg-source.zip", "qtbase-source.zip", "pyside-source.zip")]
 binaries = [(str(p), "resources/ffprobe") for p in sorted(probe.iterdir())
@@ -23,10 +27,11 @@ if not webp.is_file():
 binaries += [(str(webp), "PySide6/plugins/imageformats")]
 a = Analysis([str(root / "packaging" / "entrypoint.py")],
              pathex=[str(root / "src")], binaries=binaries, datas=datas,
-             hiddenimports=["filehub.__main__"],
+             hiddenimports=inventory['required_modules'],
              excludes=["PySide6.QtQml", "PySide6.QtQuick", "PySide6.QtWebEngineCore",
                        "PySide6.QtWebEngineWidgets", "PySide6.QtPdf", "PySide6.QtSvg",
-                       "PySide6.QtSvgWidgets", "PySide6.QtNetwork", "pytest"], noarchive=False)
+                       "PySide6.QtSvgWidgets", "PySide6.QtNetwork", "pytest",
+                       *inventory['excluded_modules']], noarchive=False)
 # QtBase raster plugins plus the sole reviewed QtImageFormats WebP plugin.
 # Replace hook discovery with one exact pinned source; no other addon plugins.
 a.binaries = [item for item in a.binaries if Path(item[0]).name.lower() != "qwebp.dll"]

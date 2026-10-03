@@ -6,10 +6,15 @@ from PySide6.QtGui import QColor
 from ..automation.models import Action, absolute_folder
 from ..conversion.models import ConversionSpec
 from ..naming import NAMING_TOKENS
-from .condition_editor import combo
 
 ACTION_NAMES = {'rename': '重命名', 'move': '移动', 'copy': '复制', 'subfolder': '移入子文件夹',
                 'image_convert': '转换图片', 'project_route': '送进项目（最后一步）'}
+
+
+def combo(values):
+    widget = QComboBox()
+    for key, label in values.items(): widget.addItem(label, key)
+    return widget
 
 
 class ConversionFields(QWidget):

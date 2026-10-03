@@ -1,0 +1,95 @@
+{
+  "version": "0.3.0",
+  "required_modules": [
+    "filehub",
+    "filehub.__main__",
+    "filehub.automation",
+    "filehub.automation.conditions",
+    "filehub.automation.executor",
+    "filehub.automation.ledger",
+    "filehub.automation.models",
+    "filehub.automation.planner",
+    "filehub.automation.runner",
+    "filehub.config",
+    "filehub.conversion",
+    "filehub.conversion.images",
+    "filehub.conversion.models",
+    "filehub.conversion.naming",
+    "filehub.generated",
+    "filehub.integration",
+    "filehub.journal",
+    "filehub.legacy_scheduler",
+    "filehub.media",
+    "filehub.models",
+    "filehub.naming",
+    "filehub.operations",
+    "filehub.platform",
+    "filehub.platform.metadata",
+    "filehub.platform.windows",
+    "filehub.rulefiles",
+    "filehub.rulefiles.catalog",
+    "filehub.rulefiles.compatibility",
+    "filehub.rulefiles.compiler",
+    "filehub.rulefiles.migration",
+    "filehub.rulefiles.protocol",
+    "filehub.rules",
+    "filehub.scheduler",
+    "filehub.selftest020",
+    "filehub.selftest030",
+    "filehub.service",
+    "filehub.tag_history",
+    "filehub.templates",
+    "filehub.trees",
+    "filehub.ui",
+    "filehub.ui.action_editor",
+    "filehub.ui.app",
+    "filehub.ui.archive_dialog",
+    "filehub.ui.automation_controller",
+    "filehub.ui.compact_message",
+    "filehub.ui.conversion_page",
+    "filehub.ui.coordinator",
+    "filehub.ui.file_process_dialog",
+    "filehub.ui.main_window",
+    "filehub.ui.rule_requests",
+    "filehub.ui.rulefile_dialogs",
+    "filehub.ui.rules_page",
+    "filehub.ui.status_footer",
+    "filehub.ui.tag_history",
+    "filehub.ui.theme"
+  ],
+  "excluded_modules": [
+    "filehub.ui.templates_page",
+    "filehub.ui.condition_editor",
+    "filehub.rulefiles.__main__"
+  ],
+  "help": [
+    {
+      "source": "docs/AI规则编写指南.md",
+      "destination": "help/AI规则编写指南.md"
+    },
+    {
+      "source": "schemas/filehub-rules-v1.schema.json",
+      "destination": "help/filehub-rules-v1.schema.json"
+    },
+    {
+      "source": "examples/rules-v1/01-move.json",
+      "destination": "help/examples/01-move.json"
+    },
+    {
+      "source": "examples/rules-v1/02-copy-rename-subfolder.json",
+      "destination": "help/examples/02-copy-rename-subfolder.json"
+    },
+    {
+      "source": "examples/rules-v1/03-image-keep-ordered.json",
+      "destination": "help/examples/03-image-keep-ordered.json"
+    },
+    {
+      "source": "examples/rules-v1/04-image-replace.json",
+      "destination": "help/examples/04-image-replace.json"
+    },
+    {
+      "source": "examples/rules-v1/05-archive-compatibility.json",
+      "destination": "help/examples/05-archive-compatibility.json"
+    }
+  ]
+}

@@ -98,24 +98,16 @@ def test_actions_all_kinds_reorder_and_replacement(app):
     assert editor.value()[3].options['mode'] == 'keep'
 
 
-def test_rules_save_failure_preserves_draft_and_preview_requires_clean(app):
+def test_rules_readonly_selection_and_samples_invalidate_preview(app):
     page = RulesPage(); page.set_ruleset(RuleSet((rule(),)))
-    saves = []; previews = []; executes = []
-    page.saveRequested.connect(saves.append); page.previewRequested.connect(previews.append)
+    previews = []; executes = []
+    page.previewRequested.connect(previews.append)
     page.executeRequested.connect(executes.append)
     page.set_sample_paths(('C:/海报.png',))
     page.set_preview('可执行', object(), True)
     assert not executes
-    page.name_edit.setText('改名草稿')
-    assert page.dirty and not page.execute_button.isEnabled()
     page.preview_button.click()
-    assert not previews and '保存' in page.error_label.text()
-    page.save_button.click()
-    assert saves[0].rules[0].name == '改名草稿'
-    page.show_error('保存失败')
-    assert page.dirty and page.name_edit.text() == '改名草稿'
-    page.set_ruleset(saves[0]); page.preview_button.click()
-    assert previews[0].rule_id == saves[0].rules[0].id
+    assert previews[0].rule_id is None
     assert previews[0].generation == page.generation
     token = object(); page.set_preview('可执行', token, True)
     page.execute_button.click(); assert executes == [token]
@@ -123,37 +115,33 @@ def test_rules_save_failure_preserves_draft_and_preview_requires_clean(app):
     assert not page.execute_button.isEnabled()
 
 
-def test_rule_new_duplicate_order_delete_disabled(app):
+def test_rules_page_has_no_authoring_controls(app):
     page = RulesPage(); page.set_ruleset(RuleSet((rule(),)))
-    page.duplicate_rule()
-    assert not page.value().rules[1].enabled
-    assert page.value().rules[0].id != page.value().rules[1].id
-    page.new_rule(); assert not page.value().rules[-1].enabled
-    page.move_rule(-1); assert page.value().rules[1].name == '新规则'
-    page.delete_rule(); assert len(page.value().rules) == 2
+    for name in ('new_rule','duplicate_rule','delete_rule','saveRequested','value',
+                 'name_edit','condition_editor','action_editor','scope_list','save_button'):
+        assert not hasattr(page,name)
+    assert page.summary.isReadOnly()
 
 
-def test_rules_watch_checklist_retains_unknown_scope_and_folder_samples(app):
+def test_rules_watch_context_does_not_edit_loaded_definition(app):
     from dataclasses import replace
     page = RulesPage(); page.set_watch_roots(('C:/观察甲', 'D:/观察乙'))
     saved = replace(rule(), scope=('E:/已移除观察',))
-    page.set_ruleset(RuleSet((saved,)))
-    assert page.value().rules[0].scope == ('E:\\已移除观察',)
-    assert '未配置' in page.scope_warning.text()
+    snapshot=RuleSet((saved,));page.set_ruleset(snapshot)
     page.set_sample_paths(('C:/样本文件夹',))
     requests = []; page.previewRequested.connect(requests.append); page.preview_button.click()
-    assert not requests and '观察' in page.error_label.text()
-    page.scope_list.item(2).setCheckState(Qt.Unchecked)
-    page.scope_list.item(0).setCheckState(Qt.Checked)
-    assert page.value().rules[0].scope == ('C:\\观察甲',)
+    assert requests[0].paths==('C:/样本文件夹',)
+    assert page._ruleset is snapshot and saved.scope==('E:\\已移除观察',)
+    assert page._watch_roots==('C:/观察甲','D:/观察乙')
 
 
-def test_scope_snapshot_order_and_case_survive_without_user_changes(app):
+def test_readonly_scope_snapshot_order_and_case_are_not_rewritten(app):
     from dataclasses import replace
     page = RulesPage(); page.set_watch_roots(('C:/观察甲', 'D:/观察乙'))
     saved = replace(rule(), scope=('d:/观察乙', 'c:/观察甲'))
-    page.set_ruleset(RuleSet((saved,)))
-    assert page.value().rules[0].scope == ('d:\\观察乙', 'c:\\观察甲')
+    snapshot=RuleSet((saved,));page.set_ruleset(snapshot)
+    page.rule_choice.setCurrentIndex(1);page.set_watch_roots(('D:/另外观察',))
+    assert page._ruleset is snapshot and snapshot.rules[0].scope==('d:\\观察乙', 'c:\\观察甲')
 
 
 def test_conversion_pure_requests_tokens_cancel_and_commit_progress(app):
@@ -228,7 +216,7 @@ def test_constructors_and_values_do_not_call_stores_or_codec(app, monkeypatch):
     monkeypatch.setattr(templates.TemplateStore, 'save', forbidden)
     monkeypatch.setattr(conversion, 'inspect', forbidden)
     monkeypatch.setattr(conversion, 'generate', forbidden)
-    rules = RulesPage(); rules.set_ruleset(RuleSet((rule(),))); rules.value()
+    rules = RulesPage(); rules.set_ruleset(RuleSet((rule(),))); rules.set_sample_paths(('C:/a.png',));rules._preview()
     library = TemplatesPage(); library.set_library(TemplateLibrary()); library.value()
     images = ConversionPage(); images.set_paths(('C:/a.png',)); images.fields.mode.setCurrentIndex(1); images.value()
 
@@ -274,18 +262,17 @@ def test_rules_folder_picker_import_export_intents_and_busy(app, monkeypatch):
     page.folder_sample_button.click()
     previews = []; page.previewRequested.connect(previews.append); page.preview_button.click()
     assert previews[0].paths == ('C:/样本文件夹',)
-    imported = []; exported = []
-    page.importRequested.connect(imported.append); page.exportRequested.connect(exported.append)
+    management = []
+    page.managementRequested.connect(management.append)
     monkeypatch.setattr(QFileDialog, 'getOpenFileName', lambda *a, **k: ('C:/规则.json', ''))
     monkeypatch.setattr(QFileDialog, 'getSaveFileName', lambda *a, **k: ('D:/导出.json', ''))
-    page.edit_buttons[5].click(); page.edit_buttons[6].click()
-    assert imported == ['C:/规则.json'] and exported == ['D:/导出.json']
+    page.manage_buttons[0].click(); page.manage_buttons[3].click()
+    assert management == [('import',None,'C:/规则.json'),('export',None,'D:/导出.json')]
     page.set_busy(True)
-    assert not page.save_button.isEnabled() and not page.preview_button.isEnabled()
-    page.set_busy(False); page.action_editor.rows[0].option.setText('../错误')
-    saves = []; page.saveRequested.connect(saves.append); page.save_button.click()
-    assert not saves and page.dirty and page.action_editor.rows[0].option.text() == '../错误'
-    assert page.error_label.text()
+    assert all(not button.isEnabled() for button in page.manage_buttons) and not page.preview_button.isEnabled()
+    page.set_busy(False);page.show_error('目录册需要恢复')
+    assert all(button.isEnabled() for button in page.manage_buttons)
+    assert page.error_label.text()=='目录册需要恢复' and not page.execute_button.isEnabled()
 
 
 def test_template_all_directory_mapping_fields_and_validation_preserve_draft(app):
