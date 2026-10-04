@@ -109,6 +109,33 @@ def test_dated_preview_respects_existing_names(setup):
     pr=s.preview([a],'XYZ测试')
     assert pr.items[0].targets[0].name=='input 2.mp4'
 
+
+def test_named_versions_preview_and_execution_reallocate_same_series(setup):
+    s,p,make=setup
+    dest=p/'3_制作'/'PV';dest.mkdir(parents=True)
+    unrelated=dest/'PV_决战打斗_260930-5_480p.mp4';unrelated.write_bytes(b'unrelated')
+    previous=dest/'PV_打斗去雪_260929-3_480p.mp4';previous.write_bytes(b'previous')
+    a=make(data=b'new video')
+    pr=s.preview([a],'XYZPV打斗去雪')
+    assert pr.items[0].targets[0].name=='PV_打斗去雪_260930-4_1080p.mp4'
+    raced=dest/'PV_打斗去雪_260929-4_4K.mp4';raced.write_bytes(b'another version')
+    r=s.execute(pr)
+    assert r.ok and r.outcomes[0].reallocated
+    assert r.outcomes[0].targets[0].name=='PV_打斗去雪_260930-5_1080p.mp4'
+    assert r.outcomes[0].targets[0].read_bytes()==b'new video'
+    assert previous.read_bytes()==b'previous' and raced.read_bytes()==b'another version'
+    assert unrelated.read_bytes()==b'unrelated'
+
+
+def test_named_versions_batch_reserves_independent_next_versions(setup):
+    s,p,make=setup
+    dest=p/'3_制作'/'PV';dest.mkdir(parents=True)
+    (dest/'PV_决战打斗_260930-5_480p.mp4').write_bytes(b'unrelated')
+    pr=s.preview([make('a.mp4',b'a'),make('b.mp4',b'b')],'XYZPV打斗去雪-1')
+    assert [i.targets[0].name for i in pr.items]==[
+        'PV_打斗去雪-1_260930-1_1080p.mp4',
+        'PV_打斗去雪-1_260930-2_1080p.mp4']
+
 def test_locked_duplicate_survivor_and_ads_ignored(setup):
     s,p,make=setup
     existing=p/'existing.mp4';existing.write_bytes(b'video')

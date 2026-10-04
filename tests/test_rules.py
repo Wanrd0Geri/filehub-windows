@@ -57,9 +57,50 @@ def test_sequence_and_note(project):
     spec=parse_tag('LYXPV',discover_projects(root),root)
     assert build_targets(Path('PV_C015A_旧备注_260922-2.PNG'),spec,TIME,None,[])[0].name=='PV_C015A_旧备注_260922-2.png'
     occupied=['OTHER_260930-99.png','PV_260929-9.png','PV_C003_260930-4.png']
-    assert build_targets(Path('x.png'),spec,TIME,None,occupied)[0].name=='PV_260930-5.png'
+    assert build_targets(Path('x.png'),spec,TIME,None,occupied)[0].name=='PV_260930-10.png'
     old='PV_C015A_旧备注_260922-2.png'
     assert build_targets(Path(old),spec,TIME,None,[old])[0].name=='PV_C015A_旧备注_260922-3.png'
+
+
+def test_named_versions_do_not_share_pv_counter(project):
+    root,p=project
+    spec=parse_tag('LYXPV打斗去雪-1',discover_projects(root),root)
+    occupied=['PV_决战打斗_261003-5_480p.mp4']
+    when=datetime(2026,10,3,15,tzinfo=timezone.utc)
+    assert build_targets(Path('input.mp4'),spec,when,1920,occupied)[0].name=='PV_打斗去雪-1_261003-1_1080p.mp4'
+
+
+def test_named_version_continues_across_dates_and_resolutions(project):
+    root,p=project
+    spec=parse_tag('LYXPV打斗去雪',discover_projects(root),root)
+    occupied=['PV_打斗去雪_260928-3_480p.mp4',
+              'PV_打斗去雪_260929-7_4K.mp4',
+              'PV_打斗去雪-1_260930-99_1080p.mp4',
+              'PV_决战打斗_260930-90_1080p.mp4']
+    assert build_targets(Path('input.mp4'),spec,TIME,1920,occupied)[0].name=='PV_打斗去雪_260930-8_1080p.mp4'
+
+
+def test_named_version_keeps_shots_separate(project):
+    root,p=project
+    spec=parse_tag('LYXPVC3白模',discover_projects(root),root)
+    occupied=['PV_C003_白模_260929-2.png','PV_C004_白模_260930-12.png',
+              'PV_C003_成品_260930-20.png']
+    assert build_targets(Path('input.png'),spec,TIME,None,occupied)[0].name=='PV_C003_白模_260930-3.png'
+
+
+def test_existing_named_version_collision_uses_series_maximum(project):
+    root,p=project
+    spec=parse_tag('LYXPV',discover_projects(root),root)
+    old='PV_旧备注_260922-2.png'
+    occupied=[old,'PV_旧备注_260929-7.png','PV_别的备注_260929-99.png']
+    assert build_targets(Path(old),spec,TIME,None,occupied)[0].name=='PV_旧备注_260922-8.png'
+
+
+def test_existing_named_version_resolution_variant_preserves_version(project):
+    root,p=project
+    spec=parse_tag('LYXPV',discover_projects(root),root)
+    occupied=['PV_旧备注_260922-2_1080p.mp4','PV_旧备注_260929-7_1080p.mp4']
+    assert build_targets(Path('PV_旧备注_260922-2_1080p.mp4'),spec,TIME,3840,occupied)[0].name=='PV_旧备注_260922-2_4K.mp4'
 
 def test_team_version_and_inference(project):
     root,p=project

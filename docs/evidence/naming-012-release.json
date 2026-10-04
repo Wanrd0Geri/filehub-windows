@@ -1,0 +1,81 @@
+{
+  "ok": true,
+  "packaged_naming_cases": [
+    {
+      "tag": "LYXPV打斗去雪-1",
+      "occupied": [
+        "PV_决战打斗_261003-5_480p.mp4"
+      ],
+      "actual": "PV_打斗去雪-1_261003-1_1080p.mp4",
+      "expected": "PV_打斗去雪-1_261003-1_1080p.mp4"
+    },
+    {
+      "tag": "LYXPV打斗去雪",
+      "occupied": [
+        "PV_打斗去雪_261002-3_4K.mp4",
+        "PV_打斗去雪-1_261003-99_1080p.mp4"
+      ],
+      "actual": "PV_打斗去雪_261003-4_1080p.mp4",
+      "expected": "PV_打斗去雪_261003-4_1080p.mp4"
+    }
+  ],
+  "portable_selftest": {
+    "schema_version": 1,
+    "ok": true,
+    "checks": {
+      "default_unconfigured_paused": true,
+      "valid_png": true,
+      "png_archive": true,
+      "png_undo": true,
+      "bundled_probe_width_64": true,
+      "paused_no_source_mutation": true,
+      "video_1920_distinct_content": true,
+      "video_1920_archive_naming": true,
+      "video_1920_distinct_sequence": true,
+      "video_1920_undo": true
+    },
+    "fixture_dir": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58",
+    "state_dir": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58\\demo\\5d1499f7877342a18fe93d83928099ef\\state",
+    "probe": {
+      "path": "F:\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\ffprobe\\ffprobe.exe",
+      "fixture": "F:\\Hazel Windows\\dist\\FileHub\\_internal\\resources\\selftest\\tiny.mp4",
+      "width": 64
+    },
+    "error": "",
+    "videos": [
+      {
+        "source": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58\\demo\\5d1499f7877342a18fe93d83928099ef\\示例下载\\真实1920-yellow.mp4",
+        "target": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58\\demo\\5d1499f7877342a18fe93d83928099ef\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_01_20261003AM_1080p.mp4",
+        "target_name": "02_08_22_01_20261003AM_1080p.mp4",
+        "expected_name": "02_08_22_01_20261003AM_1080p.mp4",
+        "sequence": "01",
+        "width": 1920,
+        "batch_id": "04e49a30f2684daf92f06f534148a78b"
+      },
+      {
+        "source": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58\\demo\\5d1499f7877342a18fe93d83928099ef\\示例下载\\真实1920-blue.mp4",
+        "target": "F:\\Hazel Windows\\sandbox\\naming-012-04e2e6355ce74551ab6c8904da645e42\\portable-selftest\\self-test-858fcff022f14f5a8a783321dba78b58\\demo\\5d1499f7877342a18fe93d83928099ef\\同步空间\\1_工作\\项目\\261001_LYX_验收项目\\3_制作\\E02\\S08\\02_08_22_02_20261003AM_1080p.mp4",
+        "target_name": "02_08_22_02_20261003AM_1080p.mp4",
+        "expected_name": "02_08_22_02_20261003AM_1080p.mp4",
+        "sequence": "02",
+        "width": 1920,
+        "batch_id": "a3d7da45636a4f00b4518ed49d936db4"
+      }
+    ]
+  },
+  "exit_code": 0,
+  "stderr": "",
+  "artifacts": [
+    {
+      "path": "F:\\Hazel Windows\\dist\\FileHub\\FileHub.exe",
+      "bytes": 2342205,
+      "sha256": "cbd0988d754ef8b9e9184c8202838bf582c3db71c329a5cecf76ab1637b6698f"
+    },
+    {
+      "path": "F:\\Hazel Windows\\dist\\installer\\FileHub-0.1.2-windows-x64-setup.exe",
+      "bytes": 139806806,
+      "sha256": "4f7879d903ea0597555695a076358d910f8f30c162b5ca50fec1f2baee164093"
+    }
+  ],
+  "scope": "Isolated fixtures only; existing installation and project videos were not changed."
+}

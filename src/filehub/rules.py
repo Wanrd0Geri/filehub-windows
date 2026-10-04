@@ -205,8 +205,6 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
                     try: date_text=date(int(dm[1]),int(dm[2]),int(dm[3])).strftime('%y%m%d')
                     except ValueError: pass
             date_text=date_text or source_time.strftime('%y%m%d')
-            pat=re.compile(rf'^{re.escape(spec.prefix.casefold())}_(?:.*_)?{date_text}-(\d+)(?:[_.]|$)')
-            seq=int(m[2]) if m else max([int(mm[1]) for n in occupied if (mm:=pat.match(n))]+[0])+1
             note=spec.note
             if not note and m and spec.mode in ('asset','shot'):
                 before=stem[:m.start()].removesuffix('_')
@@ -219,9 +217,17 @@ def build_targets(source: Path, spec: RouteSpec, source_time: datetime, video_wi
             parts=[spec.prefix]
             if spec.mode=='shot' and shot: parts.append(f'C{shot[0]:03d}{shot[1]}')
             if spec.mode in ('shot','asset') and note: parts.append(note)
+            # The date records the source's date; the version belongs to the
+            # complete logical name, across dates and resolution variants.
+            head=safe_name('_'.join(parts)).casefold()
+            pat=re.compile(rf'^{re.escape(head)}_2\d[01]\d[0-3]\d-(\d+)(?:_(?:480p|720p|1080p|4k))?\.[^.]+$')
+            next_version=max([int(mm[1]) for n in occupied if (mm:=pat.match(n))]+[0])+1
+            # Already named inputs (for example an upscale) retain their
+            # explicit version unless that exact output name is occupied.
+            seq=int(m[2]) if m else next_version
             while True:
                 name='_'.join(parts+[f'{date_text}-{seq}']+([tier] if tier else []))+ext
                 if safe_name(name).casefold() not in occupied: break
-                seq+=1
+                seq=max(seq+1,next_version)
         path=target(name); occupied.add(path.name.casefold()); targets.append(path)
     return TargetPaths(targets,warnings)

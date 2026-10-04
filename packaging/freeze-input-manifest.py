@@ -31,7 +31,7 @@ for line in (root / "packaging/build-requirements.txt").read_text().splitlines()
     name, version = line.split("==")
     requirements[name] = version
 manifest = {
-    "schema_version": 1, "app_version": "0.1.1", "redistribution_status": "prepared",
+    "schema_version": 1, "app_version": "0.1.2", "redistribution_status": "prepared",
     "python_version": "3.12.10", "ffprobe_version": "8.1.3-filehub1",
     "ffprobe_license": "LGPL-2.1-or-later", "qt_license_option": "LGPL-3.0-only",
     "source_archives": archives, "python_distributions": requirements,
